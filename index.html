@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── SEO ── -->
+  <title>CDAC Smart Systems Platform — Agriculture · Water · Cybersecurity · HPC</title>
+  <meta name="description"
+    content="CDAC's integrated Smart Agriculture and Smart Water Distribution platform, powered by High-Performance Computing and protected by Red/Blue Team cybersecurity operations.">
+
+  <!-- ── Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- ── Styles ── -->
+  <link rel="stylesheet" href="static/css/main.css">
+
+  <!-- ── Three.js  (global THREE variable) ── -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       3-D CANVAS  — sits behind everything (fixed, z-index:0)
+  ══════════════════════════════════════════════════════════ -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- ══════════════════════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════════════════════ -->
+  <nav id="main-nav" role="navigation" aria-label="Main Navigation">
+    <div class="nav-brand">
+      <div class="nav-logo-dot"></div>
+      CDAC <span class="brand-accent">SmartSystems</span>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><button class="nav-btn active" data-page="home"  id="navbtn-home" >Home</button></li>
+      <li><button class="nav-btn"        data-page="agri"  id="navbtn-agri" >Agriculture</button></li>
+      <li><button class="nav-btn"        data-page="water" id="navbtn-water">Water</button></li>
+      <li><button class="nav-btn"        data-page="cyber" id="navbtn-cyber">Cybersecurity</button></li>
+    </ul>
+
+    <button class="nav-menu-toggle" id="menu-toggle" aria-label="Toggle navigation">☰</button>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-line"></span>
+          CDAC · Integrated Smart Systems Platform
+          <span class="eyebrow-line"></span>
+        </div>
+        <h1 class="hero-title" id="hero-title">
+          Where <em>Nature</em><br>Meets Technology
+        </h1>
+        <p class="hero-desc">
+          A unified platform for smart agriculture and intelligent water distribution —
+          powered by HPC, secured by design, and monitored in real time.
+        </p>
+        <div class="hero-scroll-hint" aria-hidden="true">
+          <span>↓</span>
+          <span>Explore</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Domain Cards -->
+    <section class="domain-section" aria-label="Platform Domains">
+      <div class="section-label">Choose a Domain</div>
+      <div class="domain-grid">
+
+        <!-- Agriculture Card -->
+        <div class="domain-card domain-agri reveal" id="card-agri"
+             data-page="agri" role="button" tabindex="0"
+             aria-label="Go to Smart Agriculture">
+          <div class="dc-bg dc-bg-agri"></div>
+          <div class="dc-content">
+            <span class="dc-icon" aria-hidden="true">🌾</span>
+            <h2>Smart Agriculture</h2>
+            <p>Precision farming with sensor networks, predictive analytics, and
+               cybersecurity-hardened IoT infrastructure deployed at field scale.</p>
+            <div class="dc-footer">
+              <div class="dc-modules">
+                <span class="module-tag">About</span>
+                <span class="module-tag">Walk Through</span>
+                <span class="module-tag">Cybersecurity</span>
+                <span class="module-tag">HPC</span>
+              </div>
+              <button class="dc-explore" tabindex="-1">Explore →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Water Card -->
+        <div class="domain-card domain-water reveal" id="card-water"
+             data-page="water" role="button" tabindex="0"
+             aria-label="Go to Smart Water Distribution">
+          <div class="dc-bg dc-bg-water"></div>
+          <div class="dc-content">
+            <span class="dc-icon" aria-hidden="true">💧</span>
+            <h2>Smart Water Distribution</h2>
+            <p>Intelligent pipeline monitoring, leak detection, and distribution
+               optimization across urban and rural networks at city scale.</p>
+            <div class="dc-footer">
+              <div class="dc-modules">
+                <span class="module-tag">About</span>
+                <span class="module-tag">Walk Through</span>
+                <span class="module-tag">Cybersecurity</span>
+                <span class="module-tag">HPC</span>
+              </div>
+              <button class="dc-explore" tabindex="-1">Explore →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <span>CDAC SmartSystems Platform</span>
+        <span class="footer-sep">·</span>
+        <span>v1.0 · PoC Build</span>
+        <span class="footer-sep">·</span>
+        <span>Backend Integration Pending</span>
+      </div>
+    </footer>
+
+  </div><!-- /page-home -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: SMART AGRICULTURE
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-agri">
+
+    <!-- Banner over 3D canvas -->
+    <div class="page-banner page-banner-agri" aria-label="Smart Agriculture">
+      <div class="banner-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <button class="bc-link" data-page="home">Home</button>
+          <span aria-hidden="true">›</span>
+          <span>Smart Agriculture</span>
+        </nav>
+        <h1>Smart <em>Agriculture</em></h1>
+        <span class="banner-badge badge-agri">Agriculture Module</span>
+      </div>
+    </div>
+
+    <div class="subpage-body">
+
+      <!-- Tab Navigation -->
+      <nav class="tab-nav" id="agri-tabnav" aria-label="Agriculture sections">
+        <button class="tab-btn active" data-tab="agri-about">About</button>
+        <button class="tab-btn" data-tab="agri-walkthrough">Walk Through</button>
+        <button class="tab-btn" data-tab="agri-cybersecurity">Cybersecurity</button>
+        <button class="tab-btn" data-tab="agri-hpc">HPC Application</button>
+      </nav>
+
+      <!-- ── ABOUT ── -->
+      <div class="tab-content active" id="agri-about">
+        <div class="content-card reveal">
+          <div class="cc-header">
+            <div class="cc-dot green"></div>
+            <h3>Project Overview</h3>
+          </div>
+          <p>The Smart Agriculture platform integrates IoT sensor networks, machine learning
+             models, and high-performance computing to optimize crop yields, reduce resource
+             wastage, and enable real-time field monitoring at scale. Designed to support
+             smallholder farmers, agri-enterprises, and government agricultural bodies.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item reveal">
+            <span class="fi-icon">🌡️</span>
+            <h4>Sensor Networks</h4>
+            <p>Soil moisture, temperature, and humidity sensors feeding a central data lake
+               via LoRaWAN / MQTT.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">📡</span>
+            <h4>Real-time Monitoring</h4>
+            <p>Live dashboards for crop health, irrigation status, and environmental
+               anomaly detection.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">🤖</span>
+            <h4>Predictive Analytics</h4>
+            <p>ML-driven yield prediction, pest outbreak alerts, and weather-adaptive
+               scheduling.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">🔒</span>
+            <h4>Secure Architecture</h4>
+            <p>End-to-end encrypted data pipelines with access-controlled edge
+               computing nodes.</p>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Backend API integration pending ]</span>
+      </div>
+
+      <!-- ── WALK THROUGH ── -->
+      <div class="tab-content" id="agri-walkthrough">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot teal"></div>
+            <h3>System Walk Through</h3>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <div class="step-body">
+                <h4>Field Sensor Deployment</h4>
+                <p>IoT nodes capture soil, climate, and crop data at configurable intervals,
+                   transmitting via LoRaWAN / MQTT to edge gateways.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div class="step-body">
+                <h4>Edge Data Processing</h4>
+                <p>Local edge servers perform validation, compression, and anomaly flagging
+                   before forwarding to the central HPC cluster.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div class="step-body">
+                <h4>HPC Workload Execution</h4>
+                <p>HPC nodes run simulation models, satellite image processing (NDVI), and
+                   large-scale ML training jobs in parallel batch queues via SLURM.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div class="step-body">
+                <h4>Insights &amp; Recommendations</h4>
+                <p>Processed outputs surface through dashboards, mobile alerts, and API
+                   endpoints consumed by farm management software.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">05</div>
+              <div class="step-body">
+                <h4>Feedback Loop</h4>
+                <p>Farmer actions and interventions are logged back to continuously improve
+                   model accuracy over time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Interactive simulation coming in next phase ]</span>
+      </div>
+
+      <!-- ── CYBERSECURITY ── -->
+      <div class="tab-content" id="agri-cybersecurity">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot amber"></div>
+            <h3>Security Architecture</h3>
+          </div>
+          <p>Agricultural IoT infrastructure presents unique attack surfaces. Our security
+             posture covers OT/IT convergence threats, supply chain risks, and data integrity
+             for critical food production systems.</p>
+        </div>
+        <div class="cyber-duo">
+          <div class="cyber-card red">
+            <span class="cc-tag red">Red Team</span>
+            <h3>Threat Assessment</h3>
+            <p>Adversarial testing of sensor firmware, gateway communications, and cloud API
+               endpoints to identify exploitable vulnerabilities before deployment.</p>
+            <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
+          </div>
+          <div class="cyber-card blue">
+            <span class="cc-tag blue">Blue Team</span>
+            <h3>Monitoring &amp; Response</h3>
+            <p>Continuous log aggregation, intrusion detection, and incident response
+               playbooks aligned to ICS/SCADA threat models.</p>
+            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span></div>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Detailed security reports accessible post-authentication ]</span>
+      </div>
+
+      <!-- ── HPC APPLICATION ── -->
+      <div class="tab-content" id="agri-hpc">
+        <div class="hpc-metrics">
+          <div class="hpc-metric"><div class="hpc-val">256</div><div class="hpc-lbl">CPU Cores</div></div>
+          <div class="hpc-metric"><div class="hpc-val">4TB</div><div class="hpc-lbl">RAM</div></div>
+          <div class="hpc-metric"><div class="hpc-val">40Gb/s</div><div class="hpc-lbl">Interconnect</div></div>
+          <div class="hpc-metric"><div class="hpc-val">8×</div><div class="hpc-lbl">GPU Nodes</div></div>
+        </div>
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot blue"></div>
+            <h3>HPC Workloads in Agriculture</h3>
+          </div>
+          <p>HPC enables computationally intensive tasks including multi-year climate
+             simulations, satellite imagery analysis at sub-meter resolution, and training
+             neural networks on multi-terabyte crop datasets. Jobs are scheduled via
+             SLURM-based queue management with priority tiers for time-sensitive alerts.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="fi-icon">🛰️</span>
+            <h4>Satellite Processing</h4>
+            <p>Batch NDVI, NDWI, and crop stress index computation from Sentinel-2 /
+               Landsat feeds.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🧠</span>
+            <h4>ML Model Training</h4>
+            <p>Distributed training pipelines for yield prediction, pest detection, and
+               irrigation optimization.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🌦️</span>
+            <h4>Climate Simulation</h4>
+            <p>Regional weather models integrated with field microclimate data for
+               14-day advisory forecasts.</p>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Live HPC job queue dashboard — backend required ]</span>
+      </div>
+
+    </div><!-- /subpage-body -->
+  </div><!-- /page-agri -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: SMART WATER DISTRIBUTION
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-water">
+
+    <div class="page-banner page-banner-water" aria-label="Smart Water Distribution">
+      <div class="banner-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <button class="bc-link" data-page="home">Home</button>
+          <span aria-hidden="true">›</span>
+          <span>Smart Water Distribution</span>
+        </nav>
+        <h1>Smart <em>Water</em> Distribution</h1>
+        <span class="banner-badge badge-water">Water Module</span>
+      </div>
+    </div>
+
+    <div class="subpage-body">
+
+      <nav class="tab-nav" id="water-tabnav" aria-label="Water sections">
+        <button class="tab-btn active" data-tab="water-about">About</button>
+        <button class="tab-btn" data-tab="water-walkthrough">Walk Through</button>
+        <button class="tab-btn" data-tab="water-cybersecurity">Cybersecurity</button>
+        <button class="tab-btn" data-tab="water-hpc">HPC Application</button>
+      </nav>
+
+      <!-- ── ABOUT ── -->
+      <div class="tab-content active" id="water-about">
+        <div class="content-card reveal">
+          <div class="cc-header">
+            <div class="cc-dot blue"></div>
+            <h3>Project Overview</h3>
+          </div>
+          <p>The Smart Water Distribution system provides real-time visibility into water
+             network operations — from source to tap. It leverages pressure sensors, flow
+             meters, and AI-driven demand forecasting to minimize losses, detect leaks early,
+             and optimize distribution equity across urban and peri-urban zones.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item reveal">
+            <span class="fi-icon">🔵</span>
+            <h4>Pipe Network Monitoring</h4>
+            <p>Distributed pressure and flow sensors with anomaly detection for
+               burst events.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">📊</span>
+            <h4>Demand Forecasting</h4>
+            <p>Time-series models predicting hourly consumption patterns per zone to
+               pre-position supply.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">🚨</span>
+            <h4>Leak Detection</h4>
+            <p>Acoustic sensor fusion and pressure gradient analysis for rapid
+               pinpointing of underground leaks.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">⚖️</span>
+            <h4>Equitable Distribution</h4>
+            <p>Automated valve control to balance supply fairness across communities
+               during scarcity events.</p>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Live sensor data feed — backend required ]</span>
+      </div>
+
+      <!-- ── WALK THROUGH ── -->
+      <div class="tab-content" id="water-walkthrough">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot teal"></div>
+            <h3>System Walk Through</h3>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <div class="step-body">
+                <h4>Source &amp; Treatment Integration</h4>
+                <p>Water treatment plant telemetry feeds quality parameters (pH, turbidity,
+                   chlorine) directly into the platform for end-to-end visibility.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div class="step-body">
+                <h4>Transmission Network Sensing</h4>
+                <p>High-pressure trunk mains monitored via smart pressure loggers and acoustic
+                   correlators to detect macro leaks in bulk transmission pipes.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div class="step-body">
+                <h4>Distribution Zone Management</h4>
+                <p>District Metered Areas (DMAs) individually monitored. Night minimum flow
+                   analysis auto-triggers leak investigation workflows.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div class="step-body">
+                <h4>Consumer Demand Analytics</h4>
+                <p>Smart meter data aggregated at zone level feeds demand models. Peak demand
+                   alerts auto-open upstream valves to prevent pressure drops.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">05</div>
+              <div class="step-body">
+                <h4>Reporting &amp; Compliance</h4>
+                <p>Automated regulatory compliance reports, NRW dashboards, and water audit
+                   documentation for municipal authorities.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ GIS pipeline map — backend integration pending ]</span>
+      </div>
+
+      <!-- ── CYBERSECURITY ── -->
+      <div class="tab-content" id="water-cybersecurity">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot amber"></div>
+            <h3>Critical Infrastructure Security</h3>
+          </div>
+          <p>Water distribution is classified as critical national infrastructure. Our
+             security framework addresses SCADA system vulnerabilities, remote access risks,
+             and physical-cyber attack vectors that could compromise public health.</p>
+        </div>
+        <div class="cyber-duo">
+          <div class="cyber-card red">
+            <span class="cc-tag red">Red Team</span>
+            <h3>Penetration Testing</h3>
+            <p>Structured offensive security exercises targeting SCADA HMI interfaces, OT
+               network segmentation, and remote field device access controls.</p>
+            <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
+          </div>
+          <div class="cyber-card blue">
+            <span class="cc-tag blue">Blue Team</span>
+            <h3>SOC Monitoring</h3>
+            <p>24/7 monitoring of OT/IT network traffic with automated anomaly detection,
+               SIEM correlation rules, and incident escalation playbooks.</p>
+            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span></div>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Threat intelligence feed — backend required ]</span>
+      </div>
+
+      <!-- ── HPC APPLICATION ── -->
+      <div class="tab-content" id="water-hpc">
+        <div class="hpc-metrics">
+          <div class="hpc-metric"><div class="hpc-val">128</div><div class="hpc-lbl">CPU Cores</div></div>
+          <div class="hpc-metric"><div class="hpc-val">2TB</div><div class="hpc-lbl">RAM</div></div>
+          <div class="hpc-metric"><div class="hpc-val">1PB</div><div class="hpc-lbl">Storage</div></div>
+          <div class="hpc-metric"><div class="hpc-val">99.9%</div><div class="hpc-lbl">Uptime SLA</div></div>
+        </div>
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot blue"></div>
+            <h3>HPC in Water Systems</h3>
+          </div>
+          <p>Hydraulic network simulation at city scale requires iterative solver algorithms
+             on graphs with hundreds of thousands of nodes. HPC enables real-time digital twin
+             operation, simultaneous scenario modelling for emergency planning, and
+             high-resolution contaminant transport simulations for source tracing.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="fi-icon">🏗️</span>
+            <h4>Digital Twin</h4>
+            <p>Full hydraulic model of the distribution network running in sync with live
+               sensor data for continuous calibration.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">⚗️</span>
+            <h4>Contaminant Modelling</h4>
+            <p>Particle transport simulations to trace contamination sources within minutes
+               of a quality alert.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🔮</span>
+            <h4>Scenario Planning</h4>
+            <p>Monte Carlo simulations for infrastructure failure, drought demand, and
+               population growth planning.</p>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Hydraulic simulation engine — backend required ]</span>
+      </div>
+
+    </div><!-- /subpage-body -->
+  </div><!-- /page-water -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: CYBERSECURITY
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-cyber">
+
+    <div class="page-banner page-banner-cyber" aria-label="Cybersecurity">
+      <div class="banner-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <button class="bc-link" data-page="home">Home</button>
+          <span aria-hidden="true">›</span>
+          <span>Cybersecurity</span>
+        </nav>
+        <h1><em>Cyber</em>security</h1>
+        <span class="banner-badge badge-cyber">Security Operations</span>
+      </div>
+    </div>
+
+    <div class="cyber-page-body">
+
+      <!-- Intro card -->
+      <div class="content-card cyber-intro reveal">
+        <div class="cc-header">
+          <div class="cc-dot amber"></div>
+          <h3>Security Operations Center</h3>
+        </div>
+        <p>Protecting smart infrastructure requires both offensive capability to find
+           weaknesses before adversaries do, and a robust defensive posture to detect and
+           respond in real time. Our SOC covers both domains across all platform systems —
+           Agriculture, Water, and HPC infrastructure.</p>
+      </div>
+
+      <!-- Red / Blue Team Cards -->
+      <div class="team-grid">
+
+        <!--
+          ┌──────────────────────────────────────────────────────────┐
+          │  RED TEAM   (Offensive Security)                         │
+          │  Future developer: integrate CTFd here.                  │
+          │  Set CTF_URL = "https://your-ctfd.com" and embed iframe  │
+          │  or fetch /api/v1/challenges and render challenge cards.  │
+          └──────────────────────────────────────────────────────────┘
+        -->
+        <div class="team-card red-team reveal" id="red-team-card">
+          <span class="tc-label" aria-label="Offensive Security">⚡ Offensive Security</span>
+          <h2>Red Team</h2>
+          <p>Adversarial simulation and vulnerability research targeting platform systems.
+             Structured as CTF (Capture the Flag) exercises for skill development,
+             assessment, and continuous security validation across Agriculture, Water,
+             and HPC infrastructure.</p>
+          <div class="tc-badge">🚩 CTF Platform</div>
+
+          <!-- ╔══════════════════════════════════════════════════╗ -->
+          <!-- ║  DEVELOPER HOOK: Replace this div with CTFd     ║ -->
+          <!-- ║  challenge board or iframe when backend is ready ║ -->
+          <!-- ╚══════════════════════════════════════════════════╝ -->
+          <div id="ctf-placeholder" style="margin-top:1rem;">
+            <span class="placeholder-badge">[ CTF challenge board — backend required ]</span>
+          </div>
+
+          <div style="margin-top:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+            <div class="cyber-note">
+              Scope: <span class="tag-pill">Sensor Firmware</span>
+              <span class="tag-pill">OT Networks</span>
+              <span class="tag-pill">Cloud APIs</span>
+            </div>
+          </div>
+        </div>
+
+        <!--
+          ┌──────────────────────────────────────────────────────────┐
+          │  BLUE TEAM  (Defensive Security)                         │
+          │  Future developer: set GRAFANA_URL env var and replace   │
+          │  the placeholder below with:                             │
+          │  <iframe src="{{ GRAFANA_URL }}" ...></iframe>           │
+          └──────────────────────────────────────────────────────────┘
+        -->
+        <div class="team-card blue-team reveal" id="blue-team-card">
+          <span class="tc-label" aria-label="Defensive Security">🛡️ Defensive Security</span>
+          <h2>Blue Team</h2>
+          <p>Real-time monitoring, log analysis, and incident response operations across
+             the smart infrastructure stack. Dashboards powered by Grafana with custom
+             alerting and correlation rules for OT/IT convergence threats.</p>
+          <div class="tc-badge">📊 Grafana Dashboards</div>
+
+          <!-- ╔══════════════════════════════════════════════════╗ -->
+          <!-- ║  DEVELOPER HOOK: Replace this div with Grafana  ║ -->
+          <!-- ║  dashboard iframe when backend is ready:         ║ -->
+          <!-- ║  <iframe src="GRAFANA_URL" width="100%"          ║ -->
+          <!-- ║          height="400" frameborder="0"></iframe>   ║ -->
+          <!-- ╚══════════════════════════════════════════════════╝ -->
+          <div id="grafana-placeholder" style="margin-top:1rem;">
+            <span class="placeholder-badge">[ Grafana dashboard iframe — backend required ]</span>
+          </div>
+
+          <div style="margin-top:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+            <div class="cyber-note">
+              Covers: <span class="tag-pill">SIEM</span>
+              <span class="tag-pill">IDS/IPS</span>
+              <span class="tag-pill">Incident Response</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /team-grid -->
+
+      <!-- Coverage Section -->
+      <div class="content-card reveal">
+        <div class="cc-header">
+          <div class="cc-dot red"></div>
+          <h3>Coverage Scope</h3>
+        </div>
+        <div class="feature-grid" style="margin-top:1.25rem;">
+          <div class="feature-item">
+            <span class="fi-icon">🌾</span>
+            <h4>Agriculture Systems</h4>
+            <p>Sensor firmware, edge gateways, cloud APIs, and farm management portals.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">💧</span>
+            <h4>Water Systems</h4>
+            <p>SCADA/HMI interfaces, OT network segmentation, and remote telemetry endpoints.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🖥️</span>
+            <h4>HPC Infrastructure</h4>
+            <p>Cluster access controls, job scheduler hardening, and inter-node traffic security.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">☁️</span>
+            <h4>Cloud &amp; APIs</h4>
+            <p>IAM policies, API gateway WAF rules, and data exfiltration detection across
+               cloud workloads.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cyber-page-body -->
+  </div><!-- /page-cyber -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCRIPTS  (order matters: scenes first, then app)
+  ══════════════════════════════════════════════════════════ -->
+  <script src="static/js/scene_home.js"></script>
+  <script src="static/js/scene_water.js"></script>
+  <script src="static/js/scene_cyber.js"></script>
+  <script src="static/js/app.js"></script>
+
+</body>
+</html>
