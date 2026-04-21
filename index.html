@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -272,6 +272,8 @@
              posture covers OT/IT convergence threats, supply chain risks, and data integrity
              for critical food production systems.</p>
         </div>
+
+        <!-- Red / Blue split -->
         <div class="cyber-duo">
           <div class="cyber-card red">
             <span class="cc-tag red">Red Team</span>
@@ -279,16 +281,21 @@
             <p>Adversarial testing of sensor firmware, gateway communications, and cloud API
                endpoints to identify exploitable vulnerabilities before deployment.</p>
             <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
+            <span class="ctf-launch-hint">&#9881; Open CTF Challenges &rarr;</span>
           </div>
-          <div class="cyber-card blue">
+          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.16.79:3000/login', '_blank')" role="link" tabindex="0">
             <span class="cc-tag blue">Blue Team</span>
             <h3>Monitoring &amp; Response</h3>
             <p>Continuous log aggregation, intrusion detection, and incident response
                playbooks aligned to ICS/SCADA threat models.</p>
-            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span></div>
+            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span>
+              <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+                 class="grafana-inline-btn">📊 Open Grafana ↗</a>
+            </div>
           </div>
         </div>
-        <span class="placeholder-badge">[ Detailed security reports accessible post-authentication ]</span>
+
+
       </div>
 
       <!-- ── HPC APPLICATION ── -->
@@ -329,7 +336,23 @@
                14-day advisory forecasts.</p>
           </div>
         </div>
-        <span class="placeholder-badge">[ Live HPC job queue dashboard — backend required ]</span>
+
+        <!-- ── Grafana Launch Panel (HPC Monitor) ── -->
+        <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+           class="grafana-launch" id="agri-hpc-grafana">
+          <div class="gl-left">
+            <div class="gl-icon">📊</div>
+            <div class="gl-info">
+              <h4>Grafana HPC Monitor</h4>
+              <p>Live metrics · Agriculture cluster jobs &amp; node health</p>
+              <code>172.16.16.79:3000</code>
+            </div>
+          </div>
+          <div class="gl-right">
+            <div class="gl-live"><span class="gl-dot"></span>Live</div>
+            <div class="gl-open-label">Click to Open ↗</div>
+          </div>
+        </a>
       </div>
 
     </div><!-- /subpage-body -->
@@ -474,16 +497,21 @@
             <p>Structured offensive security exercises targeting SCADA HMI interfaces, OT
                network segmentation, and remote field device access controls.</p>
             <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
+            <span class="ctf-launch-hint">&#9881; Open CTF Challenges &rarr;</span>
           </div>
-          <div class="cyber-card blue">
+          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.16.79:3000/login', '_blank')" role="link" tabindex="0">
             <span class="cc-tag blue">Blue Team</span>
             <h3>SOC Monitoring</h3>
             <p>24/7 monitoring of OT/IT network traffic with automated anomaly detection,
                SIEM correlation rules, and incident escalation playbooks.</p>
-            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span></div>
+            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span>
+               <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+                  class="grafana-inline-btn">📊 Open Grafana ↗</a>
+             </div>
           </div>
         </div>
-        <span class="placeholder-badge">[ Threat intelligence feed — backend required ]</span>
+
+
       </div>
 
       <!-- ── HPC APPLICATION ── -->
@@ -524,7 +552,23 @@
                population growth planning.</p>
           </div>
         </div>
-        <span class="placeholder-badge">[ Hydraulic simulation engine — backend required ]</span>
+
+        <!-- ── Grafana Launch Panel (HPC Monitor) ── -->
+        <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+           class="grafana-launch" id="water-hpc-grafana">
+          <div class="gl-left">
+            <div class="gl-icon">📊</div>
+            <div class="gl-info">
+              <h4>Grafana HPC Monitor</h4>
+              <p>Live metrics · Water system cluster jobs &amp; node health</p>
+              <code>172.16.16.79:3000</code>
+            </div>
+          </div>
+          <div class="gl-right">
+            <div class="gl-live"><span class="gl-dot"></span>Live</div>
+            <div class="gl-open-label">Click to Open ↗</div>
+          </div>
+        </a>
       </div>
 
     </div><!-- /subpage-body -->
@@ -550,122 +594,67 @@
 
     <div class="cyber-page-body">
 
-      <!-- Intro card -->
-      <div class="content-card cyber-intro reveal">
-        <div class="cc-header">
-          <div class="cc-dot amber"></div>
-          <h3>Security Operations Center</h3>
-        </div>
-        <p>Protecting smart infrastructure requires both offensive capability to find
-           weaknesses before adversaries do, and a robust defensive posture to detect and
-           respond in real time. Our SOC covers both domains across all platform systems —
-           Agriculture, Water, and HPC infrastructure.</p>
-      </div>
-
-      <!-- Red / Blue Team Cards -->
-      <div class="team-grid">
-
-        <!--
-          ┌──────────────────────────────────────────────────────────┐
-          │  RED TEAM   (Offensive Security)                         │
-          │  Future developer: integrate CTFd here.                  │
-          │  Set CTF_URL = "https://your-ctfd.com" and embed iframe  │
-          │  or fetch /api/v1/challenges and render challenge cards.  │
-          └──────────────────────────────────────────────────────────┘
-        -->
-        <div class="team-card red-team reveal" id="red-team-card">
-          <span class="tc-label" aria-label="Offensive Security">⚡ Offensive Security</span>
-          <h2>Red Team</h2>
-          <p>Adversarial simulation and vulnerability research targeting platform systems.
-             Structured as CTF (Capture the Flag) exercises for skill development,
-             assessment, and continuous security validation across Agriculture, Water,
-             and HPC infrastructure.</p>
-          <div class="tc-badge">🚩 CTF Platform</div>
-
-          <!-- ╔══════════════════════════════════════════════════╗ -->
-          <!-- ║  DEVELOPER HOOK: Replace this div with CTFd     ║ -->
-          <!-- ║  challenge board or iframe when backend is ready ║ -->
-          <!-- ╚══════════════════════════════════════════════════╝ -->
-          <div id="ctf-placeholder" style="margin-top:1rem;">
-            <span class="placeholder-badge">[ CTF challenge board — backend required ]</span>
-          </div>
-
-          <div style="margin-top:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
-            <div class="cyber-note">
-              Scope: <span class="tag-pill">Sensor Firmware</span>
-              <span class="tag-pill">OT Networks</span>
-              <span class="tag-pill">Cloud APIs</span>
-            </div>
-          </div>
-        </div>
-
-        <!--
-          ┌──────────────────────────────────────────────────────────┐
-          │  BLUE TEAM  (Defensive Security)                         │
-          │  Future developer: set GRAFANA_URL env var and replace   │
-          │  the placeholder below with:                             │
-          │  <iframe src="{{ GRAFANA_URL }}" ...></iframe>           │
-          └──────────────────────────────────────────────────────────┘
-        -->
-        <div class="team-card blue-team reveal" id="blue-team-card">
-          <span class="tc-label" aria-label="Defensive Security">🛡️ Defensive Security</span>
-          <h2>Blue Team</h2>
-          <p>Real-time monitoring, log analysis, and incident response operations across
-             the smart infrastructure stack. Dashboards powered by Grafana with custom
-             alerting and correlation rules for OT/IT convergence threats.</p>
-          <div class="tc-badge">📊 Grafana Dashboards</div>
-
-          <!-- ╔══════════════════════════════════════════════════╗ -->
-          <!-- ║  DEVELOPER HOOK: Replace this div with Grafana  ║ -->
-          <!-- ║  dashboard iframe when backend is ready:         ║ -->
-          <!-- ║  <iframe src="GRAFANA_URL" width="100%"          ║ -->
-          <!-- ║          height="400" frameborder="0"></iframe>   ║ -->
-          <!-- ╚══════════════════════════════════════════════════╝ -->
-          <div id="grafana-placeholder" style="margin-top:1rem;">
-            <span class="placeholder-badge">[ Grafana dashboard iframe — backend required ]</span>
-          </div>
-
-          <div style="margin-top:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
-            <div class="cyber-note">
-              Covers: <span class="tag-pill">SIEM</span>
-              <span class="tag-pill">IDS/IPS</span>
-              <span class="tag-pill">Incident Response</span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /team-grid -->
-
-      <!-- Coverage Section -->
-      <div class="content-card reveal">
-        <div class="cc-header">
-          <div class="cc-dot red"></div>
-          <h3>Coverage Scope</h3>
-        </div>
-        <div class="feature-grid" style="margin-top:1.25rem;">
-          <div class="feature-item">
-            <span class="fi-icon">🌾</span>
-            <h4>Agriculture Systems</h4>
-            <p>Sensor firmware, edge gateways, cloud APIs, and farm management portals.</p>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon">💧</span>
-            <h4>Water Systems</h4>
-            <p>SCADA/HMI interfaces, OT network segmentation, and remote telemetry endpoints.</p>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon">🖥️</span>
-            <h4>HPC Infrastructure</h4>
-            <p>Cluster access controls, job scheduler hardening, and inter-node traffic security.</p>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon">☁️</span>
-            <h4>Cloud &amp; APIs</h4>
-            <p>IAM policies, API gateway WAF rules, and data exfiltration detection across
-               cloud workloads.</p>
-          </div>
+      <!-- Coverage Scope — click a domain to manage its CTF questions -->
+      <div class="cyber-scope-intro reveal">
+        <div class="csi-icon">&#128737;&#65039;</div>
+        <div>
+          <h2>Coverage Scope</h2>
+          <p>Select a domain below to manage its CTF challenge questions.<br>
+             Admin access is required.</p>
         </div>
       </div>
+
+      <div class="cyber-admin-grid">
+
+        <!-- Agriculture -->
+        <div class="cyber-admin-card agri-admin reveal"
+             id="cyber-admin-agri"
+             role="button" tabindex="0"
+             aria-label="Manage Agriculture CTF"
+             onclick="openAdminAuth('agriculture')"
+             onkeydown="if(event.key==='Enter'||event.key===' '){openAdminAuth('agriculture')}">
+          <div class="cac-glow cac-glow-agri"></div>
+          <div class="cac-icon">&#127806;</div>
+          <div class="cac-body">
+            <h3>Agriculture Systems</h3>
+            <p>Manage CTF challenges for the Smart Agriculture domain — sensor firmware, IoT gateways, and field data APIs.</p>
+            <div class="cac-pills">
+              <span class="cac-pill">MQTT / LoRaWAN</span>
+              <span class="cac-pill">Sensor Firmware</span>
+              <span class="cac-pill">Edge APIs</span>
+            </div>
+          </div>
+          <div class="cac-action">
+            <span class="cac-lock">&#128274;</span>
+            <span class="cac-cta">Manage Questions &#8594;</span>
+          </div>
+        </div>
+
+        <!-- Water -->
+        <div class="cyber-admin-card water-admin reveal"
+             id="cyber-admin-water"
+             role="button" tabindex="0"
+             aria-label="Manage Water CTF"
+             onclick="openAdminAuth('water')"
+             onkeydown="if(event.key==='Enter'||event.key===' '){openAdminAuth('water')}">
+          <div class="cac-glow cac-glow-water"></div>
+          <div class="cac-icon">&#128167;</div>
+          <div class="cac-body">
+            <h3>Water Systems</h3>
+            <p>Manage CTF challenges for the Smart Water domain — SCADA/HMI, Modbus, OT network segmentation.</p>
+            <div class="cac-pills">
+              <span class="cac-pill">SCADA / HMI</span>
+              <span class="cac-pill">Modbus RTU</span>
+              <span class="cac-pill">OT Networks</span>
+            </div>
+          </div>
+          <div class="cac-action">
+            <span class="cac-lock">&#128274;</span>
+            <span class="cac-cta">Manage Questions &#8594;</span>
+          </div>
+        </div>
+
+      </div><!-- /cyber-admin-grid -->
 
     </div><!-- /cyber-page-body -->
   </div><!-- /page-cyber -->
@@ -677,7 +666,301 @@
   <script src="static/js/scene_home.js"></script>
   <script src="static/js/scene_water.js"></script>
   <script src="static/js/scene_cyber.js"></script>
-  <script src="static/js/app.js"></script>
+  <script src="static/js/ctf.js"></script>
+  <script src="static/js/app.js"></script>f.src;
+    }
+    function reloadCTFFrame() {
+      var f = document.getElementById('ctf-frame');
+      if (f && f.src !== 'about:blank') f.src = f.src;
+    }
 
+    /* ── CTF URL loader ── */
+    function loadCTFUrl() {
+      var url = document.getElementById('ctf-url-input').value.trim();
+      if (!url) return;
+      if (!/^https?:\///i.test(url)) url = 'http://' + url;
+      document.getElementById('ctf-frame').src = url;
+      document.getElementById('ctf-open-link').href = url;
+      document.getElementById('ctf-fallback').style.display = 'none';
+    }
+
+    /* ── iframe load error detection ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      var grafanaFrames = [
+        { frame: 'grafana-main-frame', fallback: 'grafana-main-fallback' },
+        { frame: 'agri-grafana-frame', fallback: 'agri-grafana-fallback' },
+        { frame: 'water-grafana-frame', fallback: 'water-grafana-fallback' }
+      ];
+      grafanaFrames.forEach(function(item) {
+        var f = document.getElementById(item.frame);
+        var fb = document.getElementById(item.fallback);
+        if (!f || !fb) return;
+        /* Show fallback after 8s if frame hasn't loaded */
+        var timer = setTimeout(function () { fb.classList.add('visible'); }, 8000);
+        f.addEventListener('load', function () {
+          try {
+            /* If we can access contentDocument, it loaded fine */
+            var d = f.contentDocument || f.contentWindow.document;
+            if (d) clearTimeout(timer);
+          } catch(e) {
+            /* Cross-origin — likely loaded OK in its own origin; clear fallback */
+            clearTimeout(timer);
+          }
+        });
+        f.addEventListener('error', function () {
+          clearTimeout(timer);
+          fb.classList.add('visible');
+        });
+      });
+    });
+  </script>
+  <script>
+    /* ── CTF board init ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      /* Render inline boards (inside Agriculture / Water cybersecurity tabs) */
+      CTF.renderBoard('agriculture', 'ctf-board-agri');
+      CTF.renderBoard('water',       'ctf-board-water');
+
+      /* Pre-render modal boards */
+      CTF.renderBoard('agriculture', 'ctf-modal-board-agriculture');
+      CTF.renderBoard('water',       'ctf-modal-board-water');
+
+      /* Wire ALL Red Team cards to open the modal with the right domain */
+      document.querySelectorAll('.cyber-card.red, #red-team-card').forEach(function(card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A' || e.target.closest('a')) return;
+          /* Detect domain: check which page/tab context the card is in */
+          var domain = 'agriculture'; // default
+          var page = card.closest('.page, [id^="page-"]');
+          if (page) {
+            var pageId = page.id || '';
+            if (pageId.indexOf('water') !== -1) domain = 'water';
+          }
+          /* Also check parent tab context */
+          var tabContent = card.closest('[id$="-cybersecurity"]');
+          if (tabContent && tabContent.id.indexOf('water') !== -1) domain = 'water';
+          openCTFModal(domain);
+        });
+      });
+
+      /* Close modal when clicking outside the modal box */
+      var overlay = document.getElementById('ctf-modal-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) closeCTFModal();
+        });
+      }
+
+      /* Escape key closes modal */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeCTFModal();
+      });
+
+      /* Close button */
+      var closeBtn = document.getElementById('ctf-modal-close-btn');
+      if (closeBtn) closeBtn.addEventListener('click', closeCTFModal);
+      /* Keyboard support: Enter/Space on .ctf-inline-prompt */
+      document.querySelectorAll('.ctf-inline-prompt').forEach(function(el) {
+        el.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            el.click();
+          }
+        });
+      });
+    });
+
+    /* ── Modal API ── */
+    var _ctfActiveDomain = 'agriculture';
+
+    function openCTFModal(domain) {
+      var overlay = document.getElementById('ctf-modal-overlay');
+      if (!overlay) return;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      switchCTFModalTab(domain || _ctfActiveDomain);
+    }
+
+    function closeCTFModal() {
+      var overlay = document.getElementById('ctf-modal-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function switchCTFModalTab(category) {
+      _ctfActiveDomain = category;
+      document.querySelectorAll('.ctf-modal-tab').forEach(function(btn) {
+        var isActive = btn.id === 'ctf-tab-' + category;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      ['agriculture', 'water'].forEach(function(cat) {
+        var el = document.getElementById('ctf-modal-board-' + cat);
+        if (el) el.style.display = (cat === category) ? 'block' : 'none';
+      });
+      /* Always re-render so solved/score state is fresh */
+      CTF.renderBoard(category, 'ctf-modal-board-' + category);
+    }
+
+    /* Cyber page inline domain switcher (legacy inline boards) */
+    function switchCyberCtf(btn, boardId, category) {
+      document.querySelectorAll('.ctf-dt').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('#ctf-board-cyber-agri, #ctf-board-cyber-water').forEach(function(el) {
+        el.style.display = 'none';
+      });
+      var board = document.getElementById(boardId);
+      if (board) board.style.display = 'block';
+      CTF.renderBoard(category, boardId);
+    }
+  </script>
+
+  <script>
+    /* ── Admin Auth Modal ── */
+    const ADMIN_PASS_KEY = 'cdac_admin_pass';
+    const ADMIN_DEFAULT  = 'cdac@admin';
+
+    function _getAdminPass() {
+      return localStorage.getItem(ADMIN_PASS_KEY) || ADMIN_DEFAULT;
+    }
+
+    function openAdminAuth(domain) {
+      var overlay = document.getElementById('admin-auth-overlay');
+      var domainLbl = document.getElementById('adm-domain-label');
+      var targetDom = document.getElementById('adm-target-domain');
+      if (!overlay) return;
+      targetDom.value = domain;
+      domainLbl.textContent = domain === 'agriculture'
+        ? '&#127806; Smart Agriculture — Question Management'
+        : '&#128167; Smart Water — Question Management';
+      document.getElementById('adm-pass-input').value = '';
+      document.getElementById('adm-error').textContent = '';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function() { document.getElementById('adm-pass-input').focus(); }, 100);
+    }
+
+    function closeAdminAuth() {
+      var overlay = document.getElementById('admin-auth-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function doAdminAuth() {
+      var pass   = document.getElementById('adm-pass-input').value;
+      var domain = document.getElementById('adm-target-domain').value;
+      var errEl  = document.getElementById('adm-error');
+      if (pass === _getAdminPass()) {
+        /* Correct password — open admin.html with domain pre-selected */
+        closeAdminAuth();
+        window.open('admin.html?domain=' + domain + '&auth=' + encodeURIComponent(pass), '_blank');
+      } else {
+        errEl.textContent = 'Incorrect password. Try again.';
+        document.getElementById('adm-pass-input').value = '';
+        document.getElementById('adm-pass-input').focus();
+        setTimeout(function() { errEl.textContent = ''; }, 3000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      /* Close admin modal on backdrop click */
+      var admOverlay = document.getElementById('admin-auth-overlay');
+      if (admOverlay) {
+        admOverlay.addEventListener('click', function(e) {
+          if (e.target === admOverlay) closeAdminAuth();
+        });
+      }
+      /* Close on Escape */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeAdminAuth();
+      });
+      /* Close button */
+      var admClose = document.getElementById('adm-close-btn');
+      if (admClose) admClose.addEventListener('click', closeAdminAuth);
+      /* Enter key in password field */
+      var admInp = document.getElementById('adm-pass-input');
+      if (admInp) admInp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doAdminAuth();
+      });
+    });
+  </script>
+
+
+  <!-- ══ CTF CHALLENGE MODAL ══════════════════════════════════════════════ -->
+
+  <!-- ══ ADMIN AUTH MODAL ══════════════════════════════════════════ -->
+  <div id="admin-auth-overlay" role="dialog" aria-modal="true" aria-labelledby="adm-title">
+    <div class="adm-modal">
+
+      <div class="adm-modal-head">
+        <span class="adm-modal-icon">&#128272;</span>
+        <div>
+          <div class="adm-modal-title" id="adm-title">Admin Access</div>
+          <div class="adm-modal-sub" id="adm-domain-label">CTF Question Management</div>
+        </div>
+        <button class="adm-modal-close" id="adm-close-btn" aria-label="Close">&#x2715;</button>
+      </div>
+
+      <div class="adm-modal-body">
+        <label class="adm-label" for="adm-pass-input">Admin Password</label>
+        <input type="password" id="adm-pass-input" class="adm-input"
+               placeholder="Enter admin password" autocomplete="current-password" />
+        <div class="adm-error" id="adm-error"></div>
+      </div>
+
+      <div class="adm-modal-foot">
+        <button class="adm-submit-btn" id="adm-submit-btn" onclick="doAdminAuth()">
+          Unlock &amp; Open Admin Panel &#8594;
+        </button>
+      </div>
+
+      <input type="hidden" id="adm-target-domain" value="agriculture" />
+    </div>
+  </div>
+  <!-- /Admin Auth Modal -->
+
+  <div id="ctf-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ctf-modal-title">
+    <div class="ctf-modal">
+
+      <!-- Header -->
+      <div class="ctf-modal-head">
+        <div class="ctf-modal-title-group">
+          <div class="ctf-modal-icon" aria-hidden="true">&#128681;</div>
+          <div>
+            <div class="ctf-modal-title" id="ctf-modal-title">Red Team &middot; CTF Challenges</div>
+            <div class="ctf-modal-subtitle">Offensive Security Exercises</div>
+          </div>
+        </div>
+        <button class="ctf-modal-close" id="ctf-modal-close-btn" aria-label="Close CTF modal">&#x2715;</button>
+      </div>
+
+      <!-- Domain tabs -->
+      <div class="ctf-modal-tabs" role="tablist" aria-label="Select domain">
+        <button class="ctf-modal-tab active" id="ctf-tab-agriculture" role="tab"
+                aria-selected="true" aria-controls="ctf-modal-board-agriculture"
+                onclick="switchCTFModalTab('agriculture')">
+          &#127806; Agriculture
+        </button>
+        <button class="ctf-modal-tab" id="ctf-tab-water" role="tab"
+                aria-selected="false" aria-controls="ctf-modal-board-water"
+                onclick="switchCTFModalTab('water')">
+          &#128167; Water
+        </button>
+      </div>
+
+      <!-- Challenge Boards -->
+      <div class="ctf-modal-body">
+        <div id="ctf-modal-board-agriculture"  role="tabpanel" aria-labelledby="ctf-tab-agriculture"></div>
+        <div id="ctf-modal-board-water" role="tabpanel" aria-labelledby="ctf-tab-water" style="display:none"></div>
+      </div>
+
+
+
+    </div>
+  </div>
+  <!-- /CTF Modal -->
 </body>
 </html>
