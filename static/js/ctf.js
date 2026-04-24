@@ -2,6 +2,7 @@ window.CTF = (function () {
   'use strict';
 
   const STUDENT_KEY = 'cdac_ctf_student';
+  const SHUFFLE_KEY = 'cdac_ctf_shuffle_seed';
   const SEED = { agriculture: [], water: [] };
 
   function currentStudent() {
@@ -127,7 +128,40 @@ window.CTF = (function () {
     const qs = new URLSearchParams({ category });
     if (student && student.id) qs.set('studentId', student.id);
     const data = await api('/api/challenges?' + qs.toString());
-    return data.challenges || [];
+    return shuffleForBrowser(data.challenges || [], category);
+  }
+
+  function getShuffleSeed(category) {
+    const student = currentStudent();
+    const identity = student && student.id ? `student-${student.id}` : 'anonymous';
+    const key = `${SHUFFLE_KEY}_${identity}_${category}`;
+    let seed = localStorage.getItem(key);
+    if (!seed) {
+      seed = String(Date.now() + Math.floor(Math.random() * 1000000));
+      localStorage.setItem(key, seed);
+    }
+    return Number(seed);
+  }
+
+  function seededRandom(seed) {
+    let value = seed % 2147483647;
+    if (value <= 0) value += 2147483646;
+    return function () {
+      value = value * 16807 % 2147483647;
+      return (value - 1) / 2147483646;
+    };
+  }
+
+  function shuffleForBrowser(items, category) {
+    const list = items.slice();
+    const random = seededRandom(getShuffleSeed(category));
+    for (let i = list.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(random() * (i + 1));
+      const tmp = list[i];
+      list[i] = list[j];
+      list[j] = tmp;
+    }
+    return list;
   }
 
   async function submitFlag(challengeId, userFlag) {
