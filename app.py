@@ -409,6 +409,58 @@ def admin_challenges():
     return jsonify({"ok": True, "questions": data})
 
 
+@app.get("/api/admin/students")
+def admin_students():
+    with db() as conn:
+        rows = conn.execute(
+            """
+            SELECT s.id, s.name, s.email, s.created_at, s.updated_at,
+                   COALESCE(SUM(CASE WHEN c.category = 'agriculture' THEN sol.awarded_points ELSE 0 END), 0) AS agriculture_score,
+                   COALESCE(SUM(CASE WHEN c.category = 'water' THEN sol.awarded_points ELSE 0 END), 0) AS water_score,
+                   SUM(CASE WHEN c.category = 'agriculture' THEN 1 ELSE 0 END) AS agriculture_solved,
+                   SUM(CASE WHEN c.category = 'water' THEN 1 ELSE 0 END) AS water_solved,
+                   COUNT(sol.challenge_id) AS total_solved,
+                   (
+                     SELECT COUNT(*)
+                     FROM submissions sub
+                     WHERE sub.student_id = s.id
+                   ) AS attempts,
+                   (
+                     SELECT MAX(sub.created_at)
+                     FROM submissions sub
+                     WHERE sub.student_id = s.id
+                   ) AS last_activity
+            FROM students s
+            LEFT JOIN solves sol ON sol.student_id = s.id
+            LEFT JOIN challenges c ON c.id = sol.challenge_id
+            GROUP BY s.id
+            ORDER BY (agriculture_score + water_score) DESC,
+                     last_activity DESC,
+                     s.created_at DESC
+            """
+        ).fetchall()
+    students = []
+    for row in rows:
+        students.append(
+            {
+                "id": row["id"],
+                "name": row["name"],
+                "email": row["email"],
+                "createdAt": row["created_at"],
+                "updatedAt": row["updated_at"],
+                "agricultureScore": int(row["agriculture_score"] or 0),
+                "waterScore": int(row["water_score"] or 0),
+                "agricultureSolved": int(row["agriculture_solved"] or 0),
+                "waterSolved": int(row["water_solved"] or 0),
+                "totalSolved": int(row["total_solved"] or 0),
+                "attempts": int(row["attempts"] or 0),
+                "totalScore": int((row["agriculture_score"] or 0) + (row["water_score"] or 0)),
+                "lastActivity": row["last_activity"],
+            }
+        )
+    return jsonify({"ok": True, "students": students})
+
+
 @app.post("/api/admin/challenges")
 def create_challenge():
     payload = request.get_json(silent=True) or {}

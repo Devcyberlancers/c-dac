@@ -206,6 +206,7 @@
     .sc-tab:hover  { color: var(--text2); }
     .sc-tab.active { color: var(--text1); border-bottom-color: var(--green); }
     .sc-tab[data-cat="water"].active { border-bottom-color: var(--teal); }
+    .sc-tab[data-cat="students"].active { border-bottom-color: var(--blue); }
     .sc-tab[data-cat="settings"].active { border-bottom-color: var(--amber); }
 
     .sc-panel       { display: none; }
@@ -538,6 +539,61 @@
     }
     .stat-pill strong { color: var(--text1); }
 
+    .student-card {
+      background    : linear-gradient(135deg, rgba(10,20,32,0.95), rgba(12,16,20,0.98));
+      border        : 1px solid rgba(77,166,255,0.18);
+      border-radius : var(--r-lg);
+      padding       : 1.25rem 1.4rem;
+      margin-bottom : 1rem;
+      display       : grid;
+      grid-template-columns: 1.1fr 1.6fr;
+      gap           : 1rem;
+      align-items   : center;
+    }
+    .student-name {
+      font-weight: 800;
+      color: var(--text1);
+      margin-bottom: 0.25rem;
+    }
+    .student-email,
+    .student-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--text3);
+      overflow-wrap: anywhere;
+    }
+    .student-marks {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+    .student-mark {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 0.75rem;
+    }
+    .student-mark strong {
+      display: block;
+      color: var(--text1);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+    .student-mark span {
+      color: var(--text3);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .student-empty {
+      color: var(--text3);
+      border: 1px dashed var(--border-hi);
+      border-radius: var(--r-lg);
+      padding: 2rem;
+      text-align: center;
+    }
+
     @media (max-width: 640px) {
       .form-grid { grid-template-columns: 1fr; }
       .q-card    { grid-template-columns: 1fr; }
@@ -587,6 +643,9 @@
       </button>
       <button class="sc-tab" data-cat="water" onclick="switchTab('water')">
         💧 Water Distribution
+      </button>
+      <button class="sc-tab" data-cat="students" onclick="switchTab('students')">
+        👥 Students
       </button>
       <button class="sc-tab" data-cat="settings" onclick="switchTab('settings')">
         ⚙️ Settings
@@ -688,6 +747,19 @@
       </div>
       <div class="q-list" id="water-qlist"></div>
 
+    </div>
+
+    <!-- ── Students Panel ── -->
+    <div class="sc-panel" id="panel-students">
+      <div class="section-head">
+        <div>
+          <h2>Enrolled Students</h2>
+          <p>Students are loaded from the local SQLite database on this machine.</p>
+        </div>
+        <button class="hdr-btn" onclick="renderStudents()">Refresh</button>
+      </div>
+      <div class="stats-bar" id="students-stats"></div>
+      <div id="students-list"></div>
     </div>
 
     <!-- ── Settings Panel ── -->
@@ -838,6 +910,7 @@
     document.querySelectorAll('.sc-panel').forEach(p =>
       p.classList.toggle('active', p.id === 'panel-' + cat));
     if (cat === 'agriculture' || cat === 'water') renderList(cat);
+    if (cat === 'students') renderStudents();
   }
 
   /* ── Render list ── */
@@ -875,6 +948,61 @@
           <button class="q-btn del"  onclick="deleteQ('${q.id}','${cat}')">Delete</button>
         </div>
       </div>`).join('');
+  }
+
+  async function renderStudents() {
+    const statsEl = document.getElementById('students-stats');
+    const listEl = document.getElementById('students-list');
+    statsEl.innerHTML = '<div class="stat-pill">Loading students...</div>';
+    listEl.innerHTML = '';
+    try {
+      const data = await api('/api/admin/students');
+      const students = data.students || [];
+      const totalScore = students.reduce((s, st) => s + st.totalScore, 0);
+      const totalSolved = students.reduce((s, st) => s + st.totalSolved, 0);
+      statsEl.innerHTML = `
+        <div class="stat-pill"><strong>${students.length}</strong> enrolled</div>
+        <div class="stat-pill"><strong>${totalSolved}</strong> solves</div>
+        <div class="stat-pill"><strong>${totalScore}</strong> total marks</div>`;
+      if (students.length === 0) {
+        listEl.innerHTML = '<div class="student-empty">No students enrolled yet.</div>';
+        return;
+      }
+      listEl.innerHTML = students.map(st => `
+        <div class="student-card">
+          <div>
+            <div class="student-name">${escapeHtml(st.name)}</div>
+            <div class="student-email">${escapeHtml(st.email)}</div>
+            <div class="student-meta">Joined: ${formatDate(st.createdAt)} · Last activity: ${formatDate(st.lastActivity || st.updatedAt)}</div>
+          </div>
+          <div class="student-marks">
+            <div class="student-mark"><strong>${st.agricultureScore}</strong><span>Agriculture</span></div>
+            <div class="student-mark"><strong>${st.waterScore}</strong><span>Water</span></div>
+            <div class="student-mark"><strong>${st.totalScore}</strong><span>Total Marks</span></div>
+            <div class="student-mark"><strong>${st.attempts}</strong><span>Attempts</span></div>
+          </div>
+        </div>`).join('');
+    } catch (e) {
+      statsEl.innerHTML = '';
+      listEl.innerHTML = `<div class="student-empty">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[ch]));
+  }
+
+  function formatDate(value) {
+    if (!value) return 'No activity';
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleString();
   }
 
   /* ── Add question ── */
@@ -1054,6 +1182,7 @@
   function initAdmin(domain) {
     renderList('agriculture');
     renderList('water');
+    renderStudents();
     /* If a domain was passed from URL, switch to that tab */
     var target = domain || 'agriculture';
     if (target === 'water') switchTab('water');
