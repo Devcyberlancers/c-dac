@@ -1,0 +1,248 @@
+.nav-logo-img,
+.hdr-logo-img {
+  object-fit: contain;
+  display: block;
+  background: rgba(255,255,255,0.95);
+  border-radius: 6px;
+}
+
+.nav-logo-img {
+  width: 86px;
+  height: 34px;
+  padding: 3px 6px;
+}
+
+.hdr-logo-img {
+  width: 82px;
+  height: 32px;
+  padding: 3px 6px;
+}
+
+.ctf-entry-card,
+.ctf-leaderboard,
+.ctf-student-strip {
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(13,17,23,0.82);
+  border-radius: 10px;
+}
+
+.ctf-entry-card {
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.ctf-entry-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.ctf-entry-card p {
+  color: var(--text-2, #9ab887);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.ctf-start-btn,
+.ctf-change-student,
+.ctf-student-submit {
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--teal-600, #0f6e56), var(--green-500, #3e8a2c));
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 16px;
+}
+
+.ctf-student-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.8rem;
+  color: var(--text-2, #9ab887);
+}
+
+.ctf-change-student {
+  padding: 7px 12px;
+  background: var(--surface-2, #161c24);
+  border: 1px solid var(--border-hi, rgba(255,255,255,0.14));
+  color: var(--text-1, #e8f0e0);
+}
+
+.ctf-leaderboard {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ctf-lb-head,
+.ctf-lb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ctf-lb-head {
+  margin-bottom: 0.75rem;
+  color: var(--text-2, #9ab887);
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ctf-lb-head strong {
+  color: var(--green-300, #90d86e);
+  font-size: 0.8rem;
+}
+
+.ctf-lb-rows {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ctf-lb-row {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+}
+
+.ctf-lb-row.current {
+  border-color: rgba(88,221,182,0.45);
+  background: rgba(26,158,120,0.14);
+}
+
+.ctf-lb-rank {
+  color: var(--amber-400, #eea832);
+  font-family: 'IBM Plex Mono', monospace;
+  min-width: 34px;
+}
+
+.ctf-lb-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ctf-lb-score {
+  color: var(--green-300, #90d86e);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+}
+
+.ctf-lb-empty {
+  color: var(--text-3, #546e45);
+  font-size: 0.86rem;
+}
+
+.ctf-lb-gap {
+  height: 1px;
+  background: var(--border-hi, rgba(255,255,255,0.14));
+  margin: 0.2rem 0;
+}
+
+.ctf-award-note {
+  color: var(--amber-200, #fce099);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  margin-left: 0.5rem;
+}
+
+.ctf-loading {
+  padding: 1rem;
+  color: var(--text-2, #9ab887);
+}
+
+#ctf-student-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(10px);
+}
+
+#ctf-student-overlay.open {
+  display: flex;
+}
+
+.ctf-student-modal {
+  width: min(420px, 100%);
+  position: relative;
+  background: linear-gradient(135deg, rgba(18,28,18,0.98), rgba(12,16,20,0.99));
+  border: 1px solid rgba(93,184,62,0.28);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+}
+
+.ctf-student-close {
+  position: absolute;
+  right: 1rem;
+  top: 0.8rem;
+  border: none;
+  background: transparent;
+  color: var(--text-2, #9ab887);
+  font-size: 1.4rem;
+}
+
+.ctf-student-kicker {
+  color: var(--teal-300, #58ddb6);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.5rem;
+}
+
+.ctf-student-modal h2 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.ctf-student-modal p {
+  color: var(--text-2, #9ab887);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+}
+
+.ctf-student-modal label {
+  display: block;
+  color: var(--text-2, #9ab887);
+  font-size: 0.78rem;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.ctf-student-modal input {
+  width: 100%;
+  border: 1px solid var(--border-hi, rgba(255,255,255,0.14));
+  background: rgba(255,255,255,0.05);
+  color: var(--text-1, #e8f0e0);
+  border-radius: 6px;
+  padding: 11px 12px;
+  outline: none;
+}
+
+.ctf-student-modal input:focus {
+  border-color: var(--green-400, #5db83e);
+  box-shadow: 0 0 0 3px rgba(93,184,62,0.15);
+}
+
+.ctf-student-error {
+  min-height: 1.2rem;
+  color: var(--red-400, #f24b3a);
+  font-size: 0.8rem;
+  margin: 0.7rem 0;
+}
+
+.ctf-student-submit {
+  width: 100%;
+}

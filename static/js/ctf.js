@@ -1,231 +1,260 @@
-/**
- * ctf.js — CDAC Smart Systems CTF Engine
- * All data stored in localStorage (no backend needed).
- * Keys:
- *   cdac_ctf_data     — question bank (admin-managed)
- *   cdac_ctf_progress — user submissions & solved list
- */
 window.CTF = (function () {
   'use strict';
 
-  const DATA_KEY     = 'cdac_ctf_data';
-  const PROGRESS_KEY = 'cdac_ctf_progress';
+  const STUDENT_KEY = 'cdac_ctf_student';
+  const SEED = { agriculture: [], water: [] };
 
-  /* ─── Default seed questions ─────────────────────────────── */
-  const SEED = {
-    agriculture: [
-      {
-        id: 'agri_001',
-        title: 'MQTT Eavesdropping',
-        description:
-          'An attacker has breached the LoRaWAN gateway and is intercepting ' +
-          'MQTT telemetry messages from soil sensors. Connect to the vulnerable ' +
-          'machine, capture the MQTT traffic on topic <code>farm/sensors/#</code>, ' +
-          'and extract the flag hidden inside the sensor payload.',
-        points: 100,
-        flag: 'FLAG{mqtt_m3ss4ge_interc3pted}',
-        hint: 'Check the <code>moisture_level</code> field in the JSON payload — ' +
-              'its value is base64-encoded and contains a surprise.'
-      },
-      {
-        id: 'agri_002',
-        title: 'Sensor Firmware Backdoor',
-        description:
-          'A malicious firmware update was pushed to field IoT nodes. ' +
-          'Download the firmware binary from the vulnerable machine, ' +
-          'reverse-engineer it, and recover the hardcoded backdoor credential ' +
-          'the attacker left behind.',
-        points: 200,
-        flag: 'FLAG{backd00r_cr3d_f0und}',
-        hint: 'Run <code>strings firmware.bin | grep -i "pass\\|key\\|FLAG"</code> ' +
-              'and look for base64-encoded strings.'
-      },
-      {
-        id: 'agri_003',
-        title: 'API Command Injection',
-        description:
-          'The farm management REST API has an unvalidated input field. ' +
-          'Exploit the <code>/api/v1/field-report?field_id=</code> endpoint ' +
-          'on the vulnerable machine to achieve remote code execution ' +
-          'and read <code>/root/flag.txt</code>.',
-        points: 150,
-        flag: 'FLAG{4pi_inj3ct10n_r00t}',
-        hint: 'Try appending <code>; cat /root/flag.txt</code> to the field_id value.'
-      }
-    ],
-    water: [
-      {
-        id: 'water_001',
-        title: 'SCADA HMI Auth Bypass',
-        description:
-          'The water treatment SCADA HMI uses a legacy session management ' +
-          'mechanism. Find the authentication bypass on the vulnerable machine, ' +
-          'log in as an operator without valid credentials, and retrieve the ' +
-          'session token displayed on the operator dashboard.',
-        points: 100,
-        flag: 'FLAG{sc4d4_4uth_bypassed}',
-        hint: 'Look at the Set-Cookie header — the session token is predictable. ' +
-              'Also try default credentials: admin/admin.'
-      },
-      {
-        id: 'water_002',
-        title: 'Modbus Pressure Valve Manipulation',
-        description:
-          'An attacker is sending malformed Modbus RTU packets to override ' +
-          'pressure valve setpoints. Open Wireshark on the vulnerable machine, ' +
-          'capture the OT network traffic, and decode the flag encoded in ' +
-          'the malicious Function Code 0x06 frame.',
-        points: 200,
-        flag: 'FLAG{modbUs_v4lv3_0wned}',
-        hint: 'Filter by <code>modbus</code> in Wireshark. ' +
-              'The Register Value in the write frame is ASCII hex.'
-      },
-      {
-        id: 'water_003',
-        title: 'OT Network Lateral Movement',
-        description:
-          'An attacker breached the IT segment and moved laterally into the OT ' +
-          'network through a misconfigured jump host. Analyze the audit logs ' +
-          'on the vulnerable machine and identify the pivot IP, the protocol ' +
-          'used, and reconstruct the flag from the log timestamps.',
-        points: 150,
-        flag: 'FLAG{0T_l4ter4l_m0v3}',
-        hint: 'Check <code>/var/log/auth.log</code> for SSH login events ' +
-              'originating from 192.168.1.x addresses after 02:00 UTC.'
-      }
-    ]
-  };
-
-  /* ─── Data helpers ───────────────────────────────────────── */
-  function getData() {
+  function currentStudent() {
     try {
-      const raw = localStorage.getItem(DATA_KEY);
-      return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(SEED));
-    } catch (e) { return JSON.parse(JSON.stringify(SEED)); }
+      const raw = localStorage.getItem(STUDENT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
   }
 
-  function setData(d) {
-    localStorage.setItem(DATA_KEY, JSON.stringify(d));
+  function saveStudent(student) {
+    localStorage.setItem(STUDENT_KEY, JSON.stringify(student));
   }
 
-  function getProgress() {
-    try {
-      const raw = localStorage.getItem(PROGRESS_KEY);
-      return raw ? JSON.parse(raw) : { solved: [], attempts: {} };
-    } catch (e) { return { solved: [], attempts: {} }; }
+  async function api(path, options) {
+    const res = await fetch(path, {
+      headers: { 'Content-Type': 'application/json' },
+      ...(options || {})
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.msg || 'Request failed.');
+    }
+    return data;
   }
 
-  function saveProgress(p) {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  async function registerStudent(name, email) {
+    const data = await api('/api/students', {
+      method: 'POST',
+      body: JSON.stringify({ name, email })
+    });
+    saveStudent(data.student);
+    return data.student;
   }
 
-  /* ─── Scoring ────────────────────────────────────────────── */
-  function getScore(category) {
-    const data     = getData();
-    const progress = getProgress();
-    return (data[category] || [])
-      .filter(c => progress.solved.includes(c.id))
-      .reduce((s, c) => s + c.points, 0);
+  function ensureStudent(category, afterReady) {
+    const student = currentStudent();
+    if (student && student.id) {
+      afterReady(student);
+      return;
+    }
+    openStudentModal(category, afterReady);
   }
 
-  function getTotalPoints(category) {
-    return (getData()[category] || []).reduce((s, c) => s + c.points, 0);
-  }
-
-  /* ─── Flag submission ────────────────────────────────────── */
-  function submitFlag(challengeId, userFlag, category) {
-    const data       = getData();
-    const challenges = data[category] || [];
-    const ch         = challenges.find(c => c.id === challengeId);
-    if (!ch) return { ok: false, msg: 'Challenge not found.' };
-
-    const progress = getProgress();
-
-    if (progress.solved.includes(challengeId)) {
-      return { ok: true, already: true, msg: 'Already solved!' };
+  function openStudentModal(category, afterReady) {
+    let overlay = document.getElementById('ctf-student-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'ctf-student-overlay';
+      overlay.innerHTML = `
+        <div class="ctf-student-modal" role="dialog" aria-modal="true" aria-labelledby="ctf-student-title">
+          <button class="ctf-student-close" type="button" aria-label="Close">&times;</button>
+          <div class="ctf-student-kicker">Student Entry</div>
+          <h2 id="ctf-student-title">Join the CTF</h2>
+          <p>Enter your name and email once. Your score and rank will continue from the same email.</p>
+          <label for="ctf-student-name">Name</label>
+          <input id="ctf-student-name" type="text" autocomplete="name" placeholder="Student name" />
+          <label for="ctf-student-email">Email</label>
+          <input id="ctf-student-email" type="email" autocomplete="email" placeholder="name@example.com" />
+          <div class="ctf-student-error" id="ctf-student-error"></div>
+          <button class="ctf-student-submit" type="button">Start CTF</button>
+        </div>`;
+      document.body.appendChild(overlay);
     }
 
-    progress.attempts[challengeId] = (progress.attempts[challengeId] || 0) + 1;
-
-    const correct = userFlag.trim() === ch.flag.trim();
-    if (correct) {
-      progress.solved.push(challengeId);
-      saveProgress(progress);
-      return { ok: true, correct: true, points: ch.points,
-               msg: `Correct! +${ch.points} pts` };
+    function close() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
     }
 
-    saveProgress(progress);
-    const att = progress.attempts[challengeId];
-    return { ok: false, correct: false,
-             msg: `Wrong flag. Attempt #${att}` };
+    const closeBtn = overlay.querySelector('.ctf-student-close');
+    const submitBtn = overlay.querySelector('.ctf-student-submit');
+    const nameInp = overlay.querySelector('#ctf-student-name');
+    const emailInp = overlay.querySelector('#ctf-student-email');
+    const err = overlay.querySelector('#ctf-student-error');
+    closeBtn.onclick = close;
+    overlay.onclick = (e) => { if (e.target === overlay) close(); };
+    submitBtn.onclick = async () => {
+      err.textContent = '';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Starting...';
+      try {
+        const student = await registerStudent(nameInp.value.trim(), emailInp.value.trim());
+        close();
+        afterReady(student, category);
+      } catch (e) {
+        err.textContent = e.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Start CTF';
+      }
+    };
+    [nameInp, emailInp].forEach((inp) => {
+      inp.onkeydown = (e) => {
+        if (e.key === 'Enter') submitBtn.click();
+      };
+    });
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => nameInp.focus(), 80);
   }
 
-  /* ─── Render ─────────────────────────────────────────────── */
-  function renderBoard(category, containerId) {
+  async function getData() {
+    const data = await api('/api/admin/challenges');
+    return data.questions || { agriculture: [], water: [] };
+  }
+
+  async function setData(d) {
+    return d;
+  }
+
+  async function getProgress() {
+    return { solved: [], attempts: {} };
+  }
+
+  async function saveProgress() {
+    await api('/api/admin/reset-progress', { method: 'POST', body: '{}' });
+  }
+
+  async function getChallenges(category) {
+    const student = currentStudent();
+    const qs = new URLSearchParams({ category });
+    if (student && student.id) qs.set('studentId', student.id);
+    const data = await api('/api/challenges?' + qs.toString());
+    return data.challenges || [];
+  }
+
+  async function submitFlag(challengeId, userFlag) {
+    const student = currentStudent();
+    if (!student || !student.id) throw new Error('Please enter your student details first.');
+    return api('/api/submissions', {
+      method: 'POST',
+      body: JSON.stringify({ studentId: student.id, challengeId, answer: userFlag })
+    });
+  }
+
+  async function recordHint(challengeId) {
+    const student = currentStudent();
+    if (!student || !student.id) throw new Error('Please enter your student details first.');
+    return api('/api/hints', {
+      method: 'POST',
+      body: JSON.stringify({ studentId: student.id, challengeId })
+    });
+  }
+
+  async function getLeaderboard(category) {
+    const student = currentStudent();
+    const qs = new URLSearchParams({ category });
+    if (student && student.id) qs.set('studentId', student.id);
+    return api('/api/leaderboard?' + qs.toString());
+  }
+
+  async function renderBoard(category, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const data       = getData();
-    const progress   = getProgress();
-    const challenges = data[category] || [];
-
-    if (challenges.length === 0) {
+    const student = currentStudent();
+    if (!student || !student.id) {
       container.innerHTML = `
-        <div class="ctf-empty">
-          <span class="ctf-empty-icon">🚩</span>
-          <p>No challenges configured yet.<br>
-             An administrator needs to add challenges via the
-             <a href="admin.html" target="_blank">Admin Panel</a>.</p>
+        <div class="ctf-entry-card">
+          <h3>Student details required</h3>
+          <p>Enter your name and email to start this CTF and appear on the ${labelFor(category)} leaderboard.</p>
+          <button class="ctf-start-btn" type="button">Start ${labelFor(category)} CTF</button>
         </div>`;
+      const btn = container.querySelector('.ctf-start-btn');
+      if (btn) btn.addEventListener('click', () => ensureStudent(category, () => renderBoard(category, containerId)));
       return;
     }
 
-    const score       = getScore(category);
-    const total       = getTotalPoints(category);
-    const solvedCount = challenges.filter(c => progress.solved.includes(c.id)).length;
-    const pct         = total ? Math.round((score / total) * 100) : 0;
+    container.innerHTML = '<div class="ctf-loading">Loading CTF...</div>';
+    try {
+      const challenges = await getChallenges(category);
+      const board = await getLeaderboard(category);
+      if (challenges.length === 0) {
+        container.innerHTML = `
+          <div class="ctf-empty">
+            <span class="ctf-empty-icon">!</span>
+            <p>No challenges configured yet.<br>
+               An administrator needs to add challenges via the
+               <a href="admin.html" target="_blank">Admin Panel</a>.</p>
+          </div>`;
+        return;
+      }
 
-    container.innerHTML = `
-      <div class="ctf-scorebar">
-        <div class="ctf-sb-left">
-          <span class="ctf-sb-score">${score}</span>
-          <span class="ctf-sb-total">/ ${total} pts</span>
-        </div>
-        <div class="ctf-sb-track">
-          <div class="ctf-sb-fill" style="width:${pct}%"></div>
-        </div>
-        <div class="ctf-sb-solved">${solvedCount} / ${challenges.length} solved</div>
-      </div>
-      <div class="ctf-challenges">
-        ${challenges.map(ch => renderChallenge(ch, progress)).join('')}
-      </div>`;
+      const score = board.current ? board.current.score : 0;
+      const solvedCount = challenges.filter(c => c.solved).length;
+      const total = challenges.reduce((s, c) => s + c.points, 0);
+      const pct = total ? Math.round((score / total) * 100) : 0;
 
-    /* Bind submit buttons */
+      container.innerHTML = `
+        ${renderStudentStrip(student)}
+        ${renderLeaderboard(board)}
+        <div class="ctf-scorebar">
+          <div class="ctf-sb-left">
+            <span class="ctf-sb-score">${score}</span>
+            <span class="ctf-sb-total">/ ${total} pts</span>
+          </div>
+          <div class="ctf-sb-track">
+            <div class="ctf-sb-fill" style="width:${pct}%"></div>
+          </div>
+          <div class="ctf-sb-solved">${solvedCount} / ${challenges.length} solved</div>
+        </div>
+        <div class="ctf-challenges">
+          ${challenges.map(renderChallenge).join('')}
+        </div>`;
+
+      bindBoard(container, category, containerId);
+    } catch (e) {
+      container.innerHTML = `<div class="ctf-empty"><p>${escapeHtml(e.message)}</p></div>`;
+    }
+  }
+
+  function bindBoard(container, category, containerId) {
     container.querySelectorAll('.ctf-submit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id  = btn.dataset.id;
-        const cat = btn.dataset.cat;
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
         const inp = container.querySelector(`#ctf-inp-${id}`);
         if (!inp || !inp.value.trim()) {
-          shakeInput(inp); return;
+          shakeInput(inp);
+          return;
         }
-        handleSubmit(id, inp.value, cat, containerId, category);
+        await handleSubmit(id, inp.value, category, containerId);
       });
     });
 
-    /* Hint toggles */
     container.querySelectorAll('.ctf-hint-toggle').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const hintEl = container.querySelector(`#ctf-hint-${btn.dataset.id}`);
         if (!hintEl) return;
         const hidden = hintEl.style.display === 'none' || !hintEl.style.display;
-        hintEl.style.display = hidden ? 'block' : 'none';
-        btn.textContent = hidden ? '🙈 Hide Hint' : '💡 Show Hint';
+        if (hidden) {
+          btn.disabled = true;
+          try {
+            const result = await recordHint(btn.dataset.id);
+            hintEl.innerHTML = result.hint || 'No hint available.';
+            hintEl.style.display = 'block';
+            const ptsEl = container.querySelector(`#ctf-award-${btn.dataset.id}`);
+            if (ptsEl) ptsEl.textContent = `${result.currentAward} pts available`;
+            btn.textContent = 'Hide Hint';
+          } catch (e) {
+            hintEl.textContent = e.message;
+            hintEl.style.display = 'block';
+          } finally {
+            btn.disabled = false;
+          }
+        } else {
+          hintEl.style.display = 'none';
+          btn.textContent = 'Show Hint';
+        }
       });
     });
 
-    /* Enter key */
     container.querySelectorAll('.ctf-flag-input').forEach(inp => {
       inp.addEventListener('keydown', e => {
         if (e.key !== 'Enter') return;
@@ -235,9 +264,43 @@ window.CTF = (function () {
     });
   }
 
-  function renderChallenge(ch, progress) {
-    const solved   = progress.solved.includes(ch.id);
-    const attempts = progress.attempts[ch.id] || 0;
+  function renderStudentStrip(student) {
+    return `
+      <div class="ctf-student-strip">
+        <span>Playing as <strong>${escapeHtml(student.name)}</strong></span>
+        <button type="button" class="ctf-change-student" onclick="localStorage.removeItem('${STUDENT_KEY}'); location.reload();">Change</button>
+      </div>`;
+  }
+
+  function renderLeaderboard(board) {
+    const top = board.top || [];
+    const current = board.current;
+    const showCurrent = current && !top.some(row => row.studentId === current.studentId);
+    return `
+      <div class="ctf-leaderboard">
+        <div class="ctf-lb-head">
+          <span>Leaderboard</span>
+          ${current ? `<strong>Your rank: #${current.rank}</strong>` : '<strong>No rank yet</strong>'}
+        </div>
+        <div class="ctf-lb-rows">
+          ${top.length ? top.map(renderRankRow).join('') : '<div class="ctf-lb-empty">No scores yet.</div>'}
+          ${showCurrent ? '<div class="ctf-lb-gap"></div>' + renderRankRow(current, true) : ''}
+        </div>
+      </div>`;
+  }
+
+  function renderRankRow(row, current) {
+    return `
+      <div class="ctf-lb-row ${current ? 'current' : ''}">
+        <span class="ctf-lb-rank">#${row.rank}</span>
+        <span class="ctf-lb-name">${escapeHtml(row.name)}</span>
+        <span class="ctf-lb-score">${row.score} pts</span>
+      </div>`;
+  }
+
+  function renderChallenge(ch) {
+    const solved = !!ch.solved;
+    const attempts = ch.attempts || 0;
     return `
       <div class="ctf-card ${solved ? 'ctf-card-solved' : ''}" id="ctf-card-${ch.id}">
         <div class="ctf-card-head">
@@ -245,25 +308,24 @@ window.CTF = (function () {
             <span class="ctf-card-title">${ch.title}</span>
             <span class="ctf-card-pts">${ch.points} pts</span>
           </div>
-          ${solved ? '<span class="ctf-solved-badge">✓ SOLVED</span>' : ''}
+          ${solved ? '<span class="ctf-solved-badge">SOLVED</span>' : ''}
         </div>
         <p class="ctf-card-desc">${ch.description}</p>
         <div class="ctf-card-foot">
-          ${ch.hint ? `
+          ${ch.hasHint ? `
           <div class="ctf-hint-wrap">
-            <button class="ctf-hint-toggle" data-id="${ch.id}">💡 Show Hint</button>
-            <p class="ctf-hint-text" id="ctf-hint-${ch.id}" style="display:none">${ch.hint}</p>
+            <button class="ctf-hint-toggle" data-id="${ch.id}" ${solved ? 'disabled' : ''}>Show Hint</button>
+            <span class="ctf-award-note" id="ctf-award-${ch.id}">${solved ? `${ch.awardedPoints} pts earned` : `${ch.currentAward} pts available`}</span>
+            <p class="ctf-hint-text" id="ctf-hint-${ch.id}" style="display:none"></p>
           </div>` : ''}
           ${solved
-            ? `<div class="ctf-solved-banner">🚩 Flag accepted — challenge complete!</div>`
+            ? `<div class="ctf-solved-banner">Flag accepted - challenge complete!</div>`
             : `<div class="ctf-flag-row">
                  <input type="text" class="ctf-flag-input" id="ctf-inp-${ch.id}"
                         data-id="${ch.id}"
                         placeholder="Enter flag: FLAG{...}"
                         spellcheck="false" autocomplete="off" />
-                 <button class="ctf-submit-btn" data-id="${ch.id}" data-cat="${ch.category || ch.id.split('_')[0]}">
-                   Submit
-                 </button>
+                 <button class="ctf-submit-btn" data-id="${ch.id}">Submit</button>
                </div>
                ${attempts > 0 ? `<span class="ctf-att-count">${attempts} attempt${attempts > 1 ? 's' : ''}</span>` : ''}
                <div class="ctf-result-msg" id="ctf-res-${ch.id}"></div>`
@@ -272,25 +334,55 @@ window.CTF = (function () {
       </div>`;
   }
 
-  function handleSubmit(id, flagVal, cat, containerId, category) {
-    const result = submitFlag(id, flagVal, cat);
-    const resEl  = document.getElementById(`ctf-res-${id}`);
-    if (resEl) {
-      resEl.className = 'ctf-result-msg ' + (result.correct || result.already ? 'ctf-ok' : 'ctf-err');
-      resEl.textContent = result.msg;
+  async function handleSubmit(id, flagVal, category, containerId) {
+    const resEl = document.getElementById(`ctf-res-${id}`);
+    try {
+      const result = await submitFlag(id, flagVal);
+      if (resEl) {
+        resEl.className = 'ctf-result-msg ' + (result.correct || result.already ? 'ctf-ok' : 'ctf-err');
+        resEl.textContent = result.msg;
+      }
+      if (result.correct) {
+        setTimeout(() => renderBoard(category, containerId), 900);
+      }
+    } catch (e) {
+      if (resEl) {
+        resEl.className = 'ctf-result-msg ctf-err';
+        resEl.textContent = e.message;
+      }
     }
-    if (result.correct) {
-      setTimeout(() => renderBoard(category, containerId), 900);
-    }
+  }
+
+  function labelFor(category) {
+    return category === 'water' ? 'Water' : 'Agriculture';
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (ch) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[ch]));
   }
 
   function shakeInput(inp) {
     if (!inp) return;
     inp.style.animation = 'none';
-    inp.offsetHeight; // reflow
+    inp.offsetHeight;
     inp.style.animation = 'ctf-shake 0.35s ease';
   }
 
-  /* ─── Public API ─────────────────────────────────────────── */
-  return { renderBoard, getData, setData, getProgress, saveProgress, SEED };
+  return {
+    renderBoard,
+    getData,
+    setData,
+    getProgress,
+    saveProgress,
+    registerStudent,
+    currentStudent,
+    ensureStudent,
+    SEED
+  };
 })();

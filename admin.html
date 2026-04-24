@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/ctf-db.css">
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -568,8 +569,8 @@
 
   <header>
     <div class="hdr-brand">
-      <div class="hdr-dot"></div>
-      CDAC · CTF Admin
+      <img class="hdr-logo-img" src="static/images/cdac-logo.png" alt="CDAC logo">
+      <span>CDAC · CTF Admin</span>
     </div>
     <div class="hdr-actions">
       <a href="index.html" class="hdr-btn">← Back to Site</a>
@@ -790,6 +791,16 @@
   const PASS_KEY = 'cdac_admin_pass';
   const DEFAULT_PASS = 'cdac@admin';
 
+  async function api(path, options) {
+    const res = await fetch(path, {
+      headers: { 'Content-Type': 'application/json' },
+      ...(options || {})
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.ok === false) throw new Error(data.msg || 'Request failed.');
+    return data;
+  }
+
   function getStoredPass() {
     return localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
   }
@@ -830,8 +841,8 @@
   }
 
   /* ── Render list ── */
-  function renderList(cat) {
-    const data = CTF.getData();
+  async function renderList(cat) {
+    const data = await CTF.getData();
     const questions = data[cat] || [];
     const listEl = document.getElementById(cat + '-qlist');
     const statsEl = document.getElementById(cat + '-stats');
@@ -867,7 +878,7 @@
   }
 
   /* ── Add question ── */
-  function addQuestion(cat) {
+  async function addQuestion(cat) {
     const title  = document.getElementById(cat + '-title').value.trim();
     const points = parseInt(document.getElementById(cat + '-points').value) || 0;
     const desc   = document.getElementById(cat + '-desc').value.trim();
@@ -881,17 +892,21 @@
       return;
     }
 
-    const data = CTF.getData();
-    if (!data[cat]) data[cat] = [];
-
-    const id = cat + '_' + Date.now();
-    data[cat].push({ id, title, description: desc, points, flag, hint, category: cat });
-    CTF.setData(data);
+    try {
+      await api('/api/admin/challenges', {
+        method: 'POST',
+        body: JSON.stringify({ category: cat, title, description: desc, points, flag, hint })
+      });
+    } catch (e) {
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = e.message;
+      return;
+    }
 
     msgEl.className = 'form-msg ok';
     msgEl.textContent = '✓ Challenge added!';
     clearForm(cat);
-    renderList(cat);
+    await renderList(cat);
     toast('Challenge added successfully', 'ok');
     setTimeout(() => msgEl.textContent = '', 3000);
   }
@@ -904,18 +919,20 @@
   }
 
   /* ── Delete ── */
-  function deleteQ(id, cat) {
+  async function deleteQ(id, cat) {
     if (!confirm('Delete this challenge? This cannot be undone.')) return;
-    const data = CTF.getData();
-    data[cat] = (data[cat] || []).filter(q => q.id !== id);
-    CTF.setData(data);
-    renderList(cat);
-    toast('Challenge deleted', 'err');
+    try {
+      await api('/api/admin/challenges/' + encodeURIComponent(id), { method: 'DELETE' });
+      await renderList(cat);
+      toast('Challenge deleted', 'err');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
   /* ── Edit modal ── */
-  function openEdit(id, cat) {
-    const data = CTF.getData();
+  async function openEdit(id, cat) {
+    const data = await CTF.getData();
     const q    = (data[cat] || []).find(c => c.id === id);
     if (!q) return;
     document.getElementById('edit-id').value    = id;
@@ -932,7 +949,7 @@
     document.getElementById('edit-modal').classList.remove('open');
   }
 
-  function saveEdit() {
+  async function saveEdit() {
     const id    = document.getElementById('edit-id').value;
     const cat   = document.getElementById('edit-cat').value;
     const title = document.getElementById('edit-title').value.trim();
@@ -945,14 +962,17 @@
       toast('Please fill all required fields', 'err'); return;
     }
 
-    const data = CTF.getData();
-    const idx  = (data[cat] || []).findIndex(c => c.id === id);
-    if (idx === -1) { toast('Challenge not found', 'err'); return; }
-    data[cat][idx] = { id, title, description: desc, points: pts, flag, hint, category: cat };
-    CTF.setData(data);
-    closeModal();
-    renderList(cat);
-    toast('Challenge updated', 'ok');
+    try {
+      await api('/api/admin/challenges/' + encodeURIComponent(id), {
+        method: 'PUT',
+        body: JSON.stringify({ category: cat, title, description: desc, points: pts, flag, hint })
+      });
+      closeModal();
+      await renderList(cat);
+      toast('Challenge updated', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
   /* Close modal on backdrop click */
@@ -986,26 +1006,30 @@
       document.getElementById(id).value = '');
   }
 
-  function resetProgress() {
+  async function resetProgress() {
     if (!confirm('Reset ALL user progress? Solved flags and attempts will be cleared.')) return;
-    CTF.saveProgress({ solved: [], attempts: {} });
-    toast('Progress reset', 'ok');
+    try {
+      await api('/api/admin/reset-progress', { method: 'POST', body: '{}' });
+      toast('Progress reset', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
-  function restoreDefaults() {
+  async function restoreDefaults() {
     if (!confirm('Restore built-in seed questions? Your custom questions will be replaced.')) return;
-    CTF.setData(JSON.parse(JSON.stringify(CTF.SEED)));
-    renderList('agriculture');
-    renderList('water');
-    toast('Default questions restored', 'ok');
+    try {
+      await api('/api/admin/restore-defaults', { method: 'POST', body: '{}' });
+      await renderList('agriculture');
+      await renderList('water');
+      toast('Default questions restored', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
-  function exportData() {
-    const payload = {
-      questions: CTF.getData(),
-      progress : CTF.getProgress(),
-      exportedAt: new Date().toISOString()
-    };
+  async function exportData() {
+    const payload = await fetch('/api/admin/export').then(r => r.json());
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
