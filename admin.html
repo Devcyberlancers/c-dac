@@ -1,0 +1,1059 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDAC CTF — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg       : #06090d;
+      --surface  : #0d1117;
+      --surface2 : #161c24;
+      --surface3 : #1e2631;
+      --border   : rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.15);
+      --text1    : #e8f0e0;
+      --text2    : #9ab887;
+      --text3    : #546e45;
+      --green    : #5db83e;
+      --green-dk : #3e8a2c;
+      --teal     : #1a9e78;
+      --blue     : #4da6ff;
+      --amber    : #eea832;
+      --red      : #f24b3a;
+      --red-dk   : #c42220;
+      --r-sm     : 6px;
+      --r-md     : 10px;
+      --r-lg     : 16px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family       : 'Syne', sans-serif;
+      background        : var(--bg);
+      color             : var(--text1);
+      min-height        : 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a    { color: var(--teal); }
+    code { font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+           background: rgba(255,255,255,0.07); padding: 2px 6px; border-radius: 4px; }
+
+    /* ── Login Screen ── */
+    #login-screen {
+      min-height     : 100vh;
+      display        : flex;
+      align-items    : center;
+      justify-content: center;
+      background     : radial-gradient(ellipse 80% 70% at 50% 30%,
+                         rgba(62,138,44,0.12) 0%, transparent 70%),
+                       var(--bg);
+    }
+    .login-box {
+      background    : linear-gradient(135deg, rgba(18,28,18,0.98), rgba(12,16,20,0.99));
+      border        : 1px solid rgba(62,138,44,0.25);
+      border-radius : var(--r-lg);
+      padding       : 3rem 2.5rem;
+      width         : 100%;
+      max-width     : 400px;
+      text-align    : center;
+      box-shadow    : 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(62,138,44,0.1);
+    }
+    .login-icon { font-size: 2.8rem; margin-bottom: 1.2rem; display: block; }
+    .login-box h1 {
+      font-size     : 1.4rem;
+      font-weight   : 700;
+      color         : var(--text1);
+      margin-bottom : 0.4rem;
+    }
+    .login-box p {
+      font-size    : 0.82rem;
+      color        : var(--text3);
+      margin-bottom: 2rem;
+      font-family  : 'IBM Plex Mono', monospace;
+    }
+    .login-field {
+      width         : 100%;
+      background    : rgba(255,255,255,0.04);
+      border        : 1px solid var(--border-hi);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.9rem;
+      padding       : 12px 16px;
+      border-radius : var(--r-md);
+      outline       : none;
+      margin-bottom : 1rem;
+      transition    : border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field:focus {
+      border-color: var(--green);
+      box-shadow  : 0 0 0 3px rgba(93,184,62,0.15);
+    }
+    .login-btn {
+      width         : 100%;
+      background    : linear-gradient(135deg, var(--green-dk), var(--green));
+      border        : none;
+      color         : #fff;
+      font-family   : 'Syne', sans-serif;
+      font-size     : 0.9rem;
+      font-weight   : 700;
+      padding       : 13px;
+      border-radius : var(--r-md);
+      cursor        : pointer;
+      transition    : all 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .login-btn:hover { filter: brightness(1.15); box-shadow: 0 8px 24px rgba(62,138,44,0.35); }
+    .login-err {
+      font-size    : 0.78rem;
+      color        : var(--red);
+      margin-top   : 0.75rem;
+      font-family  : 'IBM Plex Mono', monospace;
+      min-height   : 1.2em;
+    }
+    .login-hint {
+      margin-top  : 1.5rem;
+      font-size   : 0.72rem;
+      color       : var(--text3);
+      font-family : 'IBM Plex Mono', monospace;
+    }
+
+    /* ── App Shell ── */
+    #admin-app { display: none; min-height: 100vh; }
+
+    header {
+      background    : rgba(6,9,13,0.9);
+      backdrop-filter: blur(16px);
+      border-bottom : 1px solid var(--border);
+      padding       : 0 2rem;
+      height        : 58px;
+      display       : flex;
+      align-items   : center;
+      justify-content: space-between;
+      position      : sticky;
+      top           : 0;
+      z-index       : 100;
+    }
+    .hdr-brand {
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.78rem;
+      color        : var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display      : flex;
+      align-items  : center;
+      gap          : 10px;
+    }
+    .hdr-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--teal);
+      animation : hdr-pulse 2s ease-in-out infinite;
+    }
+    @keyframes hdr-pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(26,158,120,0.5); }
+      50%     { box-shadow: 0 0 0 5px rgba(26,158,120,0); }
+    }
+    .hdr-actions { display: flex; gap: 10px; align-items: center; }
+    .hdr-btn {
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.7rem;
+      background    : var(--surface2);
+      border        : 1px solid var(--border-hi);
+      color         : var(--text2);
+      padding       : 6px 14px;
+      border-radius : var(--r-sm);
+      cursor        : pointer;
+      transition    : all 0.2s;
+      text-decoration: none;
+    }
+    .hdr-btn:hover { background: var(--surface3); color: var(--text1); }
+    .hdr-btn.danger { color: var(--red); border-color: rgba(242,75,58,0.3); }
+    .hdr-btn.danger:hover { background: rgba(242,75,58,0.12); }
+
+    /* ── Main Layout ── */
+    .admin-main {
+      max-width : 1100px;
+      margin    : 0 auto;
+      padding   : 2rem;
+    }
+
+    /* ── Tab Nav ── */
+    .scenario-tabs {
+      display        : flex;
+      gap            : 0;
+      border-bottom  : 1px solid var(--border);
+      margin-bottom  : 2rem;
+    }
+    .sc-tab {
+      background   : none;
+      border       : none;
+      border-bottom: 3px solid transparent;
+      color        : var(--text3);
+      font-family  : 'Syne', sans-serif;
+      font-size    : 0.85rem;
+      font-weight  : 600;
+      padding      : 14px 28px;
+      cursor       : pointer;
+      transition   : all 0.2s;
+      white-space  : nowrap;
+      margin-bottom: -1px;
+    }
+    .sc-tab:hover  { color: var(--text2); }
+    .sc-tab.active { color: var(--text1); border-bottom-color: var(--green); }
+    .sc-tab[data-cat="water"].active { border-bottom-color: var(--teal); }
+    .sc-tab[data-cat="settings"].active { border-bottom-color: var(--amber); }
+
+    .sc-panel       { display: none; }
+    .sc-panel.active{ display: block; }
+
+    /* ── Section heading ── */
+    .section-head {
+      display        : flex;
+      align-items    : center;
+      justify-content: space-between;
+      margin-bottom  : 1.5rem;
+      flex-wrap      : wrap;
+      gap            : 1rem;
+    }
+    .section-head h2 {
+      font-size    : 1.1rem;
+      font-weight  : 700;
+      color        : var(--text1);
+    }
+    .section-head p {
+      font-size  : 0.8rem;
+      color      : var(--text3);
+      margin-top : 2px;
+    }
+
+    /* ── Add Question Form ── */
+    .add-form {
+      background    : linear-gradient(135deg, rgba(18,28,14,0.95), rgba(14,18,22,0.98));
+      border        : 1px solid rgba(62,138,44,0.2);
+      border-radius : var(--r-lg);
+      padding       : 1.75rem 2rem;
+      margin-bottom : 2rem;
+      position      : relative;
+    }
+    .add-form[data-cat="water"] {
+      border-color: rgba(26,158,120,0.2);
+    }
+    .add-form::before {
+      content   : '';
+      position  : absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--green), var(--teal));
+      border-radius: var(--r-lg) 0 0 var(--r-lg);
+    }
+    .add-form[data-cat="water"]::before {
+      background: linear-gradient(to bottom, var(--teal), var(--blue));
+    }
+    .add-form h3 {
+      font-size    : 0.9rem;
+      font-weight  : 700;
+      color        : var(--text1);
+      margin-bottom: 1.25rem;
+      display      : flex;
+      align-items  : center;
+      gap          : 8px;
+    }
+    .form-grid {
+      display              : grid;
+      grid-template-columns: 1fr 1fr;
+      gap                  : 0.9rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-label {
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color         : var(--text3);
+    }
+    .form-input, .form-textarea {
+      background    : rgba(255,255,255,0.04);
+      border        : 1px solid var(--border-hi);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.82rem;
+      padding       : 10px 14px;
+      border-radius : var(--r-md);
+      outline       : none;
+      transition    : border-color 0.2s, box-shadow 0.2s;
+      width         : 100%;
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--green);
+      box-shadow  : 0 0 0 3px rgba(93,184,62,0.12);
+    }
+    .form-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+    .btn-add {
+      font-family   : 'Syne', sans-serif;
+      font-size     : 0.82rem;
+      font-weight   : 700;
+      background    : linear-gradient(135deg, var(--green-dk), var(--green));
+      border        : none;
+      color         : #fff;
+      padding       : 10px 22px;
+      border-radius : var(--r-md);
+      cursor        : pointer;
+      transition    : all 0.2s;
+    }
+    .btn-add:hover { filter: brightness(1.12); box-shadow: 0 6px 20px rgba(62,138,44,0.35); }
+    .btn-add[data-cat="water"] {
+      background: linear-gradient(135deg, var(--teal), #14c9a0);
+    }
+    .btn-add[data-cat="water"]:hover { box-shadow: 0 6px 20px rgba(26,158,120,0.35); }
+    .btn-clear {
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.75rem;
+      background   : none;
+      border       : 1px solid var(--border-hi);
+      color        : var(--text3);
+      padding      : 10px 18px;
+      border-radius: var(--r-md);
+      cursor       : pointer;
+      transition   : all 0.2s;
+    }
+    .btn-clear:hover { color: var(--text1); background: var(--surface2); }
+    .form-msg {
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.73rem;
+      margin-top   : 0.75rem;
+      min-height   : 1.2em;
+      transition   : all 0.3s;
+    }
+    .form-msg.ok  { color: var(--green); }
+    .form-msg.err { color: var(--red); }
+
+    /* ── Question List ── */
+    .q-list { display: flex; flex-direction: column; gap: 1rem; }
+    .q-card {
+      background    : linear-gradient(135deg, rgba(16,24,16,0.95), rgba(12,16,20,0.98));
+      border        : 1px solid var(--border);
+      border-radius : var(--r-lg);
+      padding       : 1.5rem;
+      display       : grid;
+      grid-template-columns: 1fr auto;
+      gap           : 1rem;
+      align-items   : start;
+      transition    : border-color 0.2s, box-shadow 0.2s;
+      position      : relative;
+    }
+    .q-card:hover {
+      border-color: var(--border-hi);
+      box-shadow  : 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .q-card-body {}
+    .q-card-title {
+      font-size    : 0.95rem;
+      font-weight  : 700;
+      color        : var(--text1);
+      margin-bottom: 0.35rem;
+    }
+    .q-card-meta {
+      display    : flex;
+      gap        : 10px;
+      margin-bottom: 0.75rem;
+      flex-wrap  : wrap;
+    }
+    .q-badge {
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.62rem;
+      letter-spacing: 0.1em;
+      padding       : 3px 10px;
+      border-radius : 4px;
+    }
+    .q-badge.pts  { background: rgba(93,184,62,0.12); border: 1px solid rgba(93,184,62,0.3); color: #90d86e; }
+    .q-badge.id   { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text3); }
+    .q-card-desc {
+      font-size  : 0.8rem;
+      color      : var(--text2);
+      line-height: 1.75;
+      margin-bottom: 0.6rem;
+    }
+    .q-card-flag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size  : 0.75rem;
+      color      : var(--teal);
+      background : rgba(26,158,120,0.08);
+      border     : 1px solid rgba(26,158,120,0.2);
+      padding    : 4px 10px;
+      border-radius: var(--r-sm);
+      display    : inline-block;
+    }
+    .q-card-hint { font-size: 0.75rem; color: var(--text3); margin-top: 4px; }
+    .q-card-actions { display: flex; flex-direction: column; gap: 6px; }
+    .q-btn {
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.68rem;
+      padding       : 6px 14px;
+      border-radius : var(--r-sm);
+      cursor        : pointer;
+      border        : 1px solid;
+      transition    : all 0.2s;
+      white-space   : nowrap;
+    }
+    .q-btn.edit   { background: rgba(77,166,255,0.08); border-color: rgba(77,166,255,0.3); color: var(--blue); }
+    .q-btn.edit:hover { background: rgba(77,166,255,0.18); }
+    .q-btn.del    { background: rgba(242,75,58,0.08); border-color: rgba(242,75,58,0.3); color: var(--red); }
+    .q-btn.del:hover { background: rgba(242,75,58,0.18); }
+    .q-empty {
+      text-align   : center;
+      padding      : 3rem;
+      color        : var(--text3);
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.8rem;
+      border       : 1px dashed var(--border-hi);
+      border-radius: var(--r-lg);
+    }
+
+    /* ── Settings Panel ── */
+    .settings-card {
+      background    : linear-gradient(135deg, rgba(18,18,10,0.95), rgba(14,16,20,0.98));
+      border        : 1px solid rgba(238,168,50,0.2);
+      border-radius : var(--r-lg);
+      padding       : 1.75rem 2rem;
+      margin-bottom : 1.5rem;
+    }
+    .settings-card h3 {
+      font-size    : 0.9rem;
+      font-weight  : 700;
+      color        : var(--text1);
+      margin-bottom: 1.25rem;
+    }
+    .danger-card {
+      border-color: rgba(242,75,58,0.2);
+      background  : linear-gradient(135deg, rgba(30,8,6,0.95), rgba(14,16,20,0.98));
+    }
+    .danger-row {
+      display    : flex;
+      align-items: center;
+      justify-content: space-between;
+      gap        : 1rem;
+      flex-wrap  : wrap;
+    }
+    .danger-info h4 { font-size: 0.88rem; font-weight: 700; color: var(--text1); margin-bottom: 4px; }
+    .danger-info p  { font-size: 0.78rem; color: var(--text3); }
+    .btn-danger {
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.75rem;
+      background   : rgba(242,75,58,0.1);
+      border       : 1px solid rgba(242,75,58,0.4);
+      color        : var(--red);
+      padding      : 9px 18px;
+      border-radius: var(--r-md);
+      cursor       : pointer;
+      transition   : all 0.2s;
+      white-space  : nowrap;
+    }
+    .btn-danger:hover { background: rgba(242,75,58,0.22); box-shadow: 0 4px 16px rgba(242,75,58,0.2); }
+
+    /* ── Modal (Edit) ── */
+    .modal-overlay {
+      display        : none;
+      position       : fixed;
+      inset          : 0;
+      background     : rgba(3, 5, 8, 0.85);
+      backdrop-filter: blur(8px);
+      z-index        : 200;
+      align-items    : center;
+      justify-content: center;
+      padding        : 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background    : linear-gradient(135deg, rgba(18,28,18,0.99), rgba(12,16,22,0.99));
+      border        : 1px solid rgba(62,138,44,0.3);
+      border-radius : var(--r-lg);
+      padding       : 2rem;
+      width         : 100%;
+      max-width     : 560px;
+      max-height    : 90vh;
+      overflow-y    : auto;
+      position      : relative;
+    }
+    .modal-close {
+      position     : absolute;
+      top: 1rem; right: 1rem;
+      background   : none;
+      border       : 1px solid var(--border-hi);
+      color        : var(--text3);
+      width        : 30px; height: 30px;
+      border-radius: 50%;
+      cursor       : pointer;
+      font-size    : 1rem;
+      display      : flex; align-items: center; justify-content: center;
+      transition   : all 0.2s;
+    }
+    .modal-close:hover { color: var(--text1); background: var(--surface2); }
+    .modal h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text1); }
+
+    /* ── Toast ── */
+    #toast {
+      position      : fixed;
+      bottom        : 2rem;
+      left          : 50%;
+      transform     : translateX(-50%) translateY(20px);
+      background    : var(--surface3);
+      border        : 1px solid var(--border-hi);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.78rem;
+      padding       : 10px 22px;
+      border-radius : 20px;
+      opacity       : 0;
+      transition    : all 0.3s;
+      pointer-events: none;
+      z-index       : 300;
+      white-space   : nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.ok  { border-color: rgba(93,184,62,0.5); color: var(--green); }
+    #toast.err { border-color: rgba(242,75,58,0.5); color: var(--red); }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display  : flex;
+      gap      : 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.72rem;
+      background    : var(--surface2);
+      border        : 1px solid var(--border);
+      padding       : 7px 16px;
+      border-radius : 20px;
+      color         : var(--text2);
+    }
+    .stat-pill strong { color: var(--text1); }
+
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .q-card    { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <span class="login-icon">🔐</span>
+    <h1>Admin Panel</h1>
+    <p>CDAC Smart Systems · CTF Management</p>
+    <input type="password" id="login-pass" class="login-field"
+           placeholder="Enter admin password" autocomplete="current-password" />
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-err" id="login-err"></div>
+    <p class="login-hint">Default password: <code>cdac@admin</code></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ADMIN APP
+══════════════════════════════════════════ -->
+<div id="admin-app">
+
+  <header>
+    <div class="hdr-brand">
+      <div class="hdr-dot"></div>
+      CDAC · CTF Admin
+    </div>
+    <div class="hdr-actions">
+      <a href="index.html" class="hdr-btn">← Back to Site</a>
+      <button class="hdr-btn danger" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- Scenario tabs -->
+    <nav class="scenario-tabs">
+      <button class="sc-tab active" data-cat="agriculture" onclick="switchTab('agriculture')">
+        🌾 Smart Agriculture
+      </button>
+      <button class="sc-tab" data-cat="water" onclick="switchTab('water')">
+        💧 Water Distribution
+      </button>
+      <button class="sc-tab" data-cat="settings" onclick="switchTab('settings')">
+        ⚙️ Settings
+      </button>
+    </nav>
+
+    <!-- ── Agriculture Panel ── -->
+    <div class="sc-panel active" id="panel-agriculture">
+
+      <!-- Add Form -->
+      <div class="add-form">
+        <h3>➕ Add New Challenge — Agriculture</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Challenge Title *</label>
+            <input type="text" class="form-input" id="agriculture-title" placeholder="e.g. MQTT Eavesdropping" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Points *</label>
+            <input type="number" class="form-input" id="agriculture-points" placeholder="100" min="10" step="10" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Description *</label>
+            <textarea class="form-textarea" id="agriculture-desc"
+                      placeholder="Describe the challenge scenario. Students will see this while solving."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Flag (exact answer) *</label>
+            <input type="text" class="form-input" id="agriculture-flag" placeholder="FLAG{...}" spellcheck="false" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hint (optional)</label>
+            <input type="text" class="form-input" id="agriculture-hint" placeholder="A clue to guide students..." />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-add" data-cat="agriculture" onclick="addQuestion('agriculture')">Add Challenge</button>
+          <button class="btn-clear" onclick="clearForm('agriculture')">Clear</button>
+        </div>
+        <div class="form-msg" id="agriculture-form-msg"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar" id="agriculture-stats"></div>
+
+      <!-- Question list -->
+      <div class="section-head">
+        <div>
+          <h2>Existing Challenges</h2>
+          <p>Click Edit to modify, Delete to remove permanently.</p>
+        </div>
+      </div>
+      <div class="q-list" id="agriculture-qlist"></div>
+
+    </div>
+
+    <!-- ── Water Panel ── -->
+    <div class="sc-panel" id="panel-water">
+
+      <div class="add-form" data-cat="water">
+        <h3>➕ Add New Challenge — Water Distribution</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Challenge Title *</label>
+            <input type="text" class="form-input" id="water-title" placeholder="e.g. SCADA Auth Bypass" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Points *</label>
+            <input type="number" class="form-input" id="water-points" placeholder="100" min="10" step="10" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Description *</label>
+            <textarea class="form-textarea" id="water-desc"
+                      placeholder="Describe the challenge scenario. Students will see this while solving."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Flag (exact answer) *</label>
+            <input type="text" class="form-input" id="water-flag" placeholder="FLAG{...}" spellcheck="false" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hint (optional)</label>
+            <input type="text" class="form-input" id="water-hint" placeholder="A clue to guide students..." />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-add" data-cat="water" onclick="addQuestion('water')">Add Challenge</button>
+          <button class="btn-clear" onclick="clearForm('water')">Clear</button>
+        </div>
+        <div class="form-msg" id="water-form-msg"></div>
+      </div>
+
+      <div class="stats-bar" id="water-stats"></div>
+
+      <div class="section-head">
+        <div>
+          <h2>Existing Challenges</h2>
+          <p>Click Edit to modify, Delete to remove permanently.</p>
+        </div>
+      </div>
+      <div class="q-list" id="water-qlist"></div>
+
+    </div>
+
+    <!-- ── Settings Panel ── -->
+    <div class="sc-panel" id="panel-settings">
+
+      <div class="settings-card">
+        <h3>🔑 Change Admin Password</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-input" id="curr-pass" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="new-pass" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-input" id="confirm-pass" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-add" onclick="changePassword()">Update Password</button>
+        </div>
+        <div class="form-msg" id="pass-msg"></div>
+      </div>
+
+      <div class="settings-card danger-card">
+        <h3>⚠️ Danger Zone</h3>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="danger-row">
+            <div class="danger-info">
+              <h4>Reset All User Progress</h4>
+              <p>Clears all solved flags and submission attempts. Questions are kept.</p>
+            </div>
+            <button class="btn-danger" onclick="resetProgress()">Reset Progress</button>
+          </div>
+          <div class="danger-row">
+            <div class="danger-info">
+              <h4>Restore Default Questions</h4>
+              <p>Replaces all questions with the built-in seed set. This cannot be undone.</p>
+            </div>
+            <button class="btn-danger" onclick="restoreDefaults()">Restore Defaults</button>
+          </div>
+          <div class="danger-row">
+            <div class="danger-info">
+              <h4>Export Data</h4>
+              <p>Download all questions and progress as a JSON file.</p>
+            </div>
+            <button class="btn-danger" style="color:var(--blue);border-color:rgba(77,166,255,0.4);background:rgba(77,166,255,0.08)" onclick="exportData()">Export JSON</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>✏️ Edit Challenge</h3>
+    <div class="form-grid">
+      <input type="hidden" id="edit-id" />
+      <input type="hidden" id="edit-cat" />
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-input" id="edit-title" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Points</label>
+        <input type="number" class="form-input" id="edit-points" />
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="edit-desc"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Flag</label>
+        <input type="text" class="form-input" id="edit-flag" spellcheck="false" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hint</label>
+        <input type="text" class="form-input" id="edit-hint" />
+      </div>
+    </div>
+    <div class="form-actions" style="margin-top:1.5rem">
+      <button class="btn-add" onclick="saveEdit()">Save Changes</button>
+      <button class="btn-clear" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="static/js/ctf.js"></script>
+<script>
+  /* ── Auth ── */
+  const PASS_KEY = 'cdac_admin_pass';
+  const DEFAULT_PASS = 'cdac@admin';
+
+  function getStoredPass() {
+    return localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
+  }
+
+  function doLogin() {
+    const val = document.getElementById('login-pass').value;
+    if (val === getStoredPass()) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display    = 'block';
+      initAdmin();
+    } else {
+      const err = document.getElementById('login-err');
+      err.textContent = 'Incorrect password. Try again.';
+      setTimeout(() => err.textContent = '', 3000);
+      document.getElementById('login-pass').value = '';
+    }
+  }
+
+  document.getElementById('login-pass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  function doLogout() {
+    document.getElementById('admin-app').style.display    = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-pass').value           = '';
+  }
+
+  /* ── Tab switching ── */
+  let activeTab = 'agriculture';
+  function switchTab(cat) {
+    activeTab = cat;
+    document.querySelectorAll('.sc-tab').forEach(t =>
+      t.classList.toggle('active', t.dataset.cat === cat));
+    document.querySelectorAll('.sc-panel').forEach(p =>
+      p.classList.toggle('active', p.id === 'panel-' + cat));
+    if (cat === 'agriculture' || cat === 'water') renderList(cat);
+  }
+
+  /* ── Render list ── */
+  function renderList(cat) {
+    const data = CTF.getData();
+    const questions = data[cat] || [];
+    const listEl = document.getElementById(cat + '-qlist');
+    const statsEl = document.getElementById(cat + '-stats');
+
+    // Stats
+    const total = questions.reduce((s, q) => s + q.points, 0);
+    statsEl.innerHTML = `
+      <div class="stat-pill"><strong>${questions.length}</strong> challenges</div>
+      <div class="stat-pill"><strong>${total}</strong> total points</div>`;
+
+    if (questions.length === 0) {
+      listEl.innerHTML = '<div class="q-empty">No challenges yet — add one above.</div>';
+      return;
+    }
+
+    listEl.innerHTML = questions.map(q => `
+      <div class="q-card" id="qcard-${q.id}">
+        <div class="q-card-body">
+          <div class="q-card-title">${q.title}</div>
+          <div class="q-card-meta">
+            <span class="q-badge pts">${q.points} pts</span>
+            <span class="q-badge id">${q.id}</span>
+          </div>
+          <p class="q-card-desc">${q.description}</p>
+          <div class="q-card-flag">Flag: ${q.flag}</div>
+          ${q.hint ? `<p class="q-card-hint">💡 Hint: ${q.hint}</p>` : ''}
+        </div>
+        <div class="q-card-actions">
+          <button class="q-btn edit" onclick="openEdit('${q.id}','${cat}')">Edit</button>
+          <button class="q-btn del"  onclick="deleteQ('${q.id}','${cat}')">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ── Add question ── */
+  function addQuestion(cat) {
+    const title  = document.getElementById(cat + '-title').value.trim();
+    const points = parseInt(document.getElementById(cat + '-points').value) || 0;
+    const desc   = document.getElementById(cat + '-desc').value.trim();
+    const flag   = document.getElementById(cat + '-flag').value.trim();
+    const hint   = document.getElementById(cat + '-hint').value.trim();
+    const msgEl  = document.getElementById(cat + '-form-msg');
+
+    if (!title || !desc || !flag || points < 1) {
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = '✗ Please fill Title, Description, Flag, and Points.';
+      return;
+    }
+
+    const data = CTF.getData();
+    if (!data[cat]) data[cat] = [];
+
+    const id = cat + '_' + Date.now();
+    data[cat].push({ id, title, description: desc, points, flag, hint, category: cat });
+    CTF.setData(data);
+
+    msgEl.className = 'form-msg ok';
+    msgEl.textContent = '✓ Challenge added!';
+    clearForm(cat);
+    renderList(cat);
+    toast('Challenge added successfully', 'ok');
+    setTimeout(() => msgEl.textContent = '', 3000);
+  }
+
+  function clearForm(cat) {
+    ['title','points','desc','flag','hint'].forEach(f => {
+      const el = document.getElementById(cat + '-' + f);
+      if (el) el.value = '';
+    });
+  }
+
+  /* ── Delete ── */
+  function deleteQ(id, cat) {
+    if (!confirm('Delete this challenge? This cannot be undone.')) return;
+    const data = CTF.getData();
+    data[cat] = (data[cat] || []).filter(q => q.id !== id);
+    CTF.setData(data);
+    renderList(cat);
+    toast('Challenge deleted', 'err');
+  }
+
+  /* ── Edit modal ── */
+  function openEdit(id, cat) {
+    const data = CTF.getData();
+    const q    = (data[cat] || []).find(c => c.id === id);
+    if (!q) return;
+    document.getElementById('edit-id').value    = id;
+    document.getElementById('edit-cat').value   = cat;
+    document.getElementById('edit-title').value = q.title;
+    document.getElementById('edit-points').value= q.points;
+    document.getElementById('edit-desc').value  = q.description;
+    document.getElementById('edit-flag').value  = q.flag;
+    document.getElementById('edit-hint').value  = q.hint || '';
+    document.getElementById('edit-modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('edit-modal').classList.remove('open');
+  }
+
+  function saveEdit() {
+    const id    = document.getElementById('edit-id').value;
+    const cat   = document.getElementById('edit-cat').value;
+    const title = document.getElementById('edit-title').value.trim();
+    const pts   = parseInt(document.getElementById('edit-points').value) || 0;
+    const desc  = document.getElementById('edit-desc').value.trim();
+    const flag  = document.getElementById('edit-flag').value.trim();
+    const hint  = document.getElementById('edit-hint').value.trim();
+
+    if (!title || !desc || !flag || pts < 1) {
+      toast('Please fill all required fields', 'err'); return;
+    }
+
+    const data = CTF.getData();
+    const idx  = (data[cat] || []).findIndex(c => c.id === id);
+    if (idx === -1) { toast('Challenge not found', 'err'); return; }
+    data[cat][idx] = { id, title, description: desc, points: pts, flag, hint, category: cat };
+    CTF.setData(data);
+    closeModal();
+    renderList(cat);
+    toast('Challenge updated', 'ok');
+  }
+
+  /* Close modal on backdrop click */
+  document.getElementById('edit-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  /* ── Settings ── */
+  function changePassword() {
+    const curr    = document.getElementById('curr-pass').value;
+    const nw      = document.getElementById('new-pass').value;
+    const confirm = document.getElementById('confirm-pass').value;
+    const msgEl   = document.getElementById('pass-msg');
+
+    if (curr !== getStoredPass()) {
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = '✗ Current password incorrect.'; return;
+    }
+    if (nw.length < 6) {
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = '✗ New password must be at least 6 characters.'; return;
+    }
+    if (nw !== confirm) {
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = '✗ Passwords do not match.'; return;
+    }
+    localStorage.setItem(PASS_KEY, nw);
+    msgEl.className = 'form-msg ok';
+    msgEl.textContent = '✓ Password changed successfully.';
+    ['curr-pass','new-pass','confirm-pass'].forEach(id =>
+      document.getElementById(id).value = '');
+  }
+
+  function resetProgress() {
+    if (!confirm('Reset ALL user progress? Solved flags and attempts will be cleared.')) return;
+    CTF.saveProgress({ solved: [], attempts: {} });
+    toast('Progress reset', 'ok');
+  }
+
+  function restoreDefaults() {
+    if (!confirm('Restore built-in seed questions? Your custom questions will be replaced.')) return;
+    CTF.setData(JSON.parse(JSON.stringify(CTF.SEED)));
+    renderList('agriculture');
+    renderList('water');
+    toast('Default questions restored', 'ok');
+  }
+
+  function exportData() {
+    const payload = {
+      questions: CTF.getData(),
+      progress : CTF.getProgress(),
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'cdac_ctf_export_' + Date.now() + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Data exported', 'ok');
+  }
+
+  /* ── Toast ── */
+  let toastTimer;
+  function toast(msg, type) {
+    const el = document.getElementById('toast');
+    el.textContent    = msg;
+    el.className      = 'show ' + (type || '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.className = '', 2800);
+  }
+
+  /* ── Boot ── */
+  function initAdmin(domain) {
+    renderList('agriculture');
+    renderList('water');
+    /* If a domain was passed from URL, switch to that tab */
+    var target = domain || 'agriculture';
+    if (target === 'water') switchTab('water');
+    else switchTab('agriculture');
+  }
+
+  /* ── URL-param auto-login (when opened from Coverage Scope) ── */
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var auth   = params.get('auth');
+    var domain = params.get('domain') || 'agriculture';
+    var stored = localStorage.getItem('cdac_admin_pass') || 'cdac@admin';
+    if (auth && auth === stored) {
+      /* Auto-bypass login screen */
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display    = 'block';
+      initAdmin(domain);
+    }
+    /* Clean URL so password not visible in address bar */
+    if (auth) {
+      var clean = window.location.pathname + '?domain=' + domain;
+      history.replaceState(null, '', clean);
+    }
+  })();
+</script>
+</body>
+</html>

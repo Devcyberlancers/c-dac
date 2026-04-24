@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── SEO ── -->
+  <title>CDAC Smart Systems Platform — Agriculture · Water · Cybersecurity · HPC</title>
+  <meta name="description"
+    content="CDAC's integrated Smart Agriculture and Smart Water Distribution platform, powered by High-Performance Computing and protected by Red/Blue Team cybersecurity operations.">
+
+  <!-- ── Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- ── Styles ── -->
+  <link rel="stylesheet" href="static/css/main.css">
+
+  <!-- ── Three.js  (global THREE variable) ── -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       3-D CANVAS  — sits behind everything (fixed, z-index:0)
+  ══════════════════════════════════════════════════════════ -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- ══════════════════════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════════════════════ -->
+  <nav id="main-nav" role="navigation" aria-label="Main Navigation">
+    <div class="nav-brand">
+      <div class="nav-logo-dot"></div>
+      CDAC <span class="brand-accent">SmartSystems</span>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><button class="nav-btn active" data-page="home"  id="navbtn-home" >Home</button></li>
+      <li><button class="nav-btn"        data-page="agri"  id="navbtn-agri" >Agriculture</button></li>
+      <li><button class="nav-btn"        data-page="water" id="navbtn-water">Water</button></li>
+      <li><button class="nav-btn"        data-page="cyber" id="navbtn-cyber">Cybersecurity</button></li>
+    </ul>
+
+    <button class="nav-menu-toggle" id="menu-toggle" aria-label="Toggle navigation">☰</button>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-line"></span>
+          CDAC · Integrated Smart Systems Platform
+          <span class="eyebrow-line"></span>
+        </div>
+        <h1 class="hero-title" id="hero-title">
+          Where <em>Nature</em><br>Meets Technology
+        </h1>
+        <p class="hero-desc">
+          A unified platform for smart agriculture and intelligent water distribution —
+          powered by HPC, secured by design, and monitored in real time.
+        </p>
+        <div class="hero-scroll-hint" aria-hidden="true">
+          <span>↓</span>
+          <span>Explore</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Domain Cards -->
+    <section class="domain-section" aria-label="Platform Domains">
+      <div class="section-label">Choose a Domain</div>
+      <div class="domain-grid">
+
+        <!-- Agriculture Card -->
+        <div class="domain-card domain-agri reveal" id="card-agri"
+             data-page="agri" role="button" tabindex="0"
+             aria-label="Go to Smart Agriculture">
+          <div class="dc-bg dc-bg-agri"></div>
+          <div class="dc-content">
+            <span class="dc-icon" aria-hidden="true">🌾</span>
+            <h2>Smart Agriculture</h2>
+            <p>Precision farming with sensor networks, predictive analytics, and
+               cybersecurity-hardened IoT infrastructure deployed at field scale.</p>
+            <div class="dc-footer">
+              <div class="dc-modules">
+                <span class="module-tag">About</span>
+                <span class="module-tag">Walk Through</span>
+                <span class="module-tag">Cybersecurity</span>
+                <span class="module-tag">HPC</span>
+              </div>
+              <button class="dc-explore" tabindex="-1">Explore →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Water Card -->
+        <div class="domain-card domain-water reveal" id="card-water"
+             data-page="water" role="button" tabindex="0"
+             aria-label="Go to Smart Water Distribution">
+          <div class="dc-bg dc-bg-water"></div>
+          <div class="dc-content">
+            <span class="dc-icon" aria-hidden="true">💧</span>
+            <h2>Smart Water Distribution</h2>
+            <p>Intelligent pipeline monitoring, leak detection, and distribution
+               optimization across urban and rural networks at city scale.</p>
+            <div class="dc-footer">
+              <div class="dc-modules">
+                <span class="module-tag">About</span>
+                <span class="module-tag">Walk Through</span>
+                <span class="module-tag">Cybersecurity</span>
+                <span class="module-tag">HPC</span>
+              </div>
+              <button class="dc-explore" tabindex="-1">Explore →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+
+  </div><!-- /page-home -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: SMART AGRICULTURE
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-agri">
+
+    <!-- Banner over 3D canvas -->
+    <div class="page-banner page-banner-agri" aria-label="Smart Agriculture">
+      <div class="banner-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <button class="bc-link" data-page="home">Home</button>
+          <span aria-hidden="true">›</span>
+          <span>Smart Agriculture</span>
+        </nav>
+        <h1>Smart <em>Agriculture</em></h1>
+        <span class="banner-badge badge-agri">Agriculture Module</span>
+      </div>
+    </div>
+
+    <div class="subpage-body">
+
+      <!-- Tab Navigation -->
+      <nav class="tab-nav" id="agri-tabnav" aria-label="Agriculture sections">
+        <button class="tab-btn active" data-tab="agri-about">About</button>
+        <button class="tab-btn" data-tab="agri-walkthrough">Walk Through</button>
+        <button class="tab-btn" data-tab="agri-cybersecurity">Cybersecurity</button>
+        <button class="tab-btn" data-tab="agri-hpc">HPC Application</button>
+      </nav>
+
+      <!-- ── ABOUT ── -->
+      <div class="tab-content active" id="agri-about">
+        <div class="content-card reveal">
+          <div class="cc-header">
+            <div class="cc-dot green"></div>
+            <h3>Project Overview</h3>
+          </div>
+          <p>The Smart Agriculture platform integrates IoT sensor networks, machine learning
+             models, and high-performance computing to optimize crop yields, reduce resource
+             wastage, and enable real-time field monitoring at scale. Designed to support
+             smallholder farmers, agri-enterprises, and government agricultural bodies.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item reveal">
+            <span class="fi-icon">🌡️</span>
+            <h4>Sensor Networks</h4>
+            <p>Soil moisture, temperature, and humidity sensors feeding a central data lake
+               via LoRaWAN / MQTT.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">📡</span>
+            <h4>Real-time Monitoring</h4>
+            <p>Live dashboards for crop health, irrigation status, and environmental
+               anomaly detection.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">🤖</span>
+            <h4>Predictive Analytics</h4>
+            <p>ML-driven yield prediction, pest outbreak alerts, and weather-adaptive
+               scheduling.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">🔒</span>
+            <h4>Secure Architecture</h4>
+            <p>End-to-end encrypted data pipelines with access-controlled edge
+               computing nodes.</p>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Backend API integration pending ]</span>
+      </div>
+
+      <!-- ── WALK THROUGH ── -->
+      <div class="tab-content" id="agri-walkthrough">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot teal"></div>
+            <h3>System Walk Through</h3>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <div class="step-body">
+                <h4>Field Sensor Deployment</h4>
+                <p>IoT nodes capture soil, climate, and crop data at configurable intervals,
+                   transmitting via LoRaWAN / MQTT to edge gateways.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div class="step-body">
+                <h4>Edge Data Processing</h4>
+                <p>Local edge servers perform validation, compression, and anomaly flagging
+                   before forwarding to the central HPC cluster.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div class="step-body">
+                <h4>HPC Workload Execution</h4>
+                <p>HPC nodes run simulation models, satellite image processing (NDVI), and
+                   large-scale ML training jobs in parallel batch queues via SLURM.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div class="step-body">
+                <h4>Insights &amp; Recommendations</h4>
+                <p>Processed outputs surface through dashboards, mobile alerts, and API
+                   endpoints consumed by farm management software.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">05</div>
+              <div class="step-body">
+                <h4>Feedback Loop</h4>
+                <p>Farmer actions and interventions are logged back to continuously improve
+                   model accuracy over time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Interactive simulation coming in next phase ]</span>
+      </div>
+
+      <!-- ── CYBERSECURITY ── -->
+      <div class="tab-content" id="agri-cybersecurity">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot amber"></div>
+            <h3>Security Architecture</h3>
+          </div>
+          <p>Agricultural IoT infrastructure presents unique attack surfaces. Our security
+             posture covers OT/IT convergence threats, supply chain risks, and data integrity
+             for critical food production systems.</p>
+        </div>
+
+        <!-- Red / Blue split -->
+        <div class="cyber-duo">
+          <div class="cyber-card red">
+            <span class="cc-tag red">Red Team</span>
+            <h3>Threat Assessment</h3>
+            <p>Adversarial testing of sensor firmware, gateway communications, and cloud API
+               endpoints to identify exploitable vulnerabilities before deployment.</p>
+            <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
+            <span class="ctf-launch-hint">&#9881; Open CTF Challenges &rarr;</span>
+          </div>
+          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.16.79:3000/login', '_blank')" role="link" tabindex="0">
+            <span class="cc-tag blue">Blue Team</span>
+            <h3>Monitoring &amp; Response</h3>
+            <p>Continuous log aggregation, intrusion detection, and incident response
+               playbooks aligned to ICS/SCADA threat models.</p>
+            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span>
+              <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+                 class="grafana-inline-btn">📊 Open Grafana ↗</a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- ── HPC APPLICATION ── -->
+      <div class="tab-content" id="agri-hpc">
+        <div class="hpc-metrics">
+          <div class="hpc-metric"><div class="hpc-val">256</div><div class="hpc-lbl">CPU Cores</div></div>
+          <div class="hpc-metric"><div class="hpc-val">4TB</div><div class="hpc-lbl">RAM</div></div>
+          <div class="hpc-metric"><div class="hpc-val">40Gb/s</div><div class="hpc-lbl">Interconnect</div></div>
+          <div class="hpc-metric"><div class="hpc-val">8×</div><div class="hpc-lbl">GPU Nodes</div></div>
+        </div>
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot blue"></div>
+            <h3>HPC Workloads in Agriculture</h3>
+          </div>
+          <p>HPC enables computationally intensive tasks including multi-year climate
+             simulations, satellite imagery analysis at sub-meter resolution, and training
+             neural networks on multi-terabyte crop datasets. Jobs are scheduled via
+             SLURM-based queue management with priority tiers for time-sensitive alerts.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="fi-icon">🛰️</span>
+            <h4>Satellite Processing</h4>
+            <p>Batch NDVI, NDWI, and crop stress index computation from Sentinel-2 /
+               Landsat feeds.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🧠</span>
+            <h4>ML Model Training</h4>
+            <p>Distributed training pipelines for yield prediction, pest detection, and
+               irrigation optimization.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🌦️</span>
+            <h4>Climate Simulation</h4>
+            <p>Regional weather models integrated with field microclimate data for
+               14-day advisory forecasts.</p>
+          </div>
+        </div>
+
+        <!-- ── Grafana Launch Panel (HPC Monitor) ── -->
+        <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+           class="grafana-launch" id="agri-hpc-grafana">
+          <div class="gl-left">
+            <div class="gl-icon">📊</div>
+            <div class="gl-info">
+              <h4>Grafana HPC Monitor</h4>
+              <p>Live metrics · Agriculture cluster jobs &amp; node health</p>
+              <code>172.16.16.79:3000</code>
+            </div>
+          </div>
+          <div class="gl-right">
+            <div class="gl-live"><span class="gl-dot"></span>Live</div>
+            <div class="gl-open-label">Click to Open ↗</div>
+          </div>
+        </a>
+      </div>
+
+    </div><!-- /subpage-body -->
+  </div><!-- /page-agri -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: SMART WATER DISTRIBUTION
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-water">
+
+    <div class="page-banner page-banner-water" aria-label="Smart Water Distribution">
+      <div class="banner-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <button class="bc-link" data-page="home">Home</button>
+          <span aria-hidden="true">›</span>
+          <span>Smart Water Distribution</span>
+        </nav>
+        <h1>Smart <em>Water</em> Distribution</h1>
+        <span class="banner-badge badge-water">Water Module</span>
+      </div>
+    </div>
+
+    <div class="subpage-body">
+
+      <nav class="tab-nav" id="water-tabnav" aria-label="Water sections">
+        <button class="tab-btn active" data-tab="water-about">About</button>
+        <button class="tab-btn" data-tab="water-walkthrough">Walk Through</button>
+        <button class="tab-btn" data-tab="water-cybersecurity">Cybersecurity</button>
+        <button class="tab-btn" data-tab="water-hpc">HPC Application</button>
+      </nav>
+
+      <!-- ── ABOUT ── -->
+      <div class="tab-content active" id="water-about">
+        <div class="content-card reveal">
+          <div class="cc-header">
+            <div class="cc-dot blue"></div>
+            <h3>Project Overview</h3>
+          </div>
+          <p>The Smart Water Distribution system provides real-time visibility into water
+             network operations — from source to tap. It leverages pressure sensors, flow
+             meters, and AI-driven demand forecasting to minimize losses, detect leaks early,
+             and optimize distribution equity across urban and peri-urban zones.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item reveal">
+            <span class="fi-icon">🔵</span>
+            <h4>Pipe Network Monitoring</h4>
+            <p>Distributed pressure and flow sensors with anomaly detection for
+               burst events.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">📊</span>
+            <h4>Demand Forecasting</h4>
+            <p>Time-series models predicting hourly consumption patterns per zone to
+               pre-position supply.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">🚨</span>
+            <h4>Leak Detection</h4>
+            <p>Acoustic sensor fusion and pressure gradient analysis for rapid
+               pinpointing of underground leaks.</p>
+          </div>
+          <div class="feature-item reveal">
+            <span class="fi-icon">⚖️</span>
+            <h4>Equitable Distribution</h4>
+            <p>Automated valve control to balance supply fairness across communities
+               during scarcity events.</p>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ Live sensor data feed — backend required ]</span>
+      </div>
+
+      <!-- ── WALK THROUGH ── -->
+      <div class="tab-content" id="water-walkthrough">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot teal"></div>
+            <h3>System Walk Through</h3>
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <div class="step-body">
+                <h4>Source &amp; Treatment Integration</h4>
+                <p>Water treatment plant telemetry feeds quality parameters (pH, turbidity,
+                   chlorine) directly into the platform for end-to-end visibility.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <div class="step-body">
+                <h4>Transmission Network Sensing</h4>
+                <p>High-pressure trunk mains monitored via smart pressure loggers and acoustic
+                   correlators to detect macro leaks in bulk transmission pipes.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <div class="step-body">
+                <h4>Distribution Zone Management</h4>
+                <p>District Metered Areas (DMAs) individually monitored. Night minimum flow
+                   analysis auto-triggers leak investigation workflows.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">04</div>
+              <div class="step-body">
+                <h4>Consumer Demand Analytics</h4>
+                <p>Smart meter data aggregated at zone level feeds demand models. Peak demand
+                   alerts auto-open upstream valves to prevent pressure drops.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">05</div>
+              <div class="step-body">
+                <h4>Reporting &amp; Compliance</h4>
+                <p>Automated regulatory compliance reports, NRW dashboards, and water audit
+                   documentation for municipal authorities.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="placeholder-badge">[ GIS pipeline map — backend integration pending ]</span>
+      </div>
+
+      <!-- ── CYBERSECURITY ── -->
+      <div class="tab-content" id="water-cybersecurity">
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot amber"></div>
+            <h3>Critical Infrastructure Security</h3>
+          </div>
+          <p>Water distribution is classified as critical national infrastructure. Our
+             security framework addresses SCADA system vulnerabilities, remote access risks,
+             and physical-cyber attack vectors that could compromise public health.</p>
+        </div>
+        <div class="cyber-duo">
+          <div class="cyber-card red">
+            <span class="cc-tag red">Red Team</span>
+            <h3>Penetration Testing</h3>
+            <p>Structured offensive security exercises targeting SCADA HMI interfaces, OT
+               network segmentation, and remote field device access controls.</p>
+            <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
+            <span class="ctf-launch-hint">&#9881; Open CTF Challenges &rarr;</span>
+          </div>
+          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.16.79:3000/login', '_blank')" role="link" tabindex="0">
+            <span class="cc-tag blue">Blue Team</span>
+            <h3>SOC Monitoring</h3>
+            <p>24/7 monitoring of OT/IT network traffic with automated anomaly detection,
+               SIEM correlation rules, and incident escalation playbooks.</p>
+            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span>
+               <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+                  class="grafana-inline-btn">📊 Open Grafana ↗</a>
+             </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- ── HPC APPLICATION ── -->
+      <div class="tab-content" id="water-hpc">
+        <div class="hpc-metrics">
+          <div class="hpc-metric"><div class="hpc-val">128</div><div class="hpc-lbl">CPU Cores</div></div>
+          <div class="hpc-metric"><div class="hpc-val">2TB</div><div class="hpc-lbl">RAM</div></div>
+          <div class="hpc-metric"><div class="hpc-val">1PB</div><div class="hpc-lbl">Storage</div></div>
+          <div class="hpc-metric"><div class="hpc-val">99.9%</div><div class="hpc-lbl">Uptime SLA</div></div>
+        </div>
+        <div class="content-card">
+          <div class="cc-header">
+            <div class="cc-dot blue"></div>
+            <h3>HPC in Water Systems</h3>
+          </div>
+          <p>Hydraulic network simulation at city scale requires iterative solver algorithms
+             on graphs with hundreds of thousands of nodes. HPC enables real-time digital twin
+             operation, simultaneous scenario modelling for emergency planning, and
+             high-resolution contaminant transport simulations for source tracing.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="fi-icon">🏗️</span>
+            <h4>Digital Twin</h4>
+            <p>Full hydraulic model of the distribution network running in sync with live
+               sensor data for continuous calibration.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">⚗️</span>
+            <h4>Contaminant Modelling</h4>
+            <p>Particle transport simulations to trace contamination sources within minutes
+               of a quality alert.</p>
+          </div>
+          <div class="feature-item">
+            <span class="fi-icon">🔮</span>
+            <h4>Scenario Planning</h4>
+            <p>Monte Carlo simulations for infrastructure failure, drought demand, and
+               population growth planning.</p>
+          </div>
+        </div>
+
+        <!-- ── Grafana Launch Panel (HPC Monitor) ── -->
+        <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+           class="grafana-launch" id="water-hpc-grafana">
+          <div class="gl-left">
+            <div class="gl-icon">📊</div>
+            <div class="gl-info">
+              <h4>Grafana HPC Monitor</h4>
+              <p>Live metrics · Water system cluster jobs &amp; node health</p>
+              <code>172.16.16.79:3000</code>
+            </div>
+          </div>
+          <div class="gl-right">
+            <div class="gl-live"><span class="gl-dot"></span>Live</div>
+            <div class="gl-open-label">Click to Open ↗</div>
+          </div>
+        </a>
+      </div>
+
+    </div><!-- /subpage-body -->
+  </div><!-- /page-water -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       PAGE: CYBERSECURITY
+  ══════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-cyber">
+
+    <div class="page-banner page-banner-cyber" aria-label="Cybersecurity">
+      <div class="banner-content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <button class="bc-link" data-page="home">Home</button>
+          <span aria-hidden="true">›</span>
+          <span>Cybersecurity</span>
+        </nav>
+        <h1><em>Cyber</em>security</h1>
+        <span class="banner-badge badge-cyber">Security Operations</span>
+      </div>
+    </div>
+
+    <div class="cyber-page-body">
+
+      <!-- Coverage Scope — click a domain to manage its CTF questions -->
+      <div class="cyber-scope-intro reveal">
+        <div class="csi-icon">&#128737;&#65039;</div>
+        <div>
+          <h2>Coverage Scope</h2>
+          <p>Select a domain below to manage its CTF challenge questions.<br>
+             Admin access is required.</p>
+        </div>
+      </div>
+
+      <div class="cyber-admin-grid">
+
+        <!-- Agriculture -->
+        <div class="cyber-admin-card agri-admin reveal"
+             id="cyber-admin-agri"
+             role="button" tabindex="0"
+             aria-label="Manage Agriculture CTF"
+             onclick="openAdminAuth('agriculture')"
+             onkeydown="if(event.key==='Enter'||event.key===' '){openAdminAuth('agriculture')}">
+          <div class="cac-glow cac-glow-agri"></div>
+          <div class="cac-icon">&#127806;</div>
+          <div class="cac-body">
+            <h3>Agriculture Systems</h3>
+            <p>Manage CTF challenges for the Smart Agriculture domain — sensor firmware, IoT gateways, and field data APIs.</p>
+            <div class="cac-pills">
+              <span class="cac-pill">MQTT / LoRaWAN</span>
+              <span class="cac-pill">Sensor Firmware</span>
+              <span class="cac-pill">Edge APIs</span>
+            </div>
+          </div>
+          <div class="cac-action">
+            <span class="cac-lock">&#128274;</span>
+            <span class="cac-cta">Manage Questions &#8594;</span>
+          </div>
+        </div>
+
+        <!-- Water -->
+        <div class="cyber-admin-card water-admin reveal"
+             id="cyber-admin-water"
+             role="button" tabindex="0"
+             aria-label="Manage Water CTF"
+             onclick="openAdminAuth('water')"
+             onkeydown="if(event.key==='Enter'||event.key===' '){openAdminAuth('water')}">
+          <div class="cac-glow cac-glow-water"></div>
+          <div class="cac-icon">&#128167;</div>
+          <div class="cac-body">
+            <h3>Water Systems</h3>
+            <p>Manage CTF challenges for the Smart Water domain — SCADA/HMI, Modbus, OT network segmentation.</p>
+            <div class="cac-pills">
+              <span class="cac-pill">SCADA / HMI</span>
+              <span class="cac-pill">Modbus RTU</span>
+              <span class="cac-pill">OT Networks</span>
+            </div>
+          </div>
+          <div class="cac-action">
+            <span class="cac-lock">&#128274;</span>
+            <span class="cac-cta">Manage Questions &#8594;</span>
+          </div>
+        </div>
+
+      </div><!-- /cyber-admin-grid -->
+
+    </div><!-- /cyber-page-body -->
+  </div><!-- /page-cyber -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCRIPTS  (order matters: scenes first, then app)
+  ══════════════════════════════════════════════════════════ -->
+  <script src="static/js/scene_home.js"></script>
+  <script src="static/js/scene_water.js"></script>
+  <script src="static/js/scene_cyber.js"></script>
+  <script src="static/js/ctf.js"></script>
+  <script src="static/js/app.js"></script>f.src;
+    }
+    function reloadCTFFrame() {
+      var f = document.getElementById('ctf-frame');
+      if (f && f.src !== 'about:blank') f.src = f.src;
+    }
+
+    /* ── CTF URL loader ── */
+    function loadCTFUrl() {
+      var url = document.getElementById('ctf-url-input').value.trim();
+      if (!url) return;
+      if (!/^https?:\///i.test(url)) url = 'http://' + url;
+      document.getElementById('ctf-frame').src = url;
+      document.getElementById('ctf-open-link').href = url;
+      document.getElementById('ctf-fallback').style.display = 'none';
+    }
+
+    /* ── iframe load error detection ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      var grafanaFrames = [
+        { frame: 'grafana-main-frame', fallback: 'grafana-main-fallback' },
+        { frame: 'agri-grafana-frame', fallback: 'agri-grafana-fallback' },
+        { frame: 'water-grafana-frame', fallback: 'water-grafana-fallback' }
+      ];
+      grafanaFrames.forEach(function(item) {
+        var f = document.getElementById(item.frame);
+        var fb = document.getElementById(item.fallback);
+        if (!f || !fb) return;
+        /* Show fallback after 8s if frame hasn't loaded */
+        var timer = setTimeout(function () { fb.classList.add('visible'); }, 8000);
+        f.addEventListener('load', function () {
+          try {
+            /* If we can access contentDocument, it loaded fine */
+            var d = f.contentDocument || f.contentWindow.document;
+            if (d) clearTimeout(timer);
+          } catch(e) {
+            /* Cross-origin — likely loaded OK in its own origin; clear fallback */
+            clearTimeout(timer);
+          }
+        });
+        f.addEventListener('error', function () {
+          clearTimeout(timer);
+          fb.classList.add('visible');
+        });
+      });
+    });
+  </script>
+  <script>
+    /* ── CTF board init ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      /* Render inline boards (inside Agriculture / Water cybersecurity tabs) */
+      CTF.renderBoard('agriculture', 'ctf-board-agri');
+      CTF.renderBoard('water',       'ctf-board-water');
+
+      /* Pre-render modal boards */
+      CTF.renderBoard('agriculture', 'ctf-modal-board-agriculture');
+      CTF.renderBoard('water',       'ctf-modal-board-water');
+
+      /* Wire ALL Red Team cards to open the modal with the right domain */
+      document.querySelectorAll('.cyber-card.red, #red-team-card').forEach(function(card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A' || e.target.closest('a')) return;
+          /* Detect domain: check which page/tab context the card is in */
+          var domain = 'agriculture'; // default
+          var page = card.closest('.page, [id^="page-"]');
+          if (page) {
+            var pageId = page.id || '';
+            if (pageId.indexOf('water') !== -1) domain = 'water';
+          }
+          /* Also check parent tab context */
+          var tabContent = card.closest('[id$="-cybersecurity"]');
+          if (tabContent && tabContent.id.indexOf('water') !== -1) domain = 'water';
+          openCTFModal(domain);
+        });
+      });
+
+      /* Close modal when clicking outside the modal box */
+      var overlay = document.getElementById('ctf-modal-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) closeCTFModal();
+        });
+      }
+
+      /* Escape key closes modal */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeCTFModal();
+      });
+
+      /* Close button */
+      var closeBtn = document.getElementById('ctf-modal-close-btn');
+      if (closeBtn) closeBtn.addEventListener('click', closeCTFModal);
+      /* Keyboard support: Enter/Space on .ctf-inline-prompt */
+      document.querySelectorAll('.ctf-inline-prompt').forEach(function(el) {
+        el.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            el.click();
+          }
+        });
+      });
+    });
+
+    /* ── Modal API ── */
+    var _ctfActiveDomain = 'agriculture';
+
+    function openCTFModal(domain) {
+      var overlay = document.getElementById('ctf-modal-overlay');
+      if (!overlay) return;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      switchCTFModalTab(domain || _ctfActiveDomain);
+    }
+
+    function closeCTFModal() {
+      var overlay = document.getElementById('ctf-modal-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function switchCTFModalTab(category) {
+      _ctfActiveDomain = category;
+      document.querySelectorAll('.ctf-modal-tab').forEach(function(btn) {
+        var isActive = btn.id === 'ctf-tab-' + category;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      ['agriculture', 'water'].forEach(function(cat) {
+        var el = document.getElementById('ctf-modal-board-' + cat);
+        if (el) el.style.display = (cat === category) ? 'block' : 'none';
+      });
+      /* Always re-render so solved/score state is fresh */
+      CTF.renderBoard(category, 'ctf-modal-board-' + category);
+    }
+
+    /* Cyber page inline domain switcher (legacy inline boards) */
+    function switchCyberCtf(btn, boardId, category) {
+      document.querySelectorAll('.ctf-dt').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('#ctf-board-cyber-agri, #ctf-board-cyber-water').forEach(function(el) {
+        el.style.display = 'none';
+      });
+      var board = document.getElementById(boardId);
+      if (board) board.style.display = 'block';
+      CTF.renderBoard(category, boardId);
+    }
+  </script>
+
+  <script>
+    /* ── Admin Auth Modal ── */
+    const ADMIN_PASS_KEY = 'cdac_admin_pass';
+    const ADMIN_DEFAULT  = 'cdac@admin';
+
+    function _getAdminPass() {
+      return localStorage.getItem(ADMIN_PASS_KEY) || ADMIN_DEFAULT;
+    }
+
+    function openAdminAuth(domain) {
+      var overlay = document.getElementById('admin-auth-overlay');
+      var domainLbl = document.getElementById('adm-domain-label');
+      var targetDom = document.getElementById('adm-target-domain');
+      if (!overlay) return;
+      targetDom.value = domain;
+      domainLbl.textContent = domain === 'agriculture'
+        ? '&#127806; Smart Agriculture — Question Management'
+        : '&#128167; Smart Water — Question Management';
+      document.getElementById('adm-pass-input').value = '';
+      document.getElementById('adm-error').textContent = '';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function() { document.getElementById('adm-pass-input').focus(); }, 100);
+    }
+
+    function closeAdminAuth() {
+      var overlay = document.getElementById('admin-auth-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function doAdminAuth() {
+      var pass   = document.getElementById('adm-pass-input').value;
+      var domain = document.getElementById('adm-target-domain').value;
+      var errEl  = document.getElementById('adm-error');
+      if (pass === _getAdminPass()) {
+        /* Correct password — open admin.html with domain pre-selected */
+        closeAdminAuth();
+        window.open('admin.html?domain=' + domain + '&auth=' + encodeURIComponent(pass), '_blank');
+      } else {
+        errEl.textContent = 'Incorrect password. Try again.';
+        document.getElementById('adm-pass-input').value = '';
+        document.getElementById('adm-pass-input').focus();
+        setTimeout(function() { errEl.textContent = ''; }, 3000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      /* Close admin modal on backdrop click */
+      var admOverlay = document.getElementById('admin-auth-overlay');
+      if (admOverlay) {
+        admOverlay.addEventListener('click', function(e) {
+          if (e.target === admOverlay) closeAdminAuth();
+        });
+      }
+      /* Close on Escape */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeAdminAuth();
+      });
+      /* Close button */
+      var admClose = document.getElementById('adm-close-btn');
+      if (admClose) admClose.addEventListener('click', closeAdminAuth);
+      /* Enter key in password field */
+      var admInp = document.getElementById('adm-pass-input');
+      if (admInp) admInp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doAdminAuth();
+      });
+    });
+  </script>
+
+
+  <!-- ══ CTF CHALLENGE MODAL ══════════════════════════════════════════════ -->
+
+  <!-- ══ ADMIN AUTH MODAL ══════════════════════════════════════════ -->
+  <div id="admin-auth-overlay" role="dialog" aria-modal="true" aria-labelledby="adm-title">
+    <div class="adm-modal">
+
+      <div class="adm-modal-head">
+        <span class="adm-modal-icon">&#128272;</span>
+        <div>
+          <div class="adm-modal-title" id="adm-title">Admin Access</div>
+          <div class="adm-modal-sub" id="adm-domain-label">CTF Question Management</div>
+        </div>
+        <button class="adm-modal-close" id="adm-close-btn" aria-label="Close">&#x2715;</button>
+      </div>
+
+      <div class="adm-modal-body">
+        <label class="adm-label" for="adm-pass-input">Admin Password</label>
+        <input type="password" id="adm-pass-input" class="adm-input"
+               placeholder="Enter admin password" autocomplete="current-password" />
+        <div class="adm-error" id="adm-error"></div>
+      </div>
+
+      <div class="adm-modal-foot">
+        <button class="adm-submit-btn" id="adm-submit-btn" onclick="doAdminAuth()">
+          Unlock &amp; Open Admin Panel &#8594;
+        </button>
+      </div>
+
+      <input type="hidden" id="adm-target-domain" value="agriculture" />
+    </div>
+  </div>
+  <!-- /Admin Auth Modal -->
+
+  <div id="ctf-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ctf-modal-title">
+    <div class="ctf-modal">
+
+      <!-- Header -->
+      <div class="ctf-modal-head">
+        <div class="ctf-modal-title-group">
+          <div class="ctf-modal-icon" aria-hidden="true">&#128681;</div>
+          <div>
+            <div class="ctf-modal-title" id="ctf-modal-title">Red Team &middot; CTF Challenges</div>
+            <div class="ctf-modal-subtitle">Offensive Security Exercises</div>
+          </div>
+        </div>
+        <button class="ctf-modal-close" id="ctf-modal-close-btn" aria-label="Close CTF modal">&#x2715;</button>
+      </div>
+
+      <!-- Domain tabs -->
+      <div class="ctf-modal-tabs" role="tablist" aria-label="Select domain">
+        <button class="ctf-modal-tab active" id="ctf-tab-agriculture" role="tab"
+                aria-selected="true" aria-controls="ctf-modal-board-agriculture"
+                onclick="switchCTFModalTab('agriculture')">
+          &#127806; Agriculture
+        </button>
+        <button class="ctf-modal-tab" id="ctf-tab-water" role="tab"
+                aria-selected="false" aria-controls="ctf-modal-board-water"
+                onclick="switchCTFModalTab('water')">
+          &#128167; Water
+        </button>
+      </div>
+
+      <!-- Challenge Boards -->
+      <div class="ctf-modal-body">
+        <div id="ctf-modal-board-agriculture"  role="tabpanel" aria-labelledby="ctf-tab-agriculture"></div>
+        <div id="ctf-modal-board-water" role="tabpanel" aria-labelledby="ctf-tab-water" style="display:none"></div>
+      </div>
+
+
+
+    </div>
+  </div>
+  <!-- /CTF Modal -->
+</body>
+</html>
