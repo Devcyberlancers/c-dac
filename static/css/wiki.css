@@ -275,6 +275,7 @@ body {
 }
 
 .wiki-current-dir {
+  display: none;
   border-top: 1px solid var(--line);
   padding: 16px 0;
 }
