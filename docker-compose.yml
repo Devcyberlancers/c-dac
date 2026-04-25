@@ -1,0 +1,14 @@
+services:
+  cdac-smartsystems:
+    build: .
+    image: cdac-smartsystems:latest
+    container_name: cdac-smartsystems
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: "5000"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./data:/app/data
+      - ./wiki:/app/wiki
