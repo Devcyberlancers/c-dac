@@ -25,6 +25,7 @@
       --green-dk : #3e8a2c;
       --teal     : #1a9e78;
       --blue     : #4da6ff;
+      --purple   : #9974ff;
       --amber    : #eea832;
       --red      : #f24b3a;
       --red-dk   : #c42220;
@@ -207,6 +208,7 @@
     .sc-tab.active { color: var(--text1); border-bottom-color: var(--green); }
     .sc-tab[data-cat="water"].active { border-bottom-color: var(--teal); }
     .sc-tab[data-cat="students"].active { border-bottom-color: var(--blue); }
+    .sc-tab[data-cat="wiki"].active { border-bottom-color: var(--purple); }
     .sc-tab[data-cat="settings"].active { border-bottom-color: var(--amber); }
 
     .sc-panel       { display: none; }
@@ -594,9 +596,70 @@
       text-align: center;
     }
 
+    .wiki-editor-card {
+      background    : linear-gradient(135deg, rgba(18,14,30,0.95), rgba(12,16,20,0.98));
+      border        : 1px solid rgba(153,116,255,0.22);
+      border-radius : var(--r-lg);
+      padding       : 1.75rem 2rem;
+    }
+    .wiki-editor-toolbar {
+      display              : grid;
+      grid-template-columns: minmax(240px, 1fr) auto auto auto;
+      gap                  : 0.75rem;
+      align-items          : center;
+      margin-bottom        : 1rem;
+    }
+    .wiki-editor-select {
+      background    : rgba(255,255,255,0.04);
+      border        : 1px solid var(--border-hi);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.78rem;
+      padding       : 10px 12px;
+      border-radius : var(--r-md);
+      outline       : none;
+      min-width     : 0;
+    }
+    .wiki-editor-textarea {
+      min-height    : 560px;
+      width         : 100%;
+      background    : rgba(2,4,7,0.72);
+      border        : 1px solid rgba(153,116,255,0.24);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.78rem;
+      line-height   : 1.55;
+      padding       : 1rem;
+      border-radius : var(--r-md);
+      resize        : vertical;
+      outline       : none;
+      white-space   : pre;
+      overflow      : auto;
+    }
+    .wiki-editor-textarea:focus {
+      border-color: rgba(153,116,255,0.6);
+      box-shadow  : 0 0 0 3px rgba(153,116,255,0.12);
+    }
+    .wiki-editor-meta {
+      display      : flex;
+      flex-wrap    : wrap;
+      gap          : 0.6rem;
+      margin-bottom: 1rem;
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.72rem;
+      color        : var(--text3);
+    }
+    .wiki-editor-note {
+      margin-top : 0.8rem;
+      color      : var(--text3);
+      font-size  : 0.78rem;
+      line-height: 1.6;
+    }
+
     @media (max-width: 640px) {
       .form-grid { grid-template-columns: 1fr; }
       .q-card    { grid-template-columns: 1fr; }
+      .wiki-editor-toolbar { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -646,6 +709,9 @@
       </button>
       <button class="sc-tab" data-cat="students" onclick="switchTab('students')">
         👥 Students
+      </button>
+      <button class="sc-tab" data-cat="wiki" onclick="switchTab('wiki')">
+        Wiki Pages
       </button>
       <button class="sc-tab" data-cat="settings" onclick="switchTab('settings')">
         ⚙️ Settings
@@ -760,6 +826,35 @@
       </div>
       <div class="stats-bar" id="students-stats"></div>
       <div id="students-list"></div>
+    </div>
+
+    <!-- ── Wiki Panel ── -->
+    <div class="sc-panel" id="panel-wiki">
+      <div class="section-head">
+        <div>
+          <h2>Wiki Page Editor</h2>
+          <p>Edit the HTML content of each wiki page from one place.</p>
+        </div>
+      </div>
+
+      <div class="wiki-editor-card">
+        <div class="wiki-editor-toolbar">
+          <select class="wiki-editor-select" id="wiki-page-select" onchange="loadWikiPage(this.value)">
+            <option value="">Loading pages...</option>
+          </select>
+          <button class="hdr-btn" onclick="loadWikiPage()">Load</button>
+          <button class="btn-add" onclick="saveWikiPage()">Save Page</button>
+          <button class="btn-clear" onclick="openWikiPage()">Open Page</button>
+        </div>
+        <div class="wiki-editor-meta" id="wiki-page-meta">
+          <span>Select a page to edit.</span>
+        </div>
+        <textarea class="wiki-editor-textarea" id="wiki-page-content" spellcheck="false"
+                  placeholder="Select a wiki page to load its HTML here."></textarea>
+        <p class="wiki-editor-note">
+          This editor saves directly into the local wiki HTML files. Keep the sidebar/header structure if you want the page layout to stay consistent.
+        </p>
+      </div>
     </div>
 
     <!-- ── Settings Panel ── -->
@@ -911,6 +1006,7 @@
       p.classList.toggle('active', p.id === 'panel-' + cat));
     if (cat === 'agriculture' || cat === 'water') renderList(cat);
     if (cat === 'students') renderStudents();
+    if (cat === 'wiki') initWikiEditor();
   }
 
   /* ── Render list ── */
@@ -1003,6 +1099,82 @@
     const d = new Date(value);
     if (Number.isNaN(d.getTime())) return value;
     return d.toLocaleString();
+  }
+
+  /* ── Wiki editor ── */
+  let wikiPages = [];
+  let wikiPagesLoaded = false;
+  let activeWikiPageId = '';
+
+  async function initWikiEditor() {
+    if (wikiPagesLoaded) return;
+    const select = document.getElementById('wiki-page-select');
+    const meta = document.getElementById('wiki-page-meta');
+    try {
+      const data = await api('/api/admin/wiki-pages');
+      wikiPages = data.pages || [];
+      wikiPagesLoaded = true;
+      select.innerHTML = wikiPages.map(page =>
+        `<option value="${escapeHtml(page.id)}">${escapeHtml(page.title)}</option>`
+      ).join('');
+      if (wikiPages.length) await loadWikiPage(wikiPages[0].id);
+      else meta.innerHTML = '<span>No wiki pages found.</span>';
+    } catch (e) {
+      select.innerHTML = '<option value="">Unable to load pages</option>';
+      meta.innerHTML = `<span>${escapeHtml(e.message)}</span>`;
+    }
+  }
+
+  async function loadWikiPage(pageId) {
+    const select = document.getElementById('wiki-page-select');
+    const contentEl = document.getElementById('wiki-page-content');
+    const meta = document.getElementById('wiki-page-meta');
+    const id = pageId || select.value;
+    if (!id) return;
+    meta.innerHTML = '<span>Loading page...</span>';
+    try {
+      const data = await api('/api/admin/wiki-pages/' + encodeURIComponent(id));
+      const page = data.page;
+      activeWikiPageId = page.id;
+      select.value = page.id;
+      contentEl.value = page.content || '';
+      meta.innerHTML = `
+        <span><strong>${escapeHtml(page.title)}</strong></span>
+        <span>${escapeHtml(page.path)}</span>
+        <span>${escapeHtml(page.url)}</span>`;
+    } catch (e) {
+      meta.innerHTML = `<span>${escapeHtml(e.message)}</span>`;
+      toast(e.message, 'err');
+    }
+  }
+
+  async function saveWikiPage() {
+    const select = document.getElementById('wiki-page-select');
+    const contentEl = document.getElementById('wiki-page-content');
+    const id = activeWikiPageId || select.value;
+    if (!id) {
+      toast('Select a wiki page first', 'err');
+      return;
+    }
+    try {
+      await api('/api/admin/wiki-pages/' + encodeURIComponent(id), {
+        method: 'PUT',
+        body: JSON.stringify({ content: contentEl.value })
+      });
+      toast('Wiki page saved', 'ok');
+      await loadWikiPage(id);
+    } catch (e) {
+      toast(e.message, 'err');
+    }
+  }
+
+  function openWikiPage() {
+    const page = wikiPages.find(item => item.id === (activeWikiPageId || document.getElementById('wiki-page-select').value));
+    if (!page) {
+      toast('Select a wiki page first', 'err');
+      return;
+    }
+    window.open(page.url, '_blank');
   }
 
   /* ── Add question ── */

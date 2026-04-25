@@ -13,6 +13,75 @@ WIKI_DIR = ROOT / "wiki"
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
+WIKI_PAGES = [
+    {
+        "id": "wiki-root",
+        "title": "Wiki Home",
+        "path": "index.html",
+        "url": "/wiki/",
+    },
+    {
+        "id": "introduction",
+        "title": "Introduction",
+        "path": "introduction.html",
+        "url": "/wiki/introduction",
+    },
+    {
+        "id": "architecture-application-details",
+        "title": "Architecture / Application Details",
+        "path": "architecture/application-details.html",
+        "url": "/wiki/architecture/application-details",
+    },
+    {
+        "id": "architecture-device-list",
+        "title": "Architecture / Device List",
+        "path": "architecture/device-list.html",
+        "url": "/wiki/architecture/device-list",
+    },
+    {
+        "id": "architecture-networking",
+        "title": "Architecture / Networking",
+        "path": "architecture/networking.html",
+        "url": "/wiki/architecture/networking",
+    },
+    {
+        "id": "sensor-network-hld",
+        "title": "Sensor Network / HLD",
+        "path": "sensor-network/hld.html",
+        "url": "/wiki/sensor-network/hld",
+    },
+    {
+        "id": "device-management-table",
+        "title": "Device Management / Table",
+        "path": "device-management/table.html",
+        "url": "/wiki/device-management/table",
+    },
+    {
+        "id": "operations-manual",
+        "title": "Operational Manual",
+        "path": "operations/manual.html",
+        "url": "/wiki/operations/manual",
+    },
+    {
+        "id": "logs",
+        "title": "Logs",
+        "path": "logs.html",
+        "url": "/wiki/logs",
+    },
+    {
+        "id": "simulations",
+        "title": "Simulations",
+        "path": "simulations.html",
+        "url": "/wiki/simulations",
+    },
+    {
+        "id": "attack-notes",
+        "title": "Attack Notes",
+        "path": "attack-notes.html",
+        "url": "/wiki/attack-notes",
+    },
+]
+
 
 SEED = {
     "agriculture": [
@@ -177,6 +246,18 @@ def row_to_challenge(row, include_flag=False):
     else:
         data["hasHint"] = bool(row["hint"])
     return data
+
+
+def wiki_page_record(page_id):
+    return next((page for page in WIKI_PAGES if page["id"] == page_id), None)
+
+
+def wiki_page_path(page):
+    path = WIKI_DIR / page["path"]
+    resolved = path.resolve()
+    if not resolved.is_relative_to(WIKI_DIR.resolve()) or not path.exists():
+        abort(404)
+    return path
 
 
 def require_category(value):
@@ -483,6 +564,57 @@ def admin_students():
             }
         )
     return jsonify({"ok": True, "students": students})
+
+
+@app.get("/api/admin/wiki-pages")
+def admin_wiki_pages():
+    pages = []
+    for page in WIKI_PAGES:
+        path = WIKI_DIR / page["path"]
+        pages.append(
+            {
+                "id": page["id"],
+                "title": page["title"],
+                "path": page["path"],
+                "url": page["url"],
+                "exists": path.exists(),
+            }
+        )
+    return jsonify({"ok": True, "pages": pages})
+
+
+@app.get("/api/admin/wiki-pages/<page_id>")
+def admin_get_wiki_page(page_id):
+    page = wiki_page_record(page_id)
+    if not page:
+        return jsonify({"ok": False, "msg": "Wiki page not found."}), 404
+    path = wiki_page_path(page)
+    return jsonify(
+        {
+            "ok": True,
+            "page": {
+                "id": page["id"],
+                "title": page["title"],
+                "path": page["path"],
+                "url": page["url"],
+                "content": path.read_text(encoding="utf-8"),
+            },
+        }
+    )
+
+
+@app.put("/api/admin/wiki-pages/<page_id>")
+def admin_update_wiki_page(page_id):
+    page = wiki_page_record(page_id)
+    if not page:
+        return jsonify({"ok": False, "msg": "Wiki page not found."}), 404
+    payload = request.get_json(silent=True) or {}
+    content = payload.get("content")
+    if not isinstance(content, str) or not content.strip():
+        return jsonify({"ok": False, "msg": "Page content is required."}), 400
+    path = wiki_page_path(page)
+    path.write_text(content, encoding="utf-8")
+    return jsonify({"ok": True, "page": {"id": page["id"], "title": page["title"], "url": page["url"]}})
 
 
 @app.post("/api/admin/challenges")
