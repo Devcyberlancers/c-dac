@@ -30,13 +30,12 @@
       </div>
 
       <nav class="wiki-tree" aria-label="Wiki sidebar">
-        <a class="wiki-nav-item active" href="#introduction"><span class="icon">▣</span> Introduction</a>
-
-        <a class="wiki-nav-item" href="#architecture"><span class="icon">📁</span> Architecture</a>
+        <div class="wiki-root-line"><span>📁</span> / (root)</div>
+        <a class="wiki-nav-item active" href="#architecture"><span class="icon">📁</span> Architecture</a>
         <div class="wiki-nav-sub">
-          <a href="#architecture-overview">System Overview</a>
-          <a href="#architecture-template">Markdown Template</a>
-          <a href="#deployment-zones">Deployment Zones</a>
+          <a href="#application-details">Application Details</a>
+          <a href="#device-list">Device List</a>
+          <a href="#networking">Networking</a>
         </div>
 
         <a class="wiki-nav-item" href="#sensor-network"><span class="icon">📁</span> Sensor Network (HLD)</a>
@@ -59,15 +58,52 @@
           <a href="#maintenance">Maintenance</a>
         </div>
       </nav>
+
+      <div class="wiki-current-dir">
+        <div class="wiki-current-title">Current Directory</div>
+        <a class="wiki-dir-page active" href="#application-details">▤ Application Details</a>
+        <a class="wiki-dir-page" href="#device-list">▤ Device List</a>
+        <a class="wiki-dir-page" href="#networking">▤ Networking</a>
+      </div>
     </aside>
 
     <main class="wiki-content">
+      <nav class="wiki-breadcrumb">
+        <a href="index.html">⌂</a>
+        <span>/</span>
+        <a href="#architecture">Architecture</a>
+        <span>/</span>
+        <strong>Application-Details</strong>
+      </nav>
+
       <div class="wiki-page-head">
-        <h1>Introduction</h1>
-        <p>Documentation workspace for Smart Agriculture and Smart Water Management System architecture, sensors, devices, and operations.</p>
+        <h1>Application Details</h1>
+        <p>Details about all applications, services, and endpoints in the SmartSystems infrastructure.</p>
       </div>
 
-      <div class="wiki-main-content">
+      <div class="wiki-directory-layout">
+        <aside class="wiki-page-tools">
+          <div class="wiki-tool-card">
+            <div class="wiki-tool-label">Page Contents</div>
+            <a href="#application-details">› Application Details</a>
+            <a href="#device-list">› Device List</a>
+            <a href="#networking">› Networking</a>
+          </div>
+          <div class="wiki-tool-card">
+            <div class="wiki-tool-label">Talk</div>
+            <button type="button">View Discussion</button>
+          </div>
+          <div class="wiki-tool-card">
+            <div class="wiki-tool-label">Last Edited By</div>
+            <p>Administrator<br><span>25/04/2026</span></p>
+          </div>
+          <div class="wiki-tool-actions" aria-hidden="true">
+            <span>↗</span>
+            <span>▣</span>
+          </div>
+        </aside>
+
+        <div class="wiki-main-content">
         <section class="wiki-section searchable" id="introduction">
           <h2>Introduction</h2>
           <p>
@@ -82,7 +118,69 @@
         </section>
 
         <section class="wiki-section searchable" id="architecture">
-          <h2>Architecture</h2>
+          <h2 id="application-details">Application Details</h2>
+          <table class="device-table app-details-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Smart Agriculture</th>
+                <th>Smart Water Management</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tech Stack</td>
+                <td>Flask, SQLite, HTML/CSS/JS, MQTT-ready API placeholders</td>
+                <td>Flask, SQLite, HTML/CSS/JS, Modbus/MQTT-ready API placeholders</td>
+              </tr>
+              <tr>
+                <td>Application Type</td>
+                <td>Smart agriculture monitoring, CTF, and operations wiki</td>
+                <td>Water distribution monitoring, CTF, and operations wiki</td>
+              </tr>
+              <tr>
+                <td>Base OS</td>
+                <td><span class="placeholder">[RASPBERRY_PI_OS / LINUX]</span></td>
+                <td><span class="placeholder">[RASPBERRY_PI_OS / LINUX]</span></td>
+              </tr>
+              <tr>
+                <td>Server IP Address</td>
+                <td><span class="placeholder">[AGRI_APP_SERVER_IP]</span></td>
+                <td><span class="placeholder">[WATER_APP_SERVER_IP]</span></td>
+              </tr>
+              <tr>
+                <td>Port Number</td>
+                <td><span class="placeholder">[5000 / CUSTOM_PORT]</span></td>
+                <td><span class="placeholder">[5000 / CUSTOM_PORT]</span></td>
+              </tr>
+              <tr>
+                <td>Access Link</td>
+                <td><a href="#">http://[SERVER_IP_ADDRESS]:[PORT]/#agri</a></td>
+                <td><a href="#">http://[SERVER_IP_ADDRESS]:[PORT]/#water</a></td>
+              </tr>
+              <tr>
+                <td>Admin Login</td>
+                <td>Admin URL: <span class="placeholder">/admin.html</span><br>Default Password: <span class="placeholder">[ADMIN_PASSWORD]</span></td>
+                <td>Admin URL: <span class="placeholder">/admin.html</span><br>Default Password: <span class="placeholder">[ADMIN_PASSWORD]</span></td>
+              </tr>
+              <tr>
+                <td>Database</td>
+                <td>SQLite: <span class="placeholder">data/cdac_ctf.sqlite3</span></td>
+                <td>SQLite: <span class="placeholder">data/cdac_ctf.sqlite3</span></td>
+              </tr>
+              <tr>
+                <td>Network Protocols</td>
+                <td><span class="placeholder">[HTTP, MQTT, LoRaWAN, Wi-Fi]</span></td>
+                <td><span class="placeholder">[HTTP, MQTT, Modbus TCP, RS485]</span></td>
+              </tr>
+              <tr>
+                <td>Primary Sensors</td>
+                <td><span class="placeholder">[SOIL_MOISTURE, TEMP, HUMIDITY, PH, EC]</span></td>
+                <td><span class="placeholder">[FLOW, PRESSURE, LEVEL, TURBIDITY, PH]</span></td>
+              </tr>
+            </tbody>
+          </table>
+
           <h3 id="architecture-overview">System Overview</h3>
           <p>
             The architecture should document how sensors, edge gateways, local services, dashboards, and backend
@@ -149,6 +247,46 @@ flowchart LR
 ```
 </code></pre>
           </div>
+        </section>
+
+        <section class="wiki-section searchable" id="device-list">
+          <h2>Device List</h2>
+          <table class="device-table">
+            <thead>
+              <tr>
+                <th>Device Name</th>
+                <th>Smart Agriculture</th>
+                <th>Smart Water Management</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Gateway</td><td><span class="placeholder">[AGRI_GATEWAY_IP]</span></td><td><span class="placeholder">[WATER_GATEWAY_IP]</span></td></tr>
+              <tr><td>Sensor Node 1</td><td><span class="placeholder">[SOIL_SENSOR_NODE_ID]</span></td><td><span class="placeholder">[FLOW_METER_NODE_ID]</span></td></tr>
+              <tr><td>Sensor Node 2</td><td><span class="placeholder">[TEMP_HUMIDITY_NODE_ID]</span></td><td><span class="placeholder">[PRESSURE_SENSOR_NODE_ID]</span></td></tr>
+              <tr><td>Controller</td><td><span class="placeholder">[IRRIGATION_CONTROLLER_IP]</span></td><td><span class="placeholder">[PUMP_CONTROLLER_IP]</span></td></tr>
+              <tr><td>Dashboard</td><td><span class="placeholder">[AGRI_DASHBOARD_URL]</span></td><td><span class="placeholder">[WATER_DASHBOARD_URL]</span></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="wiki-section searchable" id="networking">
+          <h2>Networking</h2>
+          <table class="device-table">
+            <thead>
+              <tr>
+                <th>Network Item</th>
+                <th>Smart Agriculture</th>
+                <th>Smart Water Management</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>LAN/Subnet</td><td><span class="placeholder">[AGRI_NETWORK_CIDR]</span></td><td><span class="placeholder">[WATER_NETWORK_CIDR]</span></td></tr>
+              <tr><td>Protocol</td><td><span class="placeholder">[MQTT / HTTP / LoRaWAN]</span></td><td><span class="placeholder">[Modbus TCP / MQTT / HTTP]</span></td></tr>
+              <tr><td>Broker/API</td><td><span class="placeholder">[MQTT_BROKER_IP]</span></td><td><span class="placeholder">[API_OR_BROKER_IP]</span></td></tr>
+              <tr><td>Firewall Ports</td><td><span class="placeholder">[1883, 5000, 443]</span></td><td><span class="placeholder">[502, 1883, 5000]</span></td></tr>
+              <tr><td>Admin PC</td><td><span class="placeholder">[ADMIN_PC_IP]</span></td><td><span class="placeholder">[ADMIN_PC_IP]</span></td></tr>
+            </tbody>
+          </table>
         </section>
 
         <section class="wiki-section searchable" id="sensor-network">
@@ -369,6 +507,7 @@ waitress-serve --host=0.0.0.0 --port=[PORT] app:app
             <li>Back up SQLite database from <span class="placeholder">[DB_PATH]</span>.</li>
           </ul>
         </section>
+        </div>
       </div>
     </main>
   </div>

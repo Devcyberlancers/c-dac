@@ -129,6 +129,16 @@ body {
   padding: 16px 0 40px;
 }
 
+.wiki-root-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f4f4f4;
+  font-weight: 800;
+  padding: 8px 20px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
 .wiki-nav-item {
   display: flex;
   align-items: center;
@@ -173,10 +183,64 @@ body {
   background: #2a2a2a;
 }
 
+.wiki-current-dir {
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+}
+
+.wiki-current-title {
+  color: #b8b8b8;
+  font-size: 0.86rem;
+  font-weight: 800;
+  padding: 0 20px 12px;
+}
+
+.wiki-dir-page {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 0 18px;
+  color: #f4f4f4;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.wiki-dir-page:hover,
+.wiki-dir-page.active {
+  background: #565656;
+}
+
 .wiki-content {
   grid-row: 2;
   overflow-y: auto;
   background: #202020;
+}
+
+.wiki-breadcrumb {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 0 24px;
+  background: #1a1a1a;
+  border-bottom: 1px solid var(--line);
+  color: #fff;
+  font-family: "Courier New", monospace;
+  font-weight: 800;
+}
+
+.wiki-breadcrumb a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.wiki-breadcrumb a:first-child {
+  color: var(--blue);
+}
+
+.wiki-breadcrumb span {
+  color: #b8b8b8;
 }
 
 .wiki-page-head {
@@ -201,6 +265,85 @@ body {
 .wiki-main-content {
   max-width: 1100px;
   padding: 34px 26px 80px;
+}
+
+.wiki-directory-layout {
+  display: grid;
+  grid-template-columns: 390px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding: 22px 26px 80px;
+}
+
+.wiki-directory-layout .wiki-main-content {
+  max-width: 980px;
+  padding: 0;
+}
+
+.wiki-page-tools {
+  position: sticky;
+  top: 20px;
+  display: grid;
+  gap: 24px;
+}
+
+.wiki-tool-card {
+  background: #1b1b1b;
+  border: 1px solid #202020;
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  padding: 26px;
+}
+
+.wiki-tool-label {
+  color: var(--blue);
+  font-family: "Courier New", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+.wiki-tool-card a {
+  color: #fff;
+  display: block;
+  font-weight: 800;
+  text-decoration: none;
+  padding: 8px 0;
+}
+
+.wiki-tool-card button {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #6f8797;
+  border-radius: 5px;
+  color: #8aa1af;
+  font-family: "Courier New", monospace;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 10px;
+}
+
+.wiki-tool-card p {
+  color: #b8b8b8;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.wiki-tool-card span {
+  color: #787878;
+}
+
+.wiki-tool-actions {
+  background: #1b1b1b;
+  border-radius: 5px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  color: #a5a5a5;
+  font-size: 1.45rem;
 }
 
 .wiki-section {
@@ -302,6 +445,35 @@ code {
   color: var(--blue);
 }
 
+.app-details-table {
+  font-size: 1.02rem;
+}
+
+.app-details-table th {
+  background: #474747;
+  color: #d2d2d2;
+  font-size: 1.06rem;
+  text-align: center;
+}
+
+.app-details-table td:first-child {
+  width: 24%;
+  font-weight: 800;
+  color: #e2e2e2;
+}
+
+.app-details-table td {
+  background: #181818;
+}
+
+.app-details-table tr:nth-child(even) td {
+  background: #2d2d2d;
+}
+
+.app-details-table a {
+  color: #8ccdff;
+}
+
 .placeholder {
   color: var(--amber);
   font-family: "Courier New", monospace;
@@ -334,5 +506,15 @@ code {
 
   .wiki-grid {
     grid-template-columns: 1fr;
+  }
+
+  .wiki-directory-layout {
+    display: block;
+    padding: 18px;
+  }
+
+  .wiki-page-tools {
+    position: static;
+    margin-bottom: 24px;
   }
 }
