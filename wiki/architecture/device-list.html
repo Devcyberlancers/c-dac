@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device List - CDAC Wiki</title>
+  <link rel="stylesheet" href="/static/css/wiki.css">
+</head>
+<body>
+  <div class="wiki-shell">
+    <header class="wiki-topbar"><div class="wiki-brand"><img class="wiki-logo" src="/static/images/cdac-logo.png" alt="CDAC logo"><div class="wiki-brand-title">CDAC SmartSystems Wiki</div></div><label class="wiki-search"><span>⌕</span><input type="search" placeholder="Search..."></label><div class="wiki-actions"><span>⌑</span><span>●</span></div></header>
+    <aside class="wiki-sidebar">
+      <div class="wiki-menu-top"><a class="wiki-home" href="/index.html">⌂</a><a class="wiki-main" href="/wiki/">▲ Main Menu</a></div>
+      <nav class="wiki-tree"><div class="wiki-root-line"><span>📁</span> / (root)</div><a class="wiki-nav-item active" href="/wiki/architecture/application-details"><span class="icon">📁</span> Architecture</a><div class="wiki-nav-sub"><a href="/wiki/architecture/application-details">Application Details</a><a href="/wiki/architecture/device-list">Device List</a><a href="/wiki/architecture/networking">Networking</a></div><a class="wiki-nav-item" href="/wiki/sensor-network/hld"><span class="icon">📁</span> Sensor Network (HLD)</a><a class="wiki-nav-item" href="/wiki/device-management/table"><span class="icon">▤</span> Device Management Table</a><a class="wiki-nav-item" href="/wiki/operations/manual"><span class="icon">▤</span> Operational Manual</a></nav>
+      <div class="wiki-current-dir"><div class="wiki-current-title">Current Directory</div><a class="wiki-dir-page" href="/wiki/architecture/application-details">▤ Application Details</a><a class="wiki-dir-page active" href="/wiki/architecture/device-list">▤ Device List</a><a class="wiki-dir-page" href="/wiki/architecture/networking">▤ Networking</a></div>
+    </aside>
+    <main class="wiki-content">
+      <nav class="wiki-breadcrumb"><a href="/index.html">⌂</a><span>/</span><a href="/wiki/architecture/application-details">Architecture</a><span>/</span><strong>Device-List</strong></nav>
+      <div class="wiki-page-head"><h1>Device List</h1><p>Directory page for Smart Agriculture and Smart Water devices.</p></div>
+      <div class="wiki-directory-layout">
+        <aside class="wiki-page-tools"><div class="wiki-tool-card"><div class="wiki-tool-label">Page Contents</div><a href="#device-list">› Device List</a><a href="#device-template">› Markdown Template</a></div><div class="wiki-tool-card"><div class="wiki-tool-label">Last Edited By</div><p>Administrator<br><span>25/04/2026</span></p></div></aside>
+        <div class="wiki-main-content">
+          <section class="wiki-section" id="device-list">
+            <h2>Device List</h2>
+            <table class="device-table app-details-table">
+              <thead><tr><th>Device Name</th><th>Smart Agriculture</th><th>Smart Water Management</th></tr></thead>
+              <tbody>
+                <tr><td>Gateway</td><td><span class="placeholder">[AGRI_GATEWAY_IP]</span></td><td><span class="placeholder">[WATER_GATEWAY_IP]</span></td></tr>
+                <tr><td>Sensor Node 1</td><td><span class="placeholder">[SOIL_SENSOR_NODE_ID]</span></td><td><span class="placeholder">[FLOW_METER_NODE_ID]</span></td></tr>
+                <tr><td>Sensor Node 2</td><td><span class="placeholder">[TEMP_HUMIDITY_NODE_ID]</span></td><td><span class="placeholder">[PRESSURE_SENSOR_NODE_ID]</span></td></tr>
+                <tr><td>Controller</td><td><span class="placeholder">[IRRIGATION_CONTROLLER_IP]</span></td><td><span class="placeholder">[PUMP_CONTROLLER_IP]</span></td></tr>
+                <tr><td>Dashboard</td><td><span class="placeholder">[AGRI_DASHBOARD_URL]</span></td><td><span class="placeholder">[WATER_DASHBOARD_URL]</span></td></tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="wiki-section" id="device-template"><h2>Markdown Template</h2><div class="md-template"><div class="md-template-label">architecture/device-list.md</div><pre><code># Device List
+
+| Device Name | Device Type | Sensor Type | IP Address / Node ID | Protocol | Status |
+|---|---|---|---|---|---|
+| [DEVICE_NAME] | [GATEWAY/SENSOR/PLC] | [SENSOR_TYPE] | [IP_ADDRESS_OR_NODE_ID] | [NETWORK_PROTOCOL] | [STATUS] |
+</code></pre></div></section>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

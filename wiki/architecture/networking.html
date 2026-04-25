@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Networking - CDAC Wiki</title>
+  <link rel="stylesheet" href="/static/css/wiki.css">
+</head>
+<body>
+  <div class="wiki-shell">
+    <header class="wiki-topbar"><div class="wiki-brand"><img class="wiki-logo" src="/static/images/cdac-logo.png" alt="CDAC logo"><div class="wiki-brand-title">CDAC SmartSystems Wiki</div></div><label class="wiki-search"><span>⌕</span><input type="search" placeholder="Search..."></label><div class="wiki-actions"><span>⌑</span><span>●</span></div></header>
+    <aside class="wiki-sidebar"><div class="wiki-menu-top"><a class="wiki-home" href="/index.html">⌂</a><a class="wiki-main" href="/wiki/">▲ Main Menu</a></div><nav class="wiki-tree"><div class="wiki-root-line"><span>📁</span> / (root)</div><a class="wiki-nav-item active" href="/wiki/architecture/application-details"><span class="icon">📁</span> Architecture</a><div class="wiki-nav-sub"><a href="/wiki/architecture/application-details">Application Details</a><a href="/wiki/architecture/device-list">Device List</a><a href="/wiki/architecture/networking">Networking</a></div><a class="wiki-nav-item" href="/wiki/sensor-network/hld"><span class="icon">📁</span> Sensor Network (HLD)</a><a class="wiki-nav-item" href="/wiki/device-management/table"><span class="icon">▤</span> Device Management Table</a><a class="wiki-nav-item" href="/wiki/operations/manual"><span class="icon">▤</span> Operational Manual</a></nav><div class="wiki-current-dir"><div class="wiki-current-title">Current Directory</div><a class="wiki-dir-page" href="/wiki/architecture/application-details">▤ Application Details</a><a class="wiki-dir-page" href="/wiki/architecture/device-list">▤ Device List</a><a class="wiki-dir-page active" href="/wiki/architecture/networking">▤ Networking</a></div></aside>
+    <main class="wiki-content">
+      <nav class="wiki-breadcrumb"><a href="/index.html">⌂</a><span>/</span><a href="/wiki/architecture/application-details">Architecture</a><span>/</span><strong>Networking</strong></nav>
+      <div class="wiki-page-head"><h1>Networking</h1><p>Network ranges, protocols, ports, and gateway mapping.</p></div>
+      <div class="wiki-directory-layout">
+        <aside class="wiki-page-tools"><div class="wiki-tool-card"><div class="wiki-tool-label">Page Contents</div><a href="#networking">› Networking</a><a href="#network-template">› Markdown Template</a></div></aside>
+        <div class="wiki-main-content">
+          <section class="wiki-section" id="networking">
+            <h2>Networking</h2>
+            <table class="device-table app-details-table">
+              <thead><tr><th>Network Item</th><th>Smart Agriculture</th><th>Smart Water Management</th></tr></thead>
+              <tbody>
+                <tr><td>LAN/Subnet</td><td><span class="placeholder">[AGRI_NETWORK_CIDR]</span></td><td><span class="placeholder">[WATER_NETWORK_CIDR]</span></td></tr>
+                <tr><td>Protocol</td><td><span class="placeholder">[MQTT / HTTP / LoRaWAN]</span></td><td><span class="placeholder">[Modbus TCP / MQTT / HTTP]</span></td></tr>
+                <tr><td>Broker/API</td><td><span class="placeholder">[MQTT_BROKER_IP]</span></td><td><span class="placeholder">[API_OR_BROKER_IP]</span></td></tr>
+                <tr><td>Firewall Ports</td><td><span class="placeholder">[1883, 5000, 443]</span></td><td><span class="placeholder">[502, 1883, 5000]</span></td></tr>
+                <tr><td>Admin PC</td><td><span class="placeholder">[ADMIN_PC_IP]</span></td><td><span class="placeholder">[ADMIN_PC_IP]</span></td></tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="wiki-section" id="network-template"><h2>Markdown Template</h2><div class="md-template"><div class="md-template-label">architecture/networking.md</div><pre><code># Networking
+
+| Zone | CIDR/IP | Protocol | Port | Purpose |
+|---|---|---|---|---|
+| [ZONE_NAME] | [IP_ADDRESS_OR_CIDR] | [NETWORK_PROTOCOL] | [PORT] | [PURPOSE] |
+</code></pre></div></section>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

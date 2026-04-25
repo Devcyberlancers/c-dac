@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sensor Network HLD - CDAC Wiki</title><link rel="stylesheet" href="/static/css/wiki.css"></head>
+<body>
+  <div class="wiki-shell">
+    <header class="wiki-topbar"><div class="wiki-brand"><img class="wiki-logo" src="/static/images/cdac-logo.png" alt="CDAC logo"><div class="wiki-brand-title">CDAC SmartSystems Wiki</div></div><label class="wiki-search"><span>⌕</span><input type="search" placeholder="Search..."></label><div class="wiki-actions"><span>⌑</span><span>●</span></div></header>
+    <aside class="wiki-sidebar"><div class="wiki-menu-top"><a class="wiki-home" href="/index.html">⌂</a><a class="wiki-main" href="/wiki/">▲ Main Menu</a></div><nav class="wiki-tree"><div class="wiki-root-line"><span>📁</span> / (root)</div><a class="wiki-nav-item" href="/wiki/architecture/application-details"><span class="icon">📁</span> Architecture</a><a class="wiki-nav-item active" href="/wiki/sensor-network/hld"><span class="icon">📁</span> Sensor Network (HLD)</a><a class="wiki-nav-item" href="/wiki/device-management/table"><span class="icon">▤</span> Device Management Table</a><a class="wiki-nav-item" href="/wiki/operations/manual"><span class="icon">▤</span> Operational Manual</a></nav></aside>
+    <main class="wiki-content"><nav class="wiki-breadcrumb"><a href="/index.html">⌂</a><span>/</span><strong>Sensor-Network</strong><span>/</span><strong>HLD</strong></nav><div class="wiki-page-head"><h1>Sensor Network (HLD)</h1><p>High-level design for sensor topology, gateways, and protocols.</p></div><div class="wiki-directory-layout"><aside class="wiki-page-tools"><div class="wiki-tool-card"><div class="wiki-tool-label">Page Contents</div><a href="#sensor-hld">› Sensor HLD</a><a href="#sensor-template">› Markdown Template</a></div></aside><div class="wiki-main-content"><section class="wiki-section" id="sensor-hld"><h2>Sensor Network (HLD)</h2><table class="device-table"><thead><tr><th>Zone</th><th>Sensor Type</th><th>Protocol</th><th>Gateway/IP Placeholder</th></tr></thead><tbody><tr><td>Agriculture Field</td><td><span class="placeholder">[SOIL_SENSOR_TYPE]</span></td><td><span class="placeholder">[MQTT / LoRaWAN / HTTP]</span></td><td><span class="placeholder">[AGRI_GATEWAY_IP]</span></td></tr><tr><td>Water Distribution</td><td><span class="placeholder">[FLOW_OR_PRESSURE_SENSOR]</span></td><td><span class="placeholder">[Modbus TCP / RTU / MQTT]</span></td><td><span class="placeholder">[WATER_GATEWAY_IP]</span></td></tr></tbody></table></section><section class="wiki-section" id="sensor-template"><h2>Markdown Template</h2><div class="md-template"><div class="md-template-label">sensor-network/hld.md</div><pre><code># Sensor Network HLD
+
+| Sensor ID | Sensor Type | Measurement | Location | Protocol | IP/Address |
+|---|---|---|---|---|---|
+| [SENSOR_ID] | [SENSOR_TYPE] | [PARAMETER] | [LOCATION] | [NETWORK_PROTOCOL] | [IP_OR_NODE_ID] |
+
+## Gateway
+- Gateway IP: [GATEWAY_IP_ADDRESS]
+- Data Topic/Register: [MQTT_TOPIC_OR_MODBUS_REGISTER]
+</code></pre></div></section></div></div></main>
+  </div>
+</body>
+</html>

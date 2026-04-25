@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Operational Manual - CDAC Wiki</title><link rel="stylesheet" href="/static/css/wiki.css"></head>
+<body>
+  <div class="wiki-shell">
+    <header class="wiki-topbar"><div class="wiki-brand"><img class="wiki-logo" src="/static/images/cdac-logo.png" alt="CDAC logo"><div class="wiki-brand-title">CDAC SmartSystems Wiki</div></div><label class="wiki-search"><span>⌕</span><input type="search" placeholder="Search..."></label><div class="wiki-actions"><span>⌑</span><span>●</span></div></header>
+    <aside class="wiki-sidebar"><div class="wiki-menu-top"><a class="wiki-home" href="/index.html">⌂</a><a class="wiki-main" href="/wiki/">▲ Main Menu</a></div><nav class="wiki-tree"><div class="wiki-root-line"><span>📁</span> / (root)</div><a class="wiki-nav-item" href="/wiki/architecture/application-details"><span class="icon">📁</span> Architecture</a><a class="wiki-nav-item" href="/wiki/sensor-network/hld"><span class="icon">📁</span> Sensor Network (HLD)</a><a class="wiki-nav-item" href="/wiki/device-management/table"><span class="icon">▤</span> Device Management Table</a><a class="wiki-nav-item active" href="/wiki/operations/manual"><span class="icon">▤</span> Operational Manual</a></nav></aside>
+    <main class="wiki-content"><nav class="wiki-breadcrumb"><a href="/index.html">⌂</a><span>/</span><strong>Operations</strong><span>/</span><strong>Manual</strong></nav><div class="wiki-page-head"><h1>Operational Manual</h1><p>Runbook page for startup, health checks, backup, restart, and incidents.</p></div><div class="wiki-directory-layout"><aside class="wiki-page-tools"><div class="wiki-tool-card"><div class="wiki-tool-label">Page Contents</div><a href="#operations">› Runbook</a><a href="#incident">› Incident Response</a></div></aside><div class="wiki-main-content"><section class="wiki-section" id="operations"><h2>Operational Manual</h2><div class="md-template"><div class="md-template-label">operations/manual.md</div><pre><code># Operational Manual
+
+## System Startup
+1. Power on [RASPBERRY_PI_OR_SERVER].
+2. Verify IP: [SERVER_IP_ADDRESS].
+3. Start application:
+   waitress-serve --host=0.0.0.0 --port=[PORT] app:app
+
+## Health Checks
+| Check | Command / URL | Expected Result |
+|---|---|---|
+| Web App | http://[SERVER_IP_ADDRESS]:[PORT] | Page loads |
+| Database | [DB_PATH] | SQLite file exists |
+| Gateway | ping [GATEWAY_IP_ADDRESS] | Reply received |
+</code></pre></div></section><section class="wiki-section" id="incident"><h2>Incident Response</h2><div class="md-template"><div class="md-template-label">operations/incident-response.md</div><pre><code># Incident Response
+
+- Incident Type: [SENSOR_OFFLINE / GATEWAY_OFFLINE / HIGH_LATENCY]
+- Affected IP: [IP_ADDRESS]
+- Protocol: [NETWORK_PROTOCOL]
+- Recovery Command: [RECOVERY_COMMAND]
+- Root Cause: [ROOT_CAUSE]
+</code></pre></div></section></div></div></main>
+  </div>
+</body>
+</html>

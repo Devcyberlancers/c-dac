@@ -385,6 +385,17 @@ body {
   padding: 18px;
 }
 
+.wiki-card-link {
+  color: var(--text);
+  text-decoration: none;
+  min-height: 120px;
+}
+
+.wiki-card-link:hover {
+  border-color: var(--blue);
+  background: #2d2d2d;
+}
+
 .wiki-card strong {
   color: var(--green);
 }

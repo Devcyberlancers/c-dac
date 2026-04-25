@@ -3,12 +3,13 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, abort, jsonify, redirect, request, send_from_directory
 
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 DB_PATH = DATA_DIR / "cdac_ctf.sqlite3"
+WIKI_DIR = ROOT / "wiki"
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 
@@ -200,6 +201,24 @@ def admin_page():
 @app.get("/wiki.html")
 def wiki_page():
     return send_from_directory(ROOT, "wiki.html")
+
+
+@app.get("/wiki")
+def wiki_no_slash():
+    return redirect("/wiki/")
+
+
+@app.get("/wiki/")
+def wiki_index():
+    return send_from_directory(WIKI_DIR, "index.html")
+
+
+@app.get("/wiki/<path:page>")
+def wiki_nested_page(page):
+    html_path = WIKI_DIR / f"{page}.html"
+    if not html_path.resolve().is_relative_to(WIKI_DIR.resolve()) or not html_path.exists():
+        abort(404)
+    return send_from_directory(WIKI_DIR, f"{page}.html")
 
 
 @app.post("/api/students")
