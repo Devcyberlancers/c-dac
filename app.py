@@ -197,6 +197,11 @@ def admin_page():
     return send_from_directory(ROOT, "admin.html")
 
 
+@app.get("/wiki.html")
+def wiki_page():
+    return send_from_directory(ROOT, "wiki.html")
+
+
 @app.post("/api/students")
 def upsert_student():
     payload = request.get_json(silent=True) or {}
