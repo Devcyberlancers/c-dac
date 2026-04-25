@@ -160,6 +160,60 @@ body {
   text-align: left;
 }
 
+.wiki-nav-item > span,
+.wiki-folder-toggle > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.wiki-css-icon {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 25px;
+  height: 20px;
+}
+
+.wiki-css-icon.folder {
+  height: 18px;
+  border-radius: 3px;
+  background: #f4f4f4;
+}
+
+.wiki-css-icon.folder::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -5px;
+  width: 12px;
+  height: 7px;
+  border-radius: 3px 3px 0 0;
+  background: #f4f4f4;
+}
+
+.wiki-css-icon.document {
+  width: 22px;
+  height: 24px;
+  border-radius: 3px;
+  background: #f4f4f4;
+}
+
+.wiki-css-icon.document::before,
+.wiki-css-icon.document::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  height: 3px;
+  border-radius: 3px;
+  background: #171717;
+}
+
+.wiki-css-icon.document::before { top: 7px; }
+.wiki-css-icon.document::after { top: 14px; }
+
 .wiki-nav-item:hover,
 .wiki-nav-item.active,
 .wiki-folder-toggle:hover,

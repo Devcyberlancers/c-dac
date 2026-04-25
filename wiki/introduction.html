@@ -1,6 +1,6 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Operational Manual - CDAC Wiki</title><link rel="stylesheet" href="/static/css/wiki.css?v=6"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Introduction - CDAC Wiki</title><link rel="stylesheet" href="/static/css/wiki.css?v=6"></head>
 <body>
   <div class="wiki-shell">
     <header class="wiki-topbar"><div class="wiki-brand"><img class="wiki-logo" src="/static/images/cdac-logo.png" alt="CDAC logo"><div class="wiki-brand-title">CDAC SmartSystems Wiki</div></div></header>
@@ -12,40 +12,12 @@
         <a class="wiki-nav-item" href="/wiki/logs"><span><span class="wiki-css-icon folder"></span>Logs</span></a>
         <a class="wiki-nav-item" href="/wiki/simulations"><span><span class="wiki-css-icon folder"></span>Simulations</span></a>
         <a class="wiki-nav-item" href="/wiki/attack-notes"><span><span class="wiki-css-icon document"></span>Attack Notes</span></a>
-        <a class="wiki-nav-item" href="/wiki/introduction"><span><span class="wiki-css-icon document"></span>Introduction</span></a>
+        <a class="wiki-nav-item active" href="/wiki/introduction"><span><span class="wiki-css-icon document"></span>Introduction</span></a>
         <a class="wiki-nav-item" href="/wiki/device-management/table"><span><span class="wiki-css-icon document"></span>Device Management Table</span></a>
         <a class="wiki-nav-item" href="/wiki/operations/manual"><span><span class="wiki-css-icon document"></span>Operational Manual</span></a>
       </nav></aside>
-    <main class="wiki-content"><nav class="wiki-breadcrumb"><a href="/index.html">Home</a><span>/</span><strong>Operations</strong><span>/</span><strong>Manual</strong></nav><div class="wiki-page-head"><h1>Operational Manual</h1><p>Runbook page for startup, health checks, backup, restart, and incidents.</p></div><div class="wiki-directory-layout">
-        <div class="wiki-main-content"><section class="wiki-section" id="operations"><h2>Operational Manual</h2><div class="md-template"><div class="md-template-label">operations/manual.md</div><pre><code># Operational Manual
-
-## System Startup
-1. Power on [RASPBERRY_PI_OR_SERVER].
-2. Verify IP: [SERVER_IP_ADDRESS].
-3. Start application:
-   waitress-serve --host=0.0.0.0 --port=[PORT] app:app
-
-## Health Checks
-| Check | Command / URL | Expected Result |
-|---|---|---|
-| Web App | http://[SERVER_IP_ADDRESS]:[PORT] | Page loads |
-| Database | [DB_PATH] | SQLite file exists |
-| Gateway | ping [GATEWAY_IP_ADDRESS] | Reply received |
-</code></pre></div></section><section class="wiki-section" id="incident"><h2>Incident Response</h2><div class="md-template"><div class="md-template-label">operations/incident-response.md</div><pre><code># Incident Response
-
-- Incident Type: [SENSOR_OFFLINE / GATEWAY_OFFLINE / HIGH_LATENCY]
-- Affected IP: [IP_ADDRESS]
-- Protocol: [NETWORK_PROTOCOL]
-- Recovery Command: [RECOVERY_COMMAND]
-- Root Cause: [ROOT_CAUSE]
-</code></pre></div></section></div></div></main>
+    <main class="wiki-content"><nav class="wiki-breadcrumb"><a href="/index.html">Home</a><span>/</span><strong>Introduction</strong></nav><div class="wiki-page-head"><h1>Introduction</h1><p>Overview of the Smart Agriculture and Smart Water Management wiki.</p></div><div class="wiki-directory-layout"><div class="wiki-main-content"><section class="wiki-section"><h2>Introduction</h2><p>This wiki stores architecture, HLD, device, logging, simulation, attack-note, and operations documentation for the SmartSystems lab.</p></section></div></div></main>
   </div>
   <script src="/static/js/wiki.js?v=1"></script>
 </body>
 </html>
-
-
-
-
-
-
