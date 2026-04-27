@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/ctf-db.css">
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,6 +25,7 @@
       --green-dk : #3e8a2c;
       --teal     : #1a9e78;
       --blue     : #4da6ff;
+      --purple   : #9974ff;
       --amber    : #eea832;
       --red      : #f24b3a;
       --red-dk   : #c42220;
@@ -205,6 +207,8 @@
     .sc-tab:hover  { color: var(--text2); }
     .sc-tab.active { color: var(--text1); border-bottom-color: var(--green); }
     .sc-tab[data-cat="water"].active { border-bottom-color: var(--teal); }
+    .sc-tab[data-cat="students"].active { border-bottom-color: var(--blue); }
+    .sc-tab[data-cat="wiki"].active { border-bottom-color: var(--purple); }
     .sc-tab[data-cat="settings"].active { border-bottom-color: var(--amber); }
 
     .sc-panel       { display: none; }
@@ -537,9 +541,125 @@
     }
     .stat-pill strong { color: var(--text1); }
 
+    .student-card {
+      background    : linear-gradient(135deg, rgba(10,20,32,0.95), rgba(12,16,20,0.98));
+      border        : 1px solid rgba(77,166,255,0.18);
+      border-radius : var(--r-lg);
+      padding       : 1.25rem 1.4rem;
+      margin-bottom : 1rem;
+      display       : grid;
+      grid-template-columns: 1.1fr 1.6fr;
+      gap           : 1rem;
+      align-items   : center;
+    }
+    .student-name {
+      font-weight: 800;
+      color: var(--text1);
+      margin-bottom: 0.25rem;
+    }
+    .student-email,
+    .student-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--text3);
+      overflow-wrap: anywhere;
+    }
+    .student-marks {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+    .student-mark {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 0.75rem;
+    }
+    .student-mark strong {
+      display: block;
+      color: var(--text1);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+    .student-mark span {
+      color: var(--text3);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .student-empty {
+      color: var(--text3);
+      border: 1px dashed var(--border-hi);
+      border-radius: var(--r-lg);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .wiki-editor-card {
+      background    : linear-gradient(135deg, rgba(18,14,30,0.95), rgba(12,16,20,0.98));
+      border        : 1px solid rgba(153,116,255,0.22);
+      border-radius : var(--r-lg);
+      padding       : 1.75rem 2rem;
+    }
+    .wiki-editor-toolbar {
+      display              : grid;
+      grid-template-columns: minmax(240px, 1fr) auto auto auto;
+      gap                  : 0.75rem;
+      align-items          : center;
+      margin-bottom        : 1rem;
+    }
+    .wiki-editor-select {
+      background    : rgba(255,255,255,0.04);
+      border        : 1px solid var(--border-hi);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.78rem;
+      padding       : 10px 12px;
+      border-radius : var(--r-md);
+      outline       : none;
+      min-width     : 0;
+    }
+    .wiki-editor-textarea {
+      min-height    : 560px;
+      width         : 100%;
+      background    : rgba(2,4,7,0.72);
+      border        : 1px solid rgba(153,116,255,0.24);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.78rem;
+      line-height   : 1.55;
+      padding       : 1rem;
+      border-radius : var(--r-md);
+      resize        : vertical;
+      outline       : none;
+      white-space   : pre;
+      overflow      : auto;
+    }
+    .wiki-editor-textarea:focus {
+      border-color: rgba(153,116,255,0.6);
+      box-shadow  : 0 0 0 3px rgba(153,116,255,0.12);
+    }
+    .wiki-editor-meta {
+      display      : flex;
+      flex-wrap    : wrap;
+      gap          : 0.6rem;
+      margin-bottom: 1rem;
+      font-family  : 'IBM Plex Mono', monospace;
+      font-size    : 0.72rem;
+      color        : var(--text3);
+    }
+    .wiki-editor-note {
+      margin-top : 0.8rem;
+      color      : var(--text3);
+      font-size  : 0.78rem;
+      line-height: 1.6;
+    }
+
     @media (max-width: 640px) {
       .form-grid { grid-template-columns: 1fr; }
       .q-card    { grid-template-columns: 1fr; }
+      .wiki-editor-toolbar { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -568,8 +688,8 @@
 
   <header>
     <div class="hdr-brand">
-      <div class="hdr-dot"></div>
-      CDAC · CTF Admin
+      <img class="hdr-logo-img" src="static/images/cdac-logo.png" alt="CDAC logo">
+      <span>CDAC · CTF Admin</span>
     </div>
     <div class="hdr-actions">
       <a href="index.html" class="hdr-btn">← Back to Site</a>
@@ -586,6 +706,12 @@
       </button>
       <button class="sc-tab" data-cat="water" onclick="switchTab('water')">
         💧 Water Distribution
+      </button>
+      <button class="sc-tab" data-cat="students" onclick="switchTab('students')">
+        👥 Students
+      </button>
+      <button class="sc-tab" data-cat="wiki" onclick="switchTab('wiki')">
+        Wiki Pages
       </button>
       <button class="sc-tab" data-cat="settings" onclick="switchTab('settings')">
         ⚙️ Settings
@@ -689,6 +815,48 @@
 
     </div>
 
+    <!-- ── Students Panel ── -->
+    <div class="sc-panel" id="panel-students">
+      <div class="section-head">
+        <div>
+          <h2>Enrolled Students</h2>
+          <p>Students are loaded from the local SQLite database on this machine.</p>
+        </div>
+        <button class="hdr-btn" onclick="renderStudents()">Refresh</button>
+      </div>
+      <div class="stats-bar" id="students-stats"></div>
+      <div id="students-list"></div>
+    </div>
+
+    <!-- ── Wiki Panel ── -->
+    <div class="sc-panel" id="panel-wiki">
+      <div class="section-head">
+        <div>
+          <h2>Wiki Page Editor</h2>
+          <p>Edit the HTML content of each wiki page from one place.</p>
+        </div>
+      </div>
+
+      <div class="wiki-editor-card">
+        <div class="wiki-editor-toolbar">
+          <select class="wiki-editor-select" id="wiki-page-select" onchange="loadWikiPage(this.value)">
+            <option value="">Loading pages...</option>
+          </select>
+          <button class="hdr-btn" onclick="loadWikiPage()">Load</button>
+          <button class="btn-add" onclick="saveWikiPage()">Save Page</button>
+          <button class="btn-clear" onclick="openWikiPage()">Open Page</button>
+        </div>
+        <div class="wiki-editor-meta" id="wiki-page-meta">
+          <span>Select a page to edit.</span>
+        </div>
+        <textarea class="wiki-editor-textarea" id="wiki-page-content" spellcheck="false"
+                  placeholder="Select a wiki page to load its HTML here."></textarea>
+        <p class="wiki-editor-note">
+          This editor saves directly into the local wiki HTML files. Keep the sidebar/header structure if you want the page layout to stay consistent.
+        </p>
+      </div>
+    </div>
+
     <!-- ── Settings Panel ── -->
     <div class="sc-panel" id="panel-settings">
 
@@ -790,6 +958,16 @@
   const PASS_KEY = 'cdac_admin_pass';
   const DEFAULT_PASS = 'cdac@admin';
 
+  async function api(path, options) {
+    const res = await fetch(path, {
+      headers: { 'Content-Type': 'application/json' },
+      ...(options || {})
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.ok === false) throw new Error(data.msg || 'Request failed.');
+    return data;
+  }
+
   function getStoredPass() {
     return localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
   }
@@ -827,11 +1005,13 @@
     document.querySelectorAll('.sc-panel').forEach(p =>
       p.classList.toggle('active', p.id === 'panel-' + cat));
     if (cat === 'agriculture' || cat === 'water') renderList(cat);
+    if (cat === 'students') renderStudents();
+    if (cat === 'wiki') initWikiEditor();
   }
 
   /* ── Render list ── */
-  function renderList(cat) {
-    const data = CTF.getData();
+  async function renderList(cat) {
+    const data = await CTF.getData();
     const questions = data[cat] || [];
     const listEl = document.getElementById(cat + '-qlist');
     const statsEl = document.getElementById(cat + '-stats');
@@ -866,8 +1046,139 @@
       </div>`).join('');
   }
 
+  async function renderStudents() {
+    const statsEl = document.getElementById('students-stats');
+    const listEl = document.getElementById('students-list');
+    statsEl.innerHTML = '<div class="stat-pill">Loading students...</div>';
+    listEl.innerHTML = '';
+    try {
+      const data = await api('/api/admin/students');
+      const students = data.students || [];
+      const totalScore = students.reduce((s, st) => s + st.totalScore, 0);
+      const totalSolved = students.reduce((s, st) => s + st.totalSolved, 0);
+      statsEl.innerHTML = `
+        <div class="stat-pill"><strong>${students.length}</strong> enrolled</div>
+        <div class="stat-pill"><strong>${totalSolved}</strong> solves</div>
+        <div class="stat-pill"><strong>${totalScore}</strong> total marks</div>`;
+      if (students.length === 0) {
+        listEl.innerHTML = '<div class="student-empty">No students enrolled yet.</div>';
+        return;
+      }
+      listEl.innerHTML = students.map(st => `
+        <div class="student-card">
+          <div>
+            <div class="student-name">${escapeHtml(st.name)}</div>
+            <div class="student-email">${escapeHtml(st.email)}</div>
+            <div class="student-meta">Joined: ${formatDate(st.createdAt)} · Last activity: ${formatDate(st.lastActivity || st.updatedAt)}</div>
+          </div>
+          <div class="student-marks">
+            <div class="student-mark"><strong>${st.agricultureScore}</strong><span>Agriculture</span></div>
+            <div class="student-mark"><strong>${st.waterScore}</strong><span>Water</span></div>
+            <div class="student-mark"><strong>${st.totalScore}</strong><span>Total Marks</span></div>
+            <div class="student-mark"><strong>${st.attempts}</strong><span>Attempts</span></div>
+          </div>
+        </div>`).join('');
+    } catch (e) {
+      statsEl.innerHTML = '';
+      listEl.innerHTML = `<div class="student-empty">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[ch]));
+  }
+
+  function formatDate(value) {
+    if (!value) return 'No activity';
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleString();
+  }
+
+  /* ── Wiki editor ── */
+  let wikiPages = [];
+  let wikiPagesLoaded = false;
+  let activeWikiPageId = '';
+
+  async function initWikiEditor() {
+    if (wikiPagesLoaded) return;
+    const select = document.getElementById('wiki-page-select');
+    const meta = document.getElementById('wiki-page-meta');
+    try {
+      const data = await api('/api/admin/wiki-pages');
+      wikiPages = data.pages || [];
+      wikiPagesLoaded = true;
+      select.innerHTML = wikiPages.map(page =>
+        `<option value="${escapeHtml(page.id)}">${escapeHtml(page.title)}</option>`
+      ).join('');
+      if (wikiPages.length) await loadWikiPage(wikiPages[0].id);
+      else meta.innerHTML = '<span>No wiki pages found.</span>';
+    } catch (e) {
+      select.innerHTML = '<option value="">Unable to load pages</option>';
+      meta.innerHTML = `<span>${escapeHtml(e.message)}</span>`;
+    }
+  }
+
+  async function loadWikiPage(pageId) {
+    const select = document.getElementById('wiki-page-select');
+    const contentEl = document.getElementById('wiki-page-content');
+    const meta = document.getElementById('wiki-page-meta');
+    const id = pageId || select.value;
+    if (!id) return;
+    meta.innerHTML = '<span>Loading page...</span>';
+    try {
+      const data = await api('/api/admin/wiki-pages/' + encodeURIComponent(id));
+      const page = data.page;
+      activeWikiPageId = page.id;
+      select.value = page.id;
+      contentEl.value = page.content || '';
+      meta.innerHTML = `
+        <span><strong>${escapeHtml(page.title)}</strong></span>
+        <span>${escapeHtml(page.path)}</span>
+        <span>${escapeHtml(page.url)}</span>`;
+    } catch (e) {
+      meta.innerHTML = `<span>${escapeHtml(e.message)}</span>`;
+      toast(e.message, 'err');
+    }
+  }
+
+  async function saveWikiPage() {
+    const select = document.getElementById('wiki-page-select');
+    const contentEl = document.getElementById('wiki-page-content');
+    const id = activeWikiPageId || select.value;
+    if (!id) {
+      toast('Select a wiki page first', 'err');
+      return;
+    }
+    try {
+      await api('/api/admin/wiki-pages/' + encodeURIComponent(id), {
+        method: 'PUT',
+        body: JSON.stringify({ content: contentEl.value })
+      });
+      toast('Wiki page saved', 'ok');
+      await loadWikiPage(id);
+    } catch (e) {
+      toast(e.message, 'err');
+    }
+  }
+
+  function openWikiPage() {
+    const page = wikiPages.find(item => item.id === (activeWikiPageId || document.getElementById('wiki-page-select').value));
+    if (!page) {
+      toast('Select a wiki page first', 'err');
+      return;
+    }
+    window.open(page.url, '_blank');
+  }
+
   /* ── Add question ── */
-  function addQuestion(cat) {
+  async function addQuestion(cat) {
     const title  = document.getElementById(cat + '-title').value.trim();
     const points = parseInt(document.getElementById(cat + '-points').value) || 0;
     const desc   = document.getElementById(cat + '-desc').value.trim();
@@ -881,17 +1192,21 @@
       return;
     }
 
-    const data = CTF.getData();
-    if (!data[cat]) data[cat] = [];
-
-    const id = cat + '_' + Date.now();
-    data[cat].push({ id, title, description: desc, points, flag, hint, category: cat });
-    CTF.setData(data);
+    try {
+      await api('/api/admin/challenges', {
+        method: 'POST',
+        body: JSON.stringify({ category: cat, title, description: desc, points, flag, hint })
+      });
+    } catch (e) {
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = e.message;
+      return;
+    }
 
     msgEl.className = 'form-msg ok';
     msgEl.textContent = '✓ Challenge added!';
     clearForm(cat);
-    renderList(cat);
+    await renderList(cat);
     toast('Challenge added successfully', 'ok');
     setTimeout(() => msgEl.textContent = '', 3000);
   }
@@ -904,18 +1219,20 @@
   }
 
   /* ── Delete ── */
-  function deleteQ(id, cat) {
+  async function deleteQ(id, cat) {
     if (!confirm('Delete this challenge? This cannot be undone.')) return;
-    const data = CTF.getData();
-    data[cat] = (data[cat] || []).filter(q => q.id !== id);
-    CTF.setData(data);
-    renderList(cat);
-    toast('Challenge deleted', 'err');
+    try {
+      await api('/api/admin/challenges/' + encodeURIComponent(id), { method: 'DELETE' });
+      await renderList(cat);
+      toast('Challenge deleted', 'err');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
   /* ── Edit modal ── */
-  function openEdit(id, cat) {
-    const data = CTF.getData();
+  async function openEdit(id, cat) {
+    const data = await CTF.getData();
     const q    = (data[cat] || []).find(c => c.id === id);
     if (!q) return;
     document.getElementById('edit-id').value    = id;
@@ -932,7 +1249,7 @@
     document.getElementById('edit-modal').classList.remove('open');
   }
 
-  function saveEdit() {
+  async function saveEdit() {
     const id    = document.getElementById('edit-id').value;
     const cat   = document.getElementById('edit-cat').value;
     const title = document.getElementById('edit-title').value.trim();
@@ -945,14 +1262,17 @@
       toast('Please fill all required fields', 'err'); return;
     }
 
-    const data = CTF.getData();
-    const idx  = (data[cat] || []).findIndex(c => c.id === id);
-    if (idx === -1) { toast('Challenge not found', 'err'); return; }
-    data[cat][idx] = { id, title, description: desc, points: pts, flag, hint, category: cat };
-    CTF.setData(data);
-    closeModal();
-    renderList(cat);
-    toast('Challenge updated', 'ok');
+    try {
+      await api('/api/admin/challenges/' + encodeURIComponent(id), {
+        method: 'PUT',
+        body: JSON.stringify({ category: cat, title, description: desc, points: pts, flag, hint })
+      });
+      closeModal();
+      await renderList(cat);
+      toast('Challenge updated', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
   /* Close modal on backdrop click */
@@ -986,26 +1306,30 @@
       document.getElementById(id).value = '');
   }
 
-  function resetProgress() {
+  async function resetProgress() {
     if (!confirm('Reset ALL user progress? Solved flags and attempts will be cleared.')) return;
-    CTF.saveProgress({ solved: [], attempts: {} });
-    toast('Progress reset', 'ok');
+    try {
+      await api('/api/admin/reset-progress', { method: 'POST', body: '{}' });
+      toast('Progress reset', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
-  function restoreDefaults() {
+  async function restoreDefaults() {
     if (!confirm('Restore built-in seed questions? Your custom questions will be replaced.')) return;
-    CTF.setData(JSON.parse(JSON.stringify(CTF.SEED)));
-    renderList('agriculture');
-    renderList('water');
-    toast('Default questions restored', 'ok');
+    try {
+      await api('/api/admin/restore-defaults', { method: 'POST', body: '{}' });
+      await renderList('agriculture');
+      await renderList('water');
+      toast('Default questions restored', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    }
   }
 
-  function exportData() {
-    const payload = {
-      questions: CTF.getData(),
-      progress : CTF.getProgress(),
-      exportedAt: new Date().toISOString()
-    };
+  async function exportData() {
+    const payload = await fetch('/api/admin/export').then(r => r.json());
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
@@ -1030,6 +1354,7 @@
   function initAdmin(domain) {
     renderList('agriculture');
     renderList('water');
+    renderStudents();
     /* If a domain was passed from URL, switch to that tab */
     var target = domain || 'agriculture';
     if (target === 'water') switchTab('water');
