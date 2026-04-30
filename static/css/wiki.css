@@ -31,7 +31,8 @@ body {
 .wiki-topbar {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
   align-items: center;
   padding: 0 18px;
   background: #050505;
@@ -43,23 +44,53 @@ body {
   align-items: center;
   gap: 12px;
   min-width: 0;
+  width: fit-content;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
 .wiki-logo {
-  width: 44px;
-  height: 44px;
+  width: min(260px, 58vw);
+  height: 40px;
   object-fit: contain;
-  background: #fff;
-  border-radius: 4px;
-  padding: 3px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
 }
 
 .wiki-brand-title {
+  display: none;
   font-size: 1.2rem;
   font-weight: 800;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.wiki-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 8px;
+  color: #f4f4f4;
+  background: rgba(255,255,255,0.06);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wiki-logout:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.28);
 }
 
 .wiki-search {

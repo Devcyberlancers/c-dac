@@ -1,21 +1,43 @@
+.nav-brand,
+.hdr-brand {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.nav-brand {
+  padding: 4px 10px;
+}
+
+.hdr-brand {
+  padding: 4px 9px;
+}
+
 .nav-logo-img,
 .hdr-logo-img {
   object-fit: contain;
   display: block;
-  background: rgba(255,255,255,0.95);
-  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .nav-logo-img {
-  width: 86px;
-  height: 34px;
-  padding: 3px 6px;
+  width: min(260px, 52vw);
+  height: 40px;
+  padding: 0;
 }
 
 .hdr-logo-img {
-  width: 82px;
-  height: 32px;
-  padding: 3px 6px;
+  width: min(240px, 50vw);
+  height: 38px;
+  padding: 0;
+}
+
+.nav-brand > span,
+.hdr-brand > span {
+  display: none;
 }
 
 .ctf-entry-card,

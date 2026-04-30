@@ -25,15 +25,125 @@
   const canvas   = document.getElementById('bg-canvas');
   let activeScene = null;   // holds the cleanup() function
 
+  function initCanvasFallbackScene(canvas, mode) {
+    const ctx = canvas.getContext('2d');
+    let raf = 0;
+    let w = 0;
+    let h = 0;
+    const isWater = mode === 'water';
+    const isCyber = mode === 'cyber';
+    const blades = Array.from({ length: 420 }, (_, i) => ({
+      x: Math.random(),
+      y: Math.random(),
+      height: 28 + Math.random() * 70,
+      width: 1 + Math.random() * 2.8,
+      sway: Math.random() * Math.PI * 2,
+      speed: 0.7 + Math.random() * 1.6,
+      hue: 82 + Math.random() * 36,
+      alpha: 0.28 + Math.random() * 0.55,
+      layer: i % 3
+    }));
+    const particles = Array.from({ length: isCyber ? 120 : 95 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      size: 1 + Math.random() * 4,
+      speed: 0.08 + Math.random() * 0.28,
+      alpha: 0.15 + Math.random() * 0.35
+    }));
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function drawGrassBlade(b, t) {
+      const baseX = b.x * w;
+      const baseY = h * (0.72 + b.y * 0.32);
+      const bladeH = b.height * (1 + b.layer * 0.28);
+      const bend = Math.sin(t * b.speed + b.sway + b.x * 8) * (8 + b.layer * 5);
+      ctx.beginPath();
+      ctx.moveTo(baseX, baseY);
+      ctx.quadraticCurveTo(baseX + bend * 0.35, baseY - bladeH * 0.55, baseX + bend, baseY - bladeH);
+      ctx.strokeStyle = 'hsla(' + b.hue + ', 78%, ' + (28 + b.layer * 8) + '%, ' + b.alpha + ')';
+      ctx.lineWidth = b.width + b.layer * 0.8;
+      ctx.stroke();
+    }
+
+    function draw(tMs) {
+      const t = tMs * 0.001;
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, isWater ? '#031722' : isCyber ? '#070911' : '#041109');
+      bg.addColorStop(0.55, isWater ? '#062735' : isCyber ? '#101420' : '#06180b');
+      bg.addColorStop(1, isWater ? '#051318' : isCyber ? '#07090f' : '#123000');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (const p of particles) {
+        const x = ((p.x * w) + Math.sin(t * 0.5 + p.y * 8) * 18) % w;
+        const y = ((p.y * h) + t * p.speed * 42) % h;
+        ctx.fillStyle = isWater
+          ? 'rgba(88, 221, 246, ' + p.alpha + ')'
+          : isCyber
+            ? 'rgba(244, 184, 74, ' + p.alpha + ')'
+            : 'rgba(132, 214, 90, ' + p.alpha + ')';
+        ctx.fillRect(x, y, p.size, p.size);
+      }
+      ctx.restore();
+
+      if (!isCyber) {
+        ctx.save();
+        ctx.shadowColor = isWater ? 'rgba(88, 221, 246, 0.16)' : 'rgba(68, 170, 32, 0.18)';
+        ctx.shadowBlur = 10;
+        blades.forEach(b => drawGrassBlade(b, t));
+        ctx.restore();
+      } else {
+        ctx.strokeStyle = 'rgba(244, 184, 74, 0.16)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 26; i += 1) {
+          const y = (i / 26) * h + Math.sin(t + i) * 8;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y + Math.sin(t * 0.8 + i) * 16);
+          ctx.stroke();
+        }
+      }
+
+      const vignette = ctx.createRadialGradient(w * 0.5, h * 0.52, h * 0.08, w * 0.5, h * 0.52, h * 0.75);
+      vignette.addColorStop(0, 'rgba(0,0,0,0)');
+      vignette.addColorStop(1, 'rgba(0,0,0,0.55)');
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, w, h);
+      raf = requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    raf = requestAnimationFrame(draw);
+    return function cleanupFallbackScene() {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      ctx.clearRect(0, 0, w, h);
+    };
+  }
+
   /**
    * Map page IDs → scene initialiser functions.
    * 'agri' shares the home grass scene (looks great on subpage too).
    */
+  const hasThree = typeof window.THREE !== 'undefined';
   const SCENE_MAP = {
-    home  : () => initHomeScene(canvas),
-    agri  : () => initHomeScene(canvas),    // green field fits agriculture
-    water : () => initWaterScene(canvas),
-    cyber : () => initCyberScene(canvas),
+    home  : () => hasThree ? initHomeScene(canvas) : initCanvasFallbackScene(canvas, 'home'),
+    agri  : () => hasThree ? initHomeScene(canvas) : initCanvasFallbackScene(canvas, 'home'),
+    water : () => hasThree ? initWaterScene(canvas) : initCanvasFallbackScene(canvas, 'water'),
+    cyber : () => hasThree ? initCyberScene(canvas) : initCanvasFallbackScene(canvas, 'cyber'),
   };
 
   function switchScene(pageId) {

@@ -1,9 +1,9 @@
-import os
+﻿import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, abort, jsonify, redirect, request, send_from_directory
+from flask import Flask, abort, jsonify, redirect, request, send_from_directory, session
 
 
 ROOT = Path(__file__).resolve().parent
@@ -12,6 +12,8 @@ DB_PATH = DATA_DIR / "cdac_ctf.sqlite3"
 WIKI_DIR = ROOT / "wiki"
 
 app = Flask(__name__, static_folder="static", static_url_path="/static")
+app.secret_key = os.environ.get("SECRET_KEY", "cdac-smartsystems-dev-secret")
+WIKI_PASSWORD = os.environ.get("WIKI_PASSWORD", "cdac@admin")
 
 WIKI_PAGES = [
     {
@@ -264,9 +266,108 @@ def require_category(value):
     return value if value in ("agriculture", "water") else None
 
 
+def clean_next_url(value):
+    if value and value.startswith("/") and not value.startswith("//"):
+        return value
+    return "/wiki/"
+
+
+def require_wiki_auth():
+    if session.get("wiki_authenticated"):
+        return None
+    return redirect(f"/wiki-login?next={request.path}")
+
+
+def wiki_login_page(error=""):
+    err = f'<div class="wiki-login-error">{error}</div>' if error else ""
+    next_url = clean_next_url(request.args.get("next") or request.form.get("next"))
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+  <title>CDAC Wiki Access</title>
+  <style>
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #06090d;
+      color: #f4f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+    }}
+    .wiki-login-card {{
+      width: min(420px, calc(100vw - 32px));
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      background: rgba(13,17,23,0.95);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+    }}
+    .wiki-login-brand {{ display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }}
+    .wiki-login-brand img {{
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 8px;
+      padding: 3px;
+    }}
+    h1 {{ font-size: 1.25rem; margin: 0; }}
+    p {{ margin: 0 0 18px; color: #aab7c6; line-height: 1.5; }}
+    label {{ display: block; margin-bottom: 8px; font-size: 0.82rem; color: #aab7c6; }}
+    input {{
+      width: 100%;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      background: #0a0f16;
+      color: #fff;
+      padding: 0 12px;
+      font-size: 1rem;
+    }}
+    button {{
+      width: 100%;
+      height: 44px;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 8px;
+      background: #58ddb6;
+      color: #06100d;
+      font-weight: 800;
+      cursor: pointer;
+    }}
+    .wiki-login-error {{ margin-bottom: 12px; color: #ff8a8a; font-size: 0.9rem; }}
+  </style>
+</head>
+<body>
+  <form class="wiki-login-card" method="post" action="/wiki-login">
+    <div class="wiki-login-brand">
+      <img src="/static/images/favicon-192.png" alt="CDAC logo">
+      <h1>CDAC Wiki Access</h1>
+    </div>
+    <p>Enter the CDAC Wiki password to continue.</p>
+    {err}
+    <input type="hidden" name="next" value="{next_url}">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" autofocus>
+    <button type="submit">Unlock Wiki</button>
+  </form>
+</body>
+</html>"""
+
+
 @app.get("/")
 def home():
     return send_from_directory(ROOT, "index.html")
+
+
+@app.get("/favicon.ico")
+def favicon():
+    return send_from_directory(ROOT / "static" / "images", "favicon.ico")
 
 
 @app.get("/index.html")
@@ -279,8 +380,27 @@ def admin_page():
     return send_from_directory(ROOT, "admin.html")
 
 
+@app.route("/wiki-login", methods=["GET", "POST"])
+def wiki_login():
+    if request.method == "POST":
+        if (request.form.get("password") or "") == WIKI_PASSWORD:
+            session["wiki_authenticated"] = True
+            return redirect(clean_next_url(request.form.get("next")))
+        return wiki_login_page("Incorrect password.")
+    return wiki_login_page()
+
+
+@app.get("/wiki-logout")
+def wiki_logout():
+    session.pop("wiki_authenticated", None)
+    return redirect("/wiki-login")
+
+
 @app.get("/wiki.html")
 def wiki_page():
+    gate = require_wiki_auth()
+    if gate:
+        return gate
     return send_from_directory(ROOT, "wiki.html")
 
 
@@ -291,11 +411,17 @@ def wiki_no_slash():
 
 @app.get("/wiki/")
 def wiki_index():
+    gate = require_wiki_auth()
+    if gate:
+        return gate
     return send_from_directory(WIKI_DIR, "index.html")
 
 
 @app.get("/wiki/<path:page>")
 def wiki_nested_page(page):
+    gate = require_wiki_auth()
+    if gate:
+        return gate
     html_path = WIKI_DIR / f"{page}.html"
     if not html_path.resolve().is_relative_to(WIKI_DIR.resolve()) or not html_path.exists():
         abort(404)
@@ -711,3 +837,4 @@ init_db()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "5000"))
     app.run(host="0.0.0.0", port=port, debug=os.environ.get("FLASK_DEBUG") == "1")
+
