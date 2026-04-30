@@ -7,11 +7,11 @@
 }
 
 .nav-brand {
-  padding: 4px 10px;
+  padding: 3px 6px;
 }
 
 .hdr-brand {
-  padding: 4px 9px;
+  padding: 3px 6px;
 }
 
 .nav-logo-img,
@@ -24,13 +24,13 @@
 }
 
 .nav-logo-img {
-  width: min(260px, 52vw);
+  width: min(210px, 48vw);
   height: 40px;
   padding: 0;
 }
 
 .hdr-logo-img {
-  width: min(240px, 50vw);
+  width: min(200px, 46vw);
   height: 38px;
   padding: 0;
 }
