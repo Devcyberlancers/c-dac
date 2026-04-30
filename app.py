@@ -329,17 +329,35 @@ def wiki_login_page(error=""):
       padding: 0 12px;
       font-size: 1rem;
     }}
-    button {{
+    .wiki-login-actions {{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }}
+    button,
+    .wiki-home-link {{
       width: 100%;
       height: 44px;
-      margin-top: 16px;
       border: 0;
       border-radius: 8px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }}
+    button {{
       background: #58ddb6;
       color: #06100d;
-      font-weight: 800;
       cursor: pointer;
     }}
+    .wiki-home-link {{
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: #f4f7fb;
+    }}
+    .wiki-home-link:hover {{ background: rgba(255,255,255,0.14); }}
     .wiki-login-error {{ margin-bottom: 12px; color: #ff8a8a; font-size: 0.9rem; }}
   </style>
 </head>
@@ -354,7 +372,10 @@ def wiki_login_page(error=""):
     <input type="hidden" name="next" value="{next_url}">
     <label for="password">Password</label>
     <input id="password" name="password" type="password" autocomplete="current-password" autofocus>
-    <button type="submit">Unlock Wiki</button>
+    <div class="wiki-login-actions">
+      <a class="wiki-home-link" href="/index.html">Home</a>
+      <button type="submit">Unlock Wiki</button>
+    </div>
   </form>
 </body>
 </html>"""
