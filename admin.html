@@ -623,6 +623,83 @@
       outline       : none;
       min-width     : 0;
     }
+    .wiki-format-toolbar {
+      display      : flex;
+      flex-wrap    : wrap;
+      gap          : 0.45rem;
+      align-items  : center;
+      padding      : 0.75rem;
+      margin-bottom: 0.75rem;
+      border       : 1px solid rgba(153,116,255,0.18);
+      border-radius: var(--r-md);
+      background   : rgba(255,255,255,0.035);
+    }
+    .wiki-tool,
+    .wiki-tool-select {
+      height        : 34px;
+      border        : 1px solid rgba(255,255,255,0.13);
+      border-radius : var(--r-sm);
+      background    : rgba(255,255,255,0.05);
+      color         : var(--text1);
+      font-family   : 'IBM Plex Mono', monospace;
+      font-size     : 0.76rem;
+    }
+    .wiki-tool {
+      min-width     : 38px;
+      padding       : 0 0.7rem;
+      cursor        : pointer;
+    }
+    .wiki-tool:hover {
+      background: rgba(153,116,255,0.14);
+      border-color: rgba(153,116,255,0.35);
+    }
+    .wiki-tool.primary {
+      color: #06100d;
+      background: var(--green);
+      border-color: transparent;
+      font-weight: 800;
+    }
+    .wiki-tool-select {
+      min-width: 128px;
+      padding: 0 0.65rem;
+    }
+    .wiki-visual-editor {
+      min-height    : 560px;
+      width         : 100%;
+      background    : #f7f7f4;
+      border        : 1px solid rgba(153,116,255,0.24);
+      color         : #1f2933;
+      border-radius : var(--r-md);
+      padding       : 1.25rem;
+      font-family   : Arial, Helvetica, sans-serif;
+      font-size     : 1rem;
+      line-height   : 1.65;
+      overflow      : auto;
+      outline       : none;
+    }
+    .wiki-visual-editor:focus {
+      border-color: rgba(153,116,255,0.6);
+      box-shadow  : 0 0 0 3px rgba(153,116,255,0.12);
+    }
+    .wiki-visual-editor h1,
+    .wiki-visual-editor h2,
+    .wiki-visual-editor h3 {
+      color: #111827;
+      line-height: 1.2;
+      margin: 1rem 0 0.6rem;
+    }
+    .wiki-visual-editor p { margin: 0 0 0.9rem; }
+    .wiki-visual-editor table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    .wiki-visual-editor td,
+    .wiki-visual-editor th {
+      border: 1px solid #c9d1d9;
+      padding: 0.55rem;
+    }
+    .wiki-visual-editor a { color: #075bb5; }
     .wiki-editor-textarea {
       min-height    : 560px;
       width         : 100%;
@@ -638,6 +715,12 @@
       outline       : none;
       white-space   : pre;
       overflow      : auto;
+    }
+    .wiki-editor-textarea.source-hidden {
+      display: none;
+    }
+    .wiki-visual-editor.visual-hidden {
+      display: none;
     }
     .wiki-editor-textarea:focus {
       border-color: rgba(153,116,255,0.6);
@@ -836,7 +919,7 @@
       <div class="section-head">
         <div>
           <h2>Wiki Page Editor</h2>
-          <p>Edit the HTML content of each wiki page from one place.</p>
+          <p>Edit wiki pages visually with a simple document-style toolbar.</p>
         </div>
       </div>
 
@@ -852,10 +935,31 @@
         <div class="wiki-editor-meta" id="wiki-page-meta">
           <span>Select a page to edit.</span>
         </div>
-        <textarea class="wiki-editor-textarea" id="wiki-page-content" spellcheck="false"
+        <div class="wiki-format-toolbar" aria-label="Wiki editor tools">
+          <select class="wiki-tool-select" id="wiki-format-block" onchange="wikiFormatBlock(this.value)">
+            <option value="P">Paragraph</option>
+            <option value="H1">Heading 1</option>
+            <option value="H2">Heading 2</option>
+            <option value="H3">Heading 3</option>
+          </select>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('bold')"><strong>B</strong></button>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('italic')"><em>I</em></button>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('underline')"><u>U</u></button>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('insertUnorderedList')">List</button>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('insertOrderedList')">1. List</button>
+          <button type="button" class="wiki-tool" onclick="wikiCreateLink()">Link</button>
+          <button type="button" class="wiki-tool" onclick="wikiInsertTable()">Table</button>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('undo')">Undo</button>
+          <button type="button" class="wiki-tool" onclick="wikiCommand('redo')">Redo</button>
+          <button type="button" class="wiki-tool primary" id="wiki-source-toggle" onclick="toggleWikiSource()">Source</button>
+        </div>
+        <div class="wiki-visual-editor" id="wiki-visual-editor" contenteditable="true" spellcheck="true" oninput="syncWikiSourceFromVisual()">
+          Select a wiki page to start editing.
+        </div>
+        <textarea class="wiki-editor-textarea source-hidden" id="wiki-page-content" spellcheck="false" oninput="syncWikiVisualFromSource()"
                   placeholder="Select a wiki page to load its HTML here."></textarea>
         <p class="wiki-editor-note">
-          This editor saves directly into the local wiki HTML files. Keep the sidebar/header structure if you want the page layout to stay consistent.
+          Edit the page visually with the toolbar. Use Source only for advanced HTML fixes.
         </p>
       </div>
     </div>
@@ -1108,6 +1212,120 @@
   let wikiPages = [];
   let wikiPagesLoaded = false;
   let activeWikiPageId = '';
+  let activeWikiFullHtml = '';
+  let wikiSourceMode = false;
+
+  function getWikiEditorEls() {
+    return {
+      source: document.getElementById('wiki-page-content'),
+      visual: document.getElementById('wiki-visual-editor'),
+      toggle: document.getElementById('wiki-source-toggle')
+    };
+  }
+
+  function findWikiEditableBounds(html, className) {
+    const safeClass = className.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const openTagRe = new RegExp(`<([a-zA-Z][\\w:-]*)(?=[^>]*\\bclass\\s*=\\s*["'][^"']*\\b${safeClass}\\b)[^>]*>`, 'i');
+    const open = openTagRe.exec(html);
+    if (!open) return null;
+    const tagName = open[1].toLowerCase();
+    const tagRe = new RegExp('<\\/?' + tagName + '\\b[^>]*>', 'ig');
+    tagRe.lastIndex = open.index + open[0].length;
+    let depth = 1;
+    let match;
+    while ((match = tagRe.exec(html))) {
+      depth += match[0].startsWith('</') ? -1 : 1;
+      if (depth === 0) {
+        return {
+          start: open.index,
+          openEnd: open.index + open[0].length,
+          closeStart: match.index,
+          end: tagRe.lastIndex
+        };
+      }
+    }
+    return null;
+  }
+
+  function getWikiEditableBounds(html) {
+    return findWikiEditableBounds(html, 'wiki-main-content') || findWikiEditableBounds(html, 'wiki-content');
+  }
+
+  function extractWikiEditableHtml(fullHtml) {
+    const sourceHtml = fullHtml || '';
+    const bounds = getWikiEditableBounds(sourceHtml);
+    if (bounds) return sourceHtml.slice(bounds.openEnd, bounds.closeStart).trim();
+    try {
+      const doc = new DOMParser().parseFromString(sourceHtml.replace(/^\uFEFF/, ''), 'text/html');
+      const target = doc.body;
+      return target ? target.innerHTML.trim() : sourceHtml;
+    } catch (e) {
+      return sourceHtml;
+    }
+  }
+
+  function buildWikiFullHtml(newEditableHtml) {
+    if (!activeWikiFullHtml) return newEditableHtml;
+    const sourceHtml = activeWikiFullHtml;
+    const bounds = getWikiEditableBounds(sourceHtml);
+    if (!bounds) return sourceHtml;
+    const originalInner = sourceHtml.slice(bounds.openEnd, bounds.closeStart);
+    const leadingSpace = (originalInner.match(/^\s*/) || [''])[0];
+    const trailingSpace = (originalInner.match(/\s*$/) || [''])[0];
+    return sourceHtml.slice(0, bounds.openEnd) + leadingSpace + newEditableHtml.trim() + trailingSpace + sourceHtml.slice(bounds.closeStart);
+  }
+
+  function syncWikiSourceFromVisual() {
+    const { source, visual } = getWikiEditorEls();
+    if (source && visual) source.value = visual.innerHTML.trim();
+  }
+
+  function syncWikiVisualFromSource() {
+    const { source, visual } = getWikiEditorEls();
+    if (source && visual) visual.innerHTML = source.value || '<p></p>';
+  }
+
+  function wikiCommand(command, value = null) {
+    if (wikiSourceMode) return;
+    const { visual } = getWikiEditorEls();
+    visual.focus();
+    document.execCommand(command, false, value);
+    syncWikiSourceFromVisual();
+  }
+
+  function wikiFormatBlock(tag) {
+    if (!tag || wikiSourceMode) return;
+    wikiCommand('formatBlock', tag);
+  }
+
+  function wikiCreateLink() {
+    if (wikiSourceMode) return;
+    const url = prompt('Enter link URL');
+    if (!url) return;
+    wikiCommand('createLink', url);
+  }
+
+  function wikiInsertTable() {
+    if (wikiSourceMode) return;
+    const html = '<table><tbody><tr><th>Heading</th><th>Heading</th></tr><tr><td>Text</td><td>Text</td></tr></tbody></table><p></p>';
+    wikiCommand('insertHTML', html);
+  }
+
+  function toggleWikiSource() {
+    const { source, visual, toggle } = getWikiEditorEls();
+    wikiSourceMode = !wikiSourceMode;
+    if (wikiSourceMode) {
+      syncWikiSourceFromVisual();
+      source.classList.remove('source-hidden');
+      visual.classList.add('visual-hidden');
+      toggle.textContent = 'Visual';
+    } else {
+      syncWikiVisualFromSource();
+      source.classList.add('source-hidden');
+      visual.classList.remove('visual-hidden');
+      toggle.textContent = 'Source';
+    }
+  }
 
   async function initWikiEditor() {
     if (wikiPagesLoaded) return;
@@ -1131,6 +1349,7 @@
   async function loadWikiPage(pageId) {
     const select = document.getElementById('wiki-page-select');
     const contentEl = document.getElementById('wiki-page-content');
+    const visualEl = document.getElementById('wiki-visual-editor');
     const meta = document.getElementById('wiki-page-meta');
     const id = pageId || select.value;
     if (!id) return;
@@ -1139,8 +1358,12 @@
       const data = await api('/api/admin/wiki-pages/' + encodeURIComponent(id));
       const page = data.page;
       activeWikiPageId = page.id;
+      activeWikiFullHtml = page.content || '';
       select.value = page.id;
-      contentEl.value = page.content || '';
+      const editableHtml = extractWikiEditableHtml(activeWikiFullHtml);
+      contentEl.value = editableHtml;
+      visualEl.innerHTML = editableHtml || '<p></p>';
+      if (wikiSourceMode) toggleWikiSource();
       meta.innerHTML = `
         <span><strong>${escapeHtml(page.title)}</strong></span>
         <span>${escapeHtml(page.path)}</span>
@@ -1160,9 +1383,11 @@
       return;
     }
     try {
+      if (!wikiSourceMode) syncWikiSourceFromVisual();
+      const fullHtml = buildWikiFullHtml(contentEl.value);
       await api('/api/admin/wiki-pages/' + encodeURIComponent(id), {
         method: 'PUT',
-        body: JSON.stringify({ content: contentEl.value })
+        body: JSON.stringify({ content: fullHtml })
       });
       toast('Wiki page saved', 'ok');
       await loadWikiPage(id);
