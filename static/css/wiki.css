@@ -25,12 +25,12 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 318px minmax(0, 1fr);
-  grid-template-rows: 68px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .wiki-topbar {
   grid-column: 1 / -1;
-  display: grid;
+  display: none;
   grid-template-columns: 1fr auto;
   gap: 16px;
   align-items: center;
@@ -40,7 +40,7 @@ body {
 }
 
 .wiki-brand {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -127,7 +127,7 @@ body {
 }
 
 .wiki-sidebar {
-  grid-row: 2;
+  grid-row: 1;
   background: #171717;
   border-right: 1px solid var(--line);
   overflow-y: auto;
@@ -335,7 +335,7 @@ body {
 }
 
 .wiki-content {
-  grid-row: 2;
+  grid-row: 1;
   overflow-y: auto;
   background: #202020;
 }
