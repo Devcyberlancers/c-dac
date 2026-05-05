@@ -35,10 +35,10 @@
        NAVIGATION
   ══════════════════════════════════════════════════════════ -->
   <nav id="main-nav" role="navigation" aria-label="Main Navigation">
-    <div class="nav-brand">
+    <button class="nav-brand" type="button" data-page="home" aria-label="Go to home">
       <img class="nav-logo-img" src="static/images/cdac-logo.png" alt="CDAC logo">
       <span>CDAC <span class="brand-accent">SmartSystems</span></span>
-    </div>
+    </button>
 
     <ul class="nav-links" id="nav-links">
       <li><button class="nav-btn active" data-page="home"  id="navbtn-home" >Home</button></li>
@@ -176,6 +176,56 @@
              wastage, and enable real-time field monitoring at scale. Designed to support
              smallholder farmers, agri-enterprises, and government agricultural bodies.</p>
         </div>
+        <div class="agri-photo-grid" aria-label="Smart agriculture photos">
+          <figure class="agri-photo-card reveal">
+            <img src="static/images/agriculture-model-1.jpeg"
+                 alt="Smart agriculture model with field sensors, farm house, livestock, and water tower">
+            <figcaption>
+              <strong>Integrated Farm Model</strong>
+              <span>Complete smart agriculture layout with monitored crop zones.</span>
+            </figcaption>
+          </figure>
+          <figure class="agri-photo-card reveal">
+            <img src="static/images/agriculture-model-2.jpeg"
+                 alt="Smart agriculture model showing palm grove, tractor, greenhouse, and lit field path">
+            <figcaption>
+              <strong>Connected Field Zones</strong>
+              <span>Lighting, sensors, and machinery arranged across farm areas.</span>
+            </figcaption>
+          </figure>
+          <figure class="agri-photo-card reveal">
+            <img src="static/images/agriculture-model-3.jpeg"
+                 alt="Smart agriculture farmhouse model with greenhouse and field display">
+            <figcaption>
+              <strong>Farm Control Center</strong>
+              <span>Model house and greenhouse connected to the field system.</span>
+            </figcaption>
+          </figure>
+          <figure class="agri-photo-card reveal">
+            <img src="static/images/agriculture-model-4.jpeg"
+                 alt="Close view of illuminated crop rows and smart agriculture sensors">
+            <figcaption>
+              <strong>Live Crop Monitoring</strong>
+              <span>Illuminated crop beds represent real-time sensor coverage.</span>
+            </figcaption>
+          </figure>
+          <figure class="agri-photo-card reveal">
+            <img src="static/images/agriculture-model-5.jpeg"
+                 alt="Smart agriculture dashboard tablet next to the agriculture model">
+            <figcaption>
+              <strong>Dashboard View</strong>
+              <span>Tablet interface shows field readings and control status.</span>
+            </figcaption>
+          </figure>
+          <figure class="agri-photo-card reveal">
+            <img src="static/images/agriculture-model-6.jpeg"
+                 alt="Tractor and water tower section of the smart agriculture model">
+            <figcaption>
+              <strong>Farm Automation</strong>
+              <span>Equipment, irrigation, and field assets shown in one system.</span>
+            </figcaption>
+          </figure>
+        </div>
         <div class="feature-grid">
           <div class="feature-item reveal">
             <span class="fi-icon">🌡️</span>
@@ -280,14 +330,14 @@
             <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
             <span class="ctf-launch-hint">&#9881; Open CTF Challenges &rarr;</span>
           </div>
-          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.16.79:3000/login', '_blank')" role="link" tabindex="0">
+          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.0.62:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(),filters:!(),index:d1436d3f-9f97-40d3-b7dd-b5a2eaab2cf8,interval:auto,query:(language:kuery,query:%27%27),sort:!(!(%27@timestamp%27,desc)))', '_blank')" role="link" tabindex="0">
             <span class="cc-tag blue">Blue Team</span>
             <h3>Monitoring &amp; Response</h3>
             <p>Continuous log aggregation, intrusion detection, and incident response
                playbooks aligned to ICS/SCADA threat models.</p>
-            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span>
-              <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
-                 class="grafana-inline-btn">📊 Open Grafana ↗</a>
+            <div class="cyber-note">Platform: <span class="tag-pill">Kibana</span>
+              <a href="http://172.16.0.62:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&amp;_a=(columns:!(),filters:!(),index:d1436d3f-9f97-40d3-b7dd-b5a2eaab2cf8,interval:auto,query:(language:kuery,query:%27%27),sort:!(!(%27@timestamp%27,desc)))" target="_blank" rel="noopener"
+                 class="grafana-inline-btn">📊 Open Kibana ↗</a>
             </div>
           </div>
         </div>
@@ -334,15 +384,15 @@
           </div>
         </div>
 
-        <!-- ── Grafana Launch Panel (HPC Monitor) ── -->
-        <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+        <!-- ── Kibana Launch Panel (Log Monitor) ── -->
+        <a href="http://172.16.0.62:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&amp;_a=(columns:!(),filters:!(),index:d1436d3f-9f97-40d3-b7dd-b5a2eaab2cf8,interval:auto,query:(language:kuery,query:%27%27),sort:!(!(%27@timestamp%27,desc)))" target="_blank" rel="noopener"
            class="grafana-launch" id="agri-hpc-grafana">
           <div class="gl-left">
             <div class="gl-icon">📊</div>
             <div class="gl-info">
-              <h4>Grafana HPC Monitor</h4>
-              <p>Live metrics · Agriculture cluster jobs &amp; node health</p>
-              <code>172.16.16.79:3000</code>
+              <h4>Kibana Discover Monitor</h4>
+              <p>Live logs · Agriculture system events &amp; security visibility</p>
+              <code>172.16.0.62:5601</code>
             </div>
           </div>
           <div class="gl-right">
@@ -496,15 +546,15 @@
             <div class="cyber-note">Includes: <span class="tag-pill">CTF Exercises</span></div>
             <span class="ctf-launch-hint">&#9881; Open CTF Challenges &rarr;</span>
           </div>
-          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.16.79:3000/login', '_blank')" role="link" tabindex="0">
+          <div class="cyber-card blue" style="cursor: pointer;" onclick="window.open('http://172.16.0.62:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(),filters:!(),index:d1436d3f-9f97-40d3-b7dd-b5a2eaab2cf8,interval:auto,query:(language:kuery,query:%27%27),sort:!(!(%27@timestamp%27,desc)))', '_blank')" role="link" tabindex="0">
             <span class="cc-tag blue">Blue Team</span>
             <h3>SOC Monitoring</h3>
             <p>24/7 monitoring of OT/IT network traffic with automated anomaly detection,
                SIEM correlation rules, and incident escalation playbooks.</p>
-            <div class="cyber-note">Platform: <span class="tag-pill">Grafana</span>
-               <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
-                  class="grafana-inline-btn">📊 Open Grafana ↗</a>
-             </div>
+            <div class="cyber-note">Platform: <span class="tag-pill">Kibana</span>
+               <a href="http://172.16.0.62:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&amp;_a=(columns:!(),filters:!(),index:d1436d3f-9f97-40d3-b7dd-b5a2eaab2cf8,interval:auto,query:(language:kuery,query:%27%27),sort:!(!(%27@timestamp%27,desc)))" target="_blank" rel="noopener"
+                  class="grafana-inline-btn">📊 Open Kibana ↗</a>
+            </div>
           </div>
         </div>
 
@@ -550,15 +600,15 @@
           </div>
         </div>
 
-        <!-- ── Grafana Launch Panel (HPC Monitor) ── -->
-        <a href="http://172.16.16.79:3000/login" target="_blank" rel="noopener"
+        <!-- ── Kibana Launch Panel (Log Monitor) ── -->
+        <a href="http://172.16.0.62:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&amp;_a=(columns:!(),filters:!(),index:d1436d3f-9f97-40d3-b7dd-b5a2eaab2cf8,interval:auto,query:(language:kuery,query:%27%27),sort:!(!(%27@timestamp%27,desc)))" target="_blank" rel="noopener"
            class="grafana-launch" id="water-hpc-grafana">
           <div class="gl-left">
             <div class="gl-icon">📊</div>
             <div class="gl-info">
-              <h4>Grafana HPC Monitor</h4>
-              <p>Live metrics · Water system cluster jobs &amp; node health</p>
-              <code>172.16.16.79:3000</code>
+              <h4>Kibana Discover Monitor</h4>
+              <p>Live logs · Water system events &amp; security visibility</p>
+              <code>172.16.0.62:5601</code>
             </div>
           </div>
           <div class="gl-right">

@@ -152,7 +152,12 @@
       display      : flex;
       align-items  : center;
       gap          : 10px;
+      text-decoration: none;
+      cursor       : pointer;
+      border-radius: var(--r-sm);
+      transition   : color 0.2s, opacity 0.2s;
     }
+    .hdr-brand:hover { color: var(--text1); opacity: 0.92; }
     .hdr-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: var(--teal);
@@ -623,6 +628,11 @@
       outline       : none;
       min-width     : 0;
     }
+    .wiki-editor-select option,
+    .wiki-tool-select option {
+      background: #ffffff;
+      color: #111827;
+    }
     .wiki-format-toolbar {
       display      : flex;
       flex-wrap    : wrap;
@@ -773,10 +783,10 @@
 <div id="admin-app">
 
   <header>
-    <div class="hdr-brand">
+    <a class="hdr-brand" href="index.html" aria-label="Go to home page">
       <img class="hdr-logo-img" src="static/images/cdac-logo.png" alt="CDAC logo">
       <span>CDAC CTF Admin</span>
-    </div>
+    </a>
     <div class="hdr-actions">
       <a href="index.html" class="hdr-btn">? Back to Site</a>
       <button class="hdr-btn danger" onclick="doLogout()">Logout</button>
