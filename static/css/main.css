@@ -140,9 +140,26 @@ ul { list-style: none; }
   background  : transparent;
   padding     : 0;
   cursor      : pointer;
+  text-decoration: none;
 }
 
 .nav-brand:hover { opacity: 0.92; }
+
+.nav-logo-img {
+  width     : 158px !important;
+  height    : 34px !important;
+  max-width : 34vw;
+  max-height: 34px;
+  object-fit: contain;
+  flex      : 0 0 auto;
+  display   : block;
+  border-radius: 8px;
+}
+
+.faq-page .nav-logo-img {
+  width : 158px !important;
+  height: 34px !important;
+}
 
 .nav-logo-dot {
   width           : 9px;
@@ -368,10 +385,17 @@ ul { list-style: none; }
   z-index  : 1;
 }
 
+.dc-card-head {
+  display      : flex;
+  align-items  : center;
+  gap          : 0.85rem;
+  margin-bottom: 0.7rem;
+}
+
 .dc-icon {
   font-size     : 2.2rem;
-  margin-bottom : 1.2rem;
-  display       : block;
+  flex          : 0 0 auto;
+  display       : inline-flex;
   filter        : drop-shadow(0 0 8px rgba(255,255,255,0.3));
 }
 
@@ -379,7 +403,7 @@ ul { list-style: none; }
   font-size    : 1.4rem;
   font-weight  : 700;
   color        : var(--text-1);
-  margin-bottom: 0.7rem;
+  margin       : 0;
 }
 
 .domain-card p {
@@ -415,7 +439,15 @@ ul { list-style: none; }
   border-radius : 3px;
 }
 
-.dc-explore {
+.dc-actions {
+  display    : flex;
+  align-items: center;
+  gap        : 0.55rem;
+  flex-wrap  : wrap;
+}
+
+.dc-explore,
+.dc-demo {
   font-family   : 'IBM Plex Mono', monospace;
   font-size     : 0.7rem;
   letter-spacing: 0.1em;
@@ -428,8 +460,14 @@ ul { list-style: none; }
   white-space   : nowrap;
 }
 
+.dc-demo {
+  background: rgba(255,255,255,0.04);
+}
+
 .domain-agri:hover .dc-explore  { background: var(--green-500); color: var(--green-900); border-color: var(--green-500); }
 .domain-water:hover .dc-explore { background: var(--teal-500);  color: var(--teal-900);  border-color: var(--teal-500); }
+.domain-agri .dc-demo:hover  { background: rgba(93,184,62,0.16); border-color: rgba(93,184,62,0.55); color: var(--green-300); }
+.domain-water .dc-demo:hover { background: rgba(26,158,120,0.16); border-color: rgba(26,158,120,0.55); color: var(--teal-300); }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    7. SUB-PAGES (Agriculture / Water)
@@ -2121,6 +2159,156 @@ footer {
    CTF CHALLENGE MODAL  (triggered by clicking Red Team card)
 ------------------------------------------------------------ */
 
+#demo-modal-overlay {
+  position       : fixed;
+  inset          : 0;
+  z-index        : 1000;
+  display        : none;
+  align-items    : center;
+  justify-content: center;
+  padding        : 1.5rem;
+  background     : rgba(0,0,0,0.74);
+  backdrop-filter: blur(12px);
+}
+
+#demo-modal-overlay.open {
+  display: flex;
+}
+
+.demo-modal {
+  width        : min(860px, 100%);
+  overflow     : hidden;
+  border       : 1px solid var(--border-hi);
+  border-radius: var(--r-lg);
+  background   : rgba(10,15,19,0.96);
+  box-shadow   : 0 26px 80px rgba(0,0,0,0.65);
+}
+
+.demo-modal-head {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 1rem;
+  padding        : 1rem 1.15rem;
+  border-bottom  : 1px solid var(--border);
+}
+
+.demo-modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size  : 1.2rem;
+  font-weight: 700;
+  color      : var(--text-1);
+}
+
+.demo-modal-subtitle {
+  margin-top: 0.2rem;
+  font-size : 0.78rem;
+  color     : var(--text-3);
+}
+
+.demo-modal-close {
+  width        : 38px;
+  height       : 38px;
+  border       : 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background   : var(--surface-2);
+  color        : var(--text-2);
+  cursor       : pointer;
+  transition   : all 0.2s;
+}
+
+.demo-modal-close:hover {
+  border-color: rgba(242,75,58,0.45);
+  background  : rgba(242,75,58,0.14);
+  color       : var(--red-400);
+}
+
+.demo-video {
+  display         : block;
+  width           : 100%;
+  aspect-ratio    : 16 / 9;
+  background-color: #05080b;
+}
+
+.demo-slideshow {
+  position        : relative;
+  width           : 100%;
+  aspect-ratio    : 16 / 9;
+  background      : #05080b;
+  overflow        : hidden;
+}
+
+.demo-slide-img {
+  width     : 100%;
+  height    : 100%;
+  object-fit: cover;
+  display   : block;
+}
+
+.demo-slide-btn {
+  position       : absolute;
+  top            : 50%;
+  transform      : translateY(-50%);
+  width          : 42px;
+  height         : 42px;
+  border         : 1px solid rgba(255,255,255,0.2);
+  border-radius  : 50%;
+  background     : rgba(5,10,14,0.68);
+  color          : var(--text-1);
+  font-size      : 2rem;
+  line-height    : 1;
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  cursor         : pointer;
+  transition     : all 0.2s;
+}
+
+.demo-slide-btn:hover {
+  background    : rgba(93,184,62,0.28);
+  border-color  : rgba(93,184,62,0.55);
+}
+
+.demo-slide-prev { left: 1rem; }
+.demo-slide-next { right: 1rem; }
+
+.demo-slide-meta {
+  position       : absolute;
+  left           : 0;
+  right          : 0;
+  bottom         : 0;
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 1rem;
+  padding        : 0.9rem 1rem;
+  background     : linear-gradient(to top, rgba(0,0,0,0.72), transparent);
+  color          : var(--text-1);
+  font-family    : 'IBM Plex Mono', monospace;
+  font-size      : 0.72rem;
+}
+
+.demo-slide-dots {
+  display    : flex;
+  align-items: center;
+  gap        : 0.4rem;
+}
+
+.demo-slide-dot {
+  width        : 8px;
+  height       : 8px;
+  border       : 0;
+  border-radius: 50%;
+  background   : rgba(255,255,255,0.35);
+  cursor       : pointer;
+  padding      : 0;
+}
+
+.demo-slide-dot.active {
+  background: var(--green-300);
+  box-shadow: 0 0 12px rgba(93,184,62,0.7);
+}
+
 /* Red Team card — make it clickable */
 .cyber-card.red,
 .team-card.red-team {
@@ -2451,41 +2639,52 @@ footer {
 
 /* Intro header row */
 .cyber-scope-intro {
-  display       : flex;
-  align-items   : center;
-  gap           : 1.25rem;
+  position      : relative;
+  overflow      : hidden;
   background    : linear-gradient(135deg, rgba(14,18,28,0.96), rgba(10,12,20,0.98));
   border        : 1px solid rgba(255,255,255,0.07);
   border-radius : 14px;
-  padding       : 1.5rem 2rem;
+  padding       : 2rem 2.25rem;
   margin-bottom : 2rem;
 }
 
-.csi-icon {
-  font-size  : 2rem;
-  flex-shrink: 0;
-  width      : 54px;
-  height     : 54px;
-  background : rgba(255,255,255,0.04);
-  border     : 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  display    : flex;
-  align-items: center;
-  justify-content: center;
+.cyber-scope-intro::before {
+  content   : "";
+  position  : absolute;
+  left      : 0;
+  top       : 0;
+  width     : 4px;
+  height    : 100%;
+  background: linear-gradient(to bottom, var(--red-400), var(--amber-400), var(--blue-500));
 }
 
 .cyber-scope-intro h2 {
   font-family  : 'Syne', sans-serif;
-  font-size    : 1.15rem;
+  font-size    : clamp(2rem, 4vw, 4.1rem);
   font-weight  : 700;
-  color        : var(--text-1, #e8f0e0);
-  margin-bottom: 4px;
+  line-height  : 0.95;
+  color        : var(--text-1);
+  margin       : 0.15rem 0 0.9rem;
+  max-width    : 780px;
 }
 
-.cyber-scope-intro p {
-  font-size  : 0.82rem;
-  color      : rgba(255,255,255,0.4);
-  line-height: 1.55;
+.csi-kicker {
+  font-family   : 'IBM Plex Mono', monospace;
+  font-size     : 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color         : var(--amber-400);
+  margin        : 0;
+}
+
+.cyber-scope-intro p:not(.csi-kicker) {
+  font-family: 'Syne', sans-serif;
+  font-size  : 1rem;
+  font-weight: 500;
+  color      : rgba(255,255,255,0.55);
+  line-height: 1.65;
+  margin     : 0;
+  max-width  : 640px;
 }
 
 /* Admin entry card grid */
@@ -2546,6 +2745,13 @@ footer {
 .cyber-admin-card:hover .cac-glow { opacity: 1; }
 
 /* Domain icon */
+.cac-card-head {
+  display      : flex;
+  align-items  : center;
+  gap          : 1rem;
+  margin-bottom: 0.85rem;
+}
+
 .cac-icon {
   font-size    : 2.2rem;
   width        : 56px;
@@ -2565,7 +2771,7 @@ footer {
   font-size    : 1.05rem;
   font-weight  : 700;
   color        : #e8f0e0;
-  margin-bottom: 0.5rem;
+  margin       : 0;
 }
 
 .cac-body p {
@@ -2777,4 +2983,141 @@ footer {
   box-shadow: 0 8px 28px rgba(62,138,44,0.4);
 }
 
+/* ------------------------------------------------------------
+   FAQ / STUDENT SUPPORT PAGE
+------------------------------------------------------------ */
+.faq-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(93,184,62,0.13), transparent 34%),
+    radial-gradient(ellipse at 84% 18%, rgba(77,166,255,0.11), transparent 36%),
+    var(--bg);
+}
 
+.faq-shell {
+  width     : min(1160px, calc(100% - 2rem));
+  margin    : 0 auto;
+  padding   : calc(var(--nav-h) + 3rem) 0 4rem;
+}
+
+.faq-hero {
+  padding      : 2.2rem 0 2.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-kicker,
+.faq-contact-label {
+  font-family   : 'IBM Plex Mono', monospace;
+  font-size     : 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color         : var(--green-300);
+  margin        : 0 0 0.65rem;
+}
+
+.faq-hero h1 {
+  font-size  : clamp(2.8rem, 8vw, 7.5rem);
+  line-height: 0.9;
+  max-width  : 900px;
+  color      : var(--text-1);
+  margin     : 0 0 1rem;
+}
+
+.faq-hero p:not(.faq-kicker) {
+  max-width  : 760px;
+  color      : var(--text-2);
+  font-size  : 1rem;
+  line-height: 1.75;
+}
+
+.faq-contact-grid {
+  display              : grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap                  : 1rem;
+  margin               : 2rem 0 3rem;
+}
+
+.faq-contact-card {
+  border       : 1px solid var(--border);
+  border-radius: var(--r-md);
+  background   : linear-gradient(145deg, rgba(14,18,14,0.94), rgba(10,12,20,0.96));
+  padding      : 1.35rem;
+}
+
+.faq-contact-card h2 {
+  font-size  : 1.15rem;
+  color      : var(--text-1);
+  margin     : 0 0 0.6rem;
+}
+
+.faq-contact-card p:not(.faq-contact-label) {
+  color      : var(--text-3);
+  font-size  : 0.86rem;
+  line-height: 1.65;
+}
+
+.faq-contact-lines {
+  display       : flex;
+  flex-direction: column;
+  gap           : 0.45rem;
+  margin-top    : 1rem;
+}
+
+.faq-contact-lines a,
+.faq-contact-lines span {
+  color          : var(--teal-300);
+  text-decoration: none;
+  font-family    : 'IBM Plex Mono', monospace;
+  font-size      : 0.82rem;
+}
+
+.faq-contact-lines a:hover {
+  color: var(--green-300);
+}
+
+.faq-layout {
+  display              : grid;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+  gap                  : 2rem;
+  align-items          : start;
+}
+
+.faq-section-head h2 {
+  font-size  : clamp(1.8rem, 4vw, 3.3rem);
+  line-height: 1;
+  color      : var(--text-1);
+  margin     : 0;
+}
+
+.faq-list {
+  display       : flex;
+  flex-direction: column;
+  gap           : 0.85rem;
+}
+
+.faq-list details {
+  border       : 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background   : rgba(255,255,255,0.035);
+  padding      : 1rem 1.15rem;
+}
+
+.faq-list summary {
+  cursor     : pointer;
+  color      : var(--text-1);
+  font-weight: 700;
+}
+
+.faq-list details p {
+  color      : var(--text-2);
+  line-height: 1.65;
+  font-size  : 0.9rem;
+  margin-top : 0.8rem;
+}
+
+@media (max-width: 860px) {
+  .faq-contact-grid,
+  .faq-layout {
+    grid-template-columns: 1fr;
+  }
+}

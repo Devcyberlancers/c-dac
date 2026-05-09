@@ -284,6 +284,16 @@ def admin_page():
     return send_from_directory(ROOT, "admin.html")
 
 
+@app.get("/faq")
+def faq_no_ext():
+    return send_from_directory(ROOT, "faq.html")
+
+
+@app.get("/faq.html")
+def faq_page():
+    return send_from_directory(ROOT, "faq.html")
+
+
 @app.get("/wiki-login")
 def wiki_login():
     return redirect("/wiki/")
@@ -726,6 +736,5 @@ init_db()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "5000"))
     app.run(host="0.0.0.0", port=port, debug=os.environ.get("FLASK_DEBUG") == "1")
-
 
 

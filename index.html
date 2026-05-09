@@ -46,6 +46,7 @@
       <li><button class="nav-btn"        data-page="water" id="navbtn-water">Water</button></li>
       <li><button class="nav-btn"        data-page="cyber" id="navbtn-cyber">Cybersecurity</button></li>
       <li><a class="nav-btn" href="/wiki/">Wiki</a></li>
+      <li><a class="nav-btn" href="/faq">FAQ</a></li>
     </ul>
 
     <button class="nav-menu-toggle" id="menu-toggle" aria-label="Toggle navigation">☰</button>
@@ -90,8 +91,10 @@
              aria-label="Go to Smart Agriculture">
           <div class="dc-bg dc-bg-agri"></div>
           <div class="dc-content">
-            <span class="dc-icon" aria-hidden="true">🌾</span>
-            <h2>Smart Agriculture</h2>
+            <div class="dc-card-head">
+              <span class="dc-icon" aria-hidden="true">🌾</span>
+              <h2>Smart Agriculture</h2>
+            </div>
             <p>Precision farming with sensor networks, predictive analytics, and
                cybersecurity-hardened IoT infrastructure deployed at field scale.</p>
             <div class="dc-footer">
@@ -101,7 +104,10 @@
                 <span class="module-tag">Cybersecurity</span>
                 <span class="module-tag">HPC</span>
               </div>
-              <button class="dc-explore" tabindex="-1">Explore →</button>
+              <div class="dc-actions">
+                <button class="dc-explore" tabindex="-1">Explore →</button>
+                <button class="dc-demo" type="button" data-demo="agriculture" tabindex="-1">Demo</button>
+              </div>
             </div>
           </div>
         </div>
@@ -112,8 +118,10 @@
              aria-label="Go to Smart Water Distribution">
           <div class="dc-bg dc-bg-water"></div>
           <div class="dc-content">
-            <span class="dc-icon" aria-hidden="true">💧</span>
-            <h2>Smart Water Distribution</h2>
+            <div class="dc-card-head">
+              <span class="dc-icon" aria-hidden="true">💧</span>
+              <h2>Smart Water Distribution</h2>
+            </div>
             <p>Intelligent pipeline monitoring, leak detection, and distribution
                optimization across urban and rural networks at city scale.</p>
             <div class="dc-footer">
@@ -123,7 +131,10 @@
                 <span class="module-tag">Cybersecurity</span>
                 <span class="module-tag">HPC</span>
               </div>
-              <button class="dc-explore" tabindex="-1">Explore →</button>
+              <div class="dc-actions">
+                <button class="dc-explore" tabindex="-1">Explore →</button>
+                <button class="dc-demo" type="button" data-demo="water" tabindex="-1">Demo</button>
+              </div>
             </div>
           </div>
         </div>
@@ -643,12 +654,9 @@
 
       <!-- Coverage Scope — click a domain to manage its CTF questions -->
       <div class="cyber-scope-intro reveal">
-        <div class="csi-icon">&#128737;&#65039;</div>
-        <div>
-          <h2>Coverage Scope</h2>
-          <p>Select a domain below to manage its CTF challenge questions.<br>
-             Admin access is required.</p>
-        </div>
+        <p class="csi-kicker">Admin Workspace</p>
+        <h2>CTF Question Management</h2>
+        <p>Select a domain below to manage its CTF challenge questions. Admin access is required.</p>
       </div>
 
       <div class="cyber-admin-grid">
@@ -661,9 +669,11 @@
              onclick="openAdminAuth('agriculture')"
              onkeydown="if(event.key==='Enter'||event.key===' '){openAdminAuth('agriculture')}">
           <div class="cac-glow cac-glow-agri"></div>
-          <div class="cac-icon">&#127806;</div>
           <div class="cac-body">
-            <h3>Agriculture Systems</h3>
+            <div class="cac-card-head">
+              <div class="cac-icon">&#127806;</div>
+              <h3>Agriculture Systems</h3>
+            </div>
             <p>Manage CTF challenges for the Smart Agriculture domain — sensor firmware, IoT gateways, and field data APIs.</p>
             <div class="cac-pills">
               <span class="cac-pill">MQTT / LoRaWAN</span>
@@ -685,9 +695,11 @@
              onclick="openAdminAuth('water')"
              onkeydown="if(event.key==='Enter'||event.key===' '){openAdminAuth('water')}">
           <div class="cac-glow cac-glow-water"></div>
-          <div class="cac-icon">&#128167;</div>
           <div class="cac-body">
-            <h3>Water Systems</h3>
+            <div class="cac-card-head">
+              <div class="cac-icon">&#128167;</div>
+              <h3>Water Systems</h3>
+            </div>
             <p>Manage CTF challenges for the Smart Water domain — SCADA/HMI, Modbus, OT network segmentation.</p>
             <div class="cac-pills">
               <span class="cac-pill">SCADA / HMI</span>
@@ -945,8 +957,164 @@
     });
   </script>
 
+  <script>
+    /* Domain demo video modal */
+    var DEMO_CONTENT = {
+      agriculture: {
+        type: 'slideshow',
+        title: 'Smart Agriculture Demo',
+        subtitle: 'Photo walkthrough of the smart agriculture model.',
+        slides: [
+          'static/images/agriculture-model-1.jpeg',
+          'static/images/agriculture-model-2.jpeg',
+          'static/images/agriculture-model-3.jpeg',
+          'static/images/agriculture-model-4.jpeg',
+          'static/images/agriculture-model-5.jpeg',
+          'static/images/agriculture-model-6.jpeg'
+        ]
+      },
+      water: {
+        type: 'video',
+        title: 'Smart Water Distribution Demo',
+        subtitle: 'Placeholder video - replace later with your recorded walkthrough.',
+        src: 'static/videos/smart-water-demo.mp4'
+      }
+    };
+    var _demoSlideIndex = 0;
+    var _demoSlides = [];
+
+    function renderDemoSlide() {
+      var img = document.getElementById('demo-slide-img');
+      var count = document.getElementById('demo-slide-count');
+      var dots = document.getElementById('demo-slide-dots');
+      if (!img || !_demoSlides.length) return;
+      img.src = _demoSlides[_demoSlideIndex];
+      img.alt = 'Smart Agriculture demo photo ' + (_demoSlideIndex + 1);
+      if (count) count.textContent = (_demoSlideIndex + 1) + ' / ' + _demoSlides.length;
+      if (dots) {
+        dots.innerHTML = '';
+        _demoSlides.forEach(function(_, idx) {
+          var dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'demo-slide-dot' + (idx === _demoSlideIndex ? ' active' : '');
+          dot.setAttribute('aria-label', 'Show agriculture photo ' + (idx + 1));
+          dot.addEventListener('click', function() {
+            _demoSlideIndex = idx;
+            renderDemoSlide();
+          });
+          dots.appendChild(dot);
+        });
+      }
+    }
+
+    function moveDemoSlide(step) {
+      if (!_demoSlides.length) return;
+      _demoSlideIndex = (_demoSlideIndex + step + _demoSlides.length) % _demoSlides.length;
+      renderDemoSlide();
+    }
+
+    function openDemoModal(domain) {
+      var data = DEMO_CONTENT[domain] || DEMO_CONTENT.agriculture;
+      var overlay = document.getElementById('demo-modal-overlay');
+      var video = document.getElementById('demo-video');
+      var slideshow = document.getElementById('demo-slideshow');
+      if (!overlay || !video || !slideshow) return;
+
+      document.getElementById('demo-modal-title').textContent = data.title;
+      document.getElementById('demo-modal-subtitle').textContent = data.subtitle;
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      if (data.type === 'slideshow') {
+        _demoSlides = data.slides || [];
+        _demoSlideIndex = 0;
+        video.style.display = 'none';
+        slideshow.style.display = 'block';
+        renderDemoSlide();
+      } else {
+        _demoSlides = [];
+        slideshow.style.display = 'none';
+        video.style.display = 'block';
+        video.src = data.src;
+        video.load();
+      }
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      if (data.type === 'video') video.play().catch(function() {});
+    }
+
+    function closeDemoModal() {
+      var overlay = document.getElementById('demo-modal-overlay');
+      var video = document.getElementById('demo-video');
+      var slideshow = document.getElementById('demo-slideshow');
+      if (!overlay || !video) return;
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      if (slideshow) slideshow.style.display = 'none';
+      _demoSlides = [];
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.dc-demo').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          openDemoModal(btn.dataset.demo);
+        });
+      });
+
+      var overlay = document.getElementById('demo-modal-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) closeDemoModal();
+        });
+      }
+
+      var closeBtn = document.getElementById('demo-modal-close-btn');
+      if (closeBtn) closeBtn.addEventListener('click', closeDemoModal);
+
+      var prevBtn = document.getElementById('demo-slide-prev');
+      var nextBtn = document.getElementById('demo-slide-next');
+      if (prevBtn) prevBtn.addEventListener('click', function() { moveDemoSlide(-1); });
+      if (nextBtn) nextBtn.addEventListener('click', function() { moveDemoSlide(1); });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeDemoModal();
+        if (document.getElementById('demo-modal-overlay').classList.contains('open')) {
+          if (e.key === 'ArrowLeft') moveDemoSlide(-1);
+          if (e.key === 'ArrowRight') moveDemoSlide(1);
+        }
+      });
+    });
+  </script>
+
 
   <!-- ══ CTF CHALLENGE MODAL ══════════════════════════════════════════════ -->
+
+  <div id="demo-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title">
+    <div class="demo-modal">
+      <div class="demo-modal-head">
+        <div>
+          <div class="demo-modal-title" id="demo-modal-title">Domain Demo</div>
+          <div class="demo-modal-subtitle" id="demo-modal-subtitle">Preview video</div>
+        </div>
+        <button class="demo-modal-close" id="demo-modal-close-btn" aria-label="Close demo video">&#x2715;</button>
+      </div>
+      <div id="demo-slideshow" class="demo-slideshow" style="display:none">
+        <img id="demo-slide-img" class="demo-slide-img" src="" alt="">
+        <button class="demo-slide-btn demo-slide-prev" id="demo-slide-prev" type="button" aria-label="Previous agriculture photo">&#8249;</button>
+        <button class="demo-slide-btn demo-slide-next" id="demo-slide-next" type="button" aria-label="Next agriculture photo">&#8250;</button>
+        <div class="demo-slide-meta">
+          <span id="demo-slide-count">1 / 6</span>
+          <div class="demo-slide-dots" id="demo-slide-dots" aria-label="Agriculture photo selector"></div>
+        </div>
+      </div>
+      <video id="demo-video" class="demo-video" controls playsinline></video>
+    </div>
+  </div>
 
   <!-- ══ ADMIN AUTH MODAL ══════════════════════════════════════════ -->
   <div id="admin-auth-overlay" role="dialog" aria-modal="true" aria-labelledby="adm-title">
