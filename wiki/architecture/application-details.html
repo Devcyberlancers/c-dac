@@ -41,29 +41,21 @@
             <table class="device-table app-details-table">
               <thead><tr><th>Name</th><th>Smart Agriculture</th><th>Smart Water Management</th></tr></thead>
               <tbody>
-                <tr><td>Tech Stack</td><td>Flask, SQLite, HTML/CSS/JS, MQTT-ready API placeholders</td><td>Flask, SQLite, HTML/CSS/JS, Modbus/MQTT-ready API placeholders</td></tr>
-                <tr><td>Application Type</td><td>Smart agriculture monitoring, CTF, and operations wiki</td><td>Water distribution monitoring, CTF, and operations wiki</td></tr>
-                <tr><td>Base OS</td><td><span class="placeholder">[RASPBERRY_PI_OS / LINUX]</span></td><td><span class="placeholder">[RASPBERRY_PI_OS / LINUX]</span></td></tr>
-                <tr><td>Server IP Address</td><td><span class="placeholder">[AGRI_APP_SERVER_IP]</span></td><td><span class="placeholder">[WATER_APP_SERVER_IP]</span></td></tr>
-                <tr><td>Port Number</td><td><span class="placeholder">[5000 / CUSTOM_PORT]</span></td><td><span class="placeholder">[5000 / CUSTOM_PORT]</span></td></tr>
-                <tr><td>Access Link</td><td><a href="#">http://[SERVER_IP_ADDRESS]:[PORT]/#agri</a></td><td><a href="#">http://[SERVER_IP_ADDRESS]:[PORT]/#water</a></td></tr>
-                <tr><td>Admin Login</td><td>Admin URL: <span class="placeholder">/admin.html</span><br>Default Password: <span class="placeholder">[ADMIN_PASSWORD]</span></td><td>Admin URL: <span class="placeholder">/admin.html</span><br>Default Password: <span class="placeholder">[ADMIN_PASSWORD]</span></td></tr>
-                <tr><td>Database</td><td>SQLite: <span class="placeholder">data/cdac_ctf.sqlite3</span></td><td>SQLite: <span class="placeholder">data/cdac_ctf.sqlite3</span></td></tr>
-                <tr><td>Network Protocols</td><td><span class="placeholder">[HTTP, MQTT, LoRaWAN, Wi-Fi]</span></td><td><span class="placeholder">[HTTP, MQTT, Modbus TCP, RS485]</span></td></tr>
-                <tr><td>Primary Sensors</td><td><span class="placeholder">[SOIL_MOISTURE, TEMP, HUMIDITY, PH, EC]</span></td><td><span class="placeholder">[FLOW, PRESSURE, LEVEL, TURBIDITY, PH]</span></td></tr>
+                <tr><td>Tech Stack</td><td><strong data-start="641" data-end="775">React + Vite frontend, Python backend/simulation, Raspberry Pi, ESP32, MQTT, HTTP API, WebSocket, Modbus TCP/PLC support</strong>. The PDF mentions IoT, MQTT and embedded controllers; GitHub shows React/Vite and Python backend files.&nbsp;</td><td>Flask, SQLite, HTML/CSS/JS, Modbus/MQTT-ready API placeholders</td></tr>
+                <tr><td>Application Type</td><td><strong data-start="994" data-end="1170">Smart agriculture monitoring and automation dashboard for irrigation, soil moisture, water level, pH correction, rain simulation, drainage, and greenhouse/field operations.</strong></td><td>Water distribution monitoring, CTF, and operations wiki</td></tr>
+                <tr><td>Base OS</td><td><strong data-start="1227" data-end="1254">Raspberry Pi OS / Linux</strong>. The PDF shows Raspberry Pi as the main controller that hosts Dashboard, MQTT broker, automation logic, and communication with ESP32.&nbsp;</td><td><span class="placeholder">[RASPBERRY_PI_OS / LINUX]</span></td></tr>
+                <tr><td>Server IP Address</td><td><strong data-start="1454" data-end="1471">192.168.3.101</strong> — Raspberry Pi IP from the Smart Agriculture network architecture. GitHub backend binds to <code data-start="1563" data-end="1572">0.0.0.0</code>, meaning it can listen on the Raspberry Pi network IP.&nbsp;</td><td><span class="placeholder">[WATER_APP_SERVER_IP]</span></td></tr>
+                <tr><td>Port Number</td><td><strong data-start="1726" data-end="1751">Application/API: 8000</strong> from GitHub backend. <strong data-start="1773" data-end="1787">MQTT: 1883</strong> from the PDF. <strong data-start="1802" data-end="1831">WebSocket LED control: 81</strong> as documented in the PDF. <strong data-start="1858" data-end="1881">Modbus TCP/PLC: 502</strong> from GitHub <code data-start="1894" data-end="1907">Agri_iot.py</code>.&nbsp;</td><td><span class="placeholder">[5000 / CUSTOM_PORT]</span></td></tr>
+                <tr><td>Access Link</td><td>http://192.168.3.101:8000/</td><td><a href="#">http://[SERVER_IP_ADDRESS]:[PORT]/#water</a></td></tr>
+                <tr><td>Admin Login</td><td><strong data-start="2059" data-end="2125">Not documented / not configured in the reviewed GitHub or PDF.</strong> No default admin URL or password was found. Recommended value: <strong data-start="2189" data-end="2240">N/A – authentication not implemented/documented</strong>.</td><td>Admin URL: <span class="placeholder">/admin.html</span><br>Default Password: <span class="placeholder">[ADMIN_PASSWORD]</span></td></tr>
+                <tr><td>Database</td><td><strong data-start="2261" data-end="2317">No SQLite database found in the current GitHub repo.</strong> The repo contains <code data-start="2336" data-end="2354">esp32_state.json</code>, and the code uses it as a runtime state file. Recommended value: <strong data-start="2421" data-end="2482">JSON state file: esp32_state.json; SQLite not implemented</strong>.&nbsp;</td><td>SQLite: <span class="placeholder">data/cdac_ctf.sqlite3</span></td></tr>
+                <tr><td>Network Protocols</td><td><strong data-start="2550" data-end="2612">HTTP/REST API, MQTT, WebSocket, Wi-Fi 2.4 GHz, Modbus TCP.</strong> Router used: <strong data-start="2677" data-end="2726">TP-Link TL-WR845N, 2.4 GHz, 300 Mbps, Wi-Fi 4</strong>.&nbsp;</td><td><span class="placeholder">[HTTP, MQTT, Modbus TCP, RS485]</span></td></tr>
+                <tr><td>Primary Sensors</td><td><strong data-start="2834" data-end="2976">Soil moisture, water level, pH, temperature, humidity, flame/fire alert, LDR/photoresistor, IR obstacle, RFID/NFC, N/P/K dashboard values.</strong> EC sensor is <strong data-start="2990" data-end="3007">not confirmed</strong> in the reviewed files. The component sheet lists water-level sensors, flame sensor, photoresistor/LDR, IR obstacle sensor, RFID reader, ESP32, Raspberry Pi, pumps, relays, and displays.&nbsp;</td><td><span class="placeholder">[FLOW, PRESSURE, LEVEL, TURBIDITY, PH]</span></td></tr>
               </tbody>
             </table>
           </section>
           <section class="wiki-section" id="architecture-template">
-            <h2>Markdown Template</h2>
-            <div class="md-template"><div class="md-template-label">architecture/application-details.md</div><pre><code># Application Details
-
-| Name | Smart Agriculture | Smart Water Management |
-|---|---|---|
-| Server IP Address | [AGRI_APP_SERVER_IP] | [WATER_APP_SERVER_IP] |
-| Network Protocols | [HTTP, MQTT, LoRaWAN] | [HTTP, MQTT, Modbus TCP] |
-| Primary Sensors | [SENSOR_TYPES] | [SENSOR_TYPES] |
-| Access Link | http://[SERVER_IP_ADDRESS]:[PORT]/#agri | http://[SERVER_IP_ADDRESS]:[PORT]/#water |
+            <div class="md-template"><pre><code>
 </code></pre></div>
           </section>
         </div>
