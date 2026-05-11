@@ -6,7 +6,7 @@
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-32.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/static/images/favicon-192.png">
-  <title>FAQ & Student Support - CDAC SmartSystems</title>
+  <title>FAQ - Lab Maintenance and Troubleshooting</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -31,69 +31,120 @@
 
   <main class="faq-shell">
     <section class="faq-hero">
-      <p class="faq-kicker">Student Help Desk</p>
-      <h1>FAQ & Contact Support</h1>
+      <p class="faq-kicker">Lab Guide</p>
+      <h1>FAQ - Lab Maintenance and Basic Troubleshooting</h1>
       <p>
-        If students need help with login, CTF challenges, demo access, wiki pages, or lab setup,
-        they can use the contact details below to reach the right coordinator directly.
+        Follow these maintenance rules and troubleshooting steps to keep the smart agriculture,
+        urban water, and cybersecurity lab models safe, clean, and operational.
       </p>
     </section>
 
-    <section class="faq-contact-grid" aria-label="Support contacts">
-      <article class="faq-contact-card">
-        <p class="faq-contact-label">Contact Info</p>
-        <h2>Cyberlancers Support</h2>
-        <p>For general program information, coordination, and official communication.</p>
-        <div class="faq-contact-lines">
-          <a href="tel:+919606075066">+91 9606075066</a>
-          <a href="mailto:info@cyberlancers.in">info@cyberlancers.in</a>
-          <a href="mailto:hr@cyberlancers.in">hr@cyberlancers.in</a>
-        </div>
-      </article>
-
-      <article class="faq-contact-card">
-        <p class="faq-contact-label">Lab Support</p>
-        <h2>Devarajan</h2>
-        <p>For website issues, VPN access, CTF board problems, and server/demo troubleshooting.</p>
-        <div class="faq-contact-lines">
-          <a href="mailto:devarajan@cyberlancers.in">devarajan@cyberlancers.in</a>
-          <a href="tel:+918330857529">+91 8330857529</a>
-        </div>
-      </article>
-
-      <article class="faq-contact-card">
-        <p class="faq-contact-label">Address</p>
-        <h2>MYRA School of Business</h2>
-        <p>Near Infosys, opposite Power Grid, Yelawala, Karnataka 571130.</p>
-        <div class="faq-contact-lines">
-          <span>Mysuru, Karnataka</span>
-          <span>India - 571130</span>
-        </div>
-      </article>
-    </section>
-
-    <section class="faq-layout">
+    <section class="faq-layout faq-layout-single">
       <div class="faq-section-head">
-        <p class="faq-kicker">Quick Answers</p>
-        <h2>Common Student Questions</h2>
+        <p class="faq-kicker">Maintenance Rules</p>
+        <h2>Daily Lab Care</h2>
       </div>
 
       <div class="faq-list">
         <details open>
-          <summary>Who should I contact if I cannot open the website?</summary>
-          <p>Contact the Lab Support Team first. Share your browser, VPN status, and the URL you are trying to open.</p>
+          <summary>1. How should the lab table be cleaned regularly?</summary>
+          <p>The lab table should be cleaned using a vacuum cleaner to prevent dust accumulation.</p>
         </details>
         <details>
-          <summary>Who can help with CTF challenge questions?</summary>
-          <p>Use the Faculty Coordinator for question access or scoring policy. Use Lab Support for technical issues with submissions.</p>
+          <summary>2. How can we maintain cleanliness in the lab room?</summary>
+          <p>Maintain the lab room by avoiding dirty shoes, construction dust, and unnecessary dust movement. Regular vacuum cleaning should be done to keep the area clean.</p>
         </details>
         <details>
-          <summary>Where do I find documentation and setup notes?</summary>
-          <p>Open the Wiki page from the navigation bar. It contains architecture, logs, simulations, device management, and operational notes.</p>
+          <summary>3. Can we eat or drink near the model table?</summary>
+          <p>No. Eating or drinking on or near the table should be strictly avoided to prevent damage to the model and electronic components.</p>
         </details>
         <details>
-          <summary>Can I report a broken demo or video?</summary>
-          <p>Yes. Contact Lab Support and mention whether the Agriculture demo or Water Distribution demo is failing.</p>
+          <summary>4. What water levels should be monitored regularly?</summary>
+          <p>The water levels in the following tanks should be monitored regularly:</p>
+          <table class="faq-table">
+            <thead>
+              <tr>
+                <th>Tank</th>
+                <th>Requirement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Smart Agriculture Model</td>
+                <td>Water level should be above 20%.</td>
+              </tr>
+              <tr>
+                <td>Urban Water Management Model</td>
+                <td>Water should be above the lower sensor level.</td>
+              </tr>
+            </tbody>
+          </table>
+        </details>
+        <details>
+          <summary>5. Can wires be disconnected or connected directly?</summary>
+          <p>No. Wires should not be disconnected or connected without consulting the concerned team. Any change must be properly documented on the wiki.</p>
+        </details>
+        <details>
+          <summary>6. Can new hardware be connected to the PoE switch?</summary>
+          <p>No. Do not plug incompatible or unknown hardware into the PoE switch, as it may damage the network or connected devices.</p>
+        </details>
+        <details>
+          <summary>7. Can the IP address of any hardware be changed?</summary>
+          <p>No. The IP address of any device should not be changed unless it is approved and properly documented.</p>
+        </details>
+        <details>
+          <summary>8. Can buildings or model structures be moved physically?</summary>
+          <p>No. Buildings and model structures should not be moved physically, as this may damage wiring, sensors, or alignment.</p>
+        </details>
+        <details>
+          <summary>9. Can moving parts like metro or turbines be operated at high speed?</summary>
+          <p>No. Moving parts such as the metro, turbines, or similar mechanisms should not be run at high speed or stopped by force.</p>
+        </details>
+        <details>
+          <summary>10. Can credentials be shared with users or students?</summary>
+          <p>No. Credentials should not be shared with users or students to prevent unauthorized access, resetting, or reprogramming.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="faq-layout faq-layout-single">
+      <div class="faq-section-head">
+        <p class="faq-kicker">Basic Troubleshooting FAQ</p>
+        <h2>When Something Stops Working</h2>
+      </div>
+
+      <div class="faq-list">
+        <details>
+          <summary>11. What should be checked if the dashboard is not accessible?</summary>
+          <p>First, confirm that the system is connected to the lab network. Also verify that the dashboard device or server is powered on and reachable.</p>
+        </details>
+        <details>
+          <summary>12. What should be done if a scenario is not responding?</summary>
+          <p>Check the device's IP address and physical power status in the control panel. Then use the ping command to verify network connectivity.</p>
+        </details>
+        <details>
+          <summary>13. How do we check if a device is reachable on the network?</summary>
+          <p>Use the command-line ping command:</p>
+          <pre class="faq-code">ping &lt;device-ip-address&gt;</pre>
+          <p>Example:</p>
+          <pre class="faq-code">ping 192.168.1.10</pre>
+          <p>If replies are received, the device is reachable. If not, check power, network cable, and IP configuration.</p>
+        </details>
+        <details>
+          <summary>14. What should be done if a Raspberry Pi malfunctions?</summary>
+          <p>Reboot the Raspberry Pi by toggling the MCB in the corresponding panel.</p>
+        </details>
+        <details>
+          <summary>15. Why are the sewage treatment pumps not working?</summary>
+          <p>Check whether the water level in the sewage treatment tank is above 20%. If the level is too low, the pumps may not operate.</p>
+        </details>
+        <details>
+          <summary>16. What should be done if fire sensors keep triggering?</summary>
+          <p>Cover the sensors temporarily or disable them from the Node-RED flow, after confirming with the technical team.</p>
+        </details>
+        <details>
+          <summary>27. What should be done before making any hardware or software changes?</summary>
+          <p>Consult the responsible team and update the change details in the wiki/documentation. This helps avoid future confusion and troubleshooting issues.</p>
         </details>
       </div>
     </section>

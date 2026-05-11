@@ -3080,6 +3080,11 @@ footer {
   grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
   gap                  : 2rem;
   align-items          : start;
+  margin-top           : 2rem;
+}
+
+.faq-layout-single {
+  grid-template-columns: minmax(220px, 0.45fr) minmax(0, 1.55fr);
 }
 
 .faq-section-head h2 {
@@ -3113,6 +3118,45 @@ footer {
   line-height: 1.65;
   font-size  : 0.9rem;
   margin-top : 0.8rem;
+}
+
+.faq-table {
+  width          : 100%;
+  border-collapse: collapse;
+  margin-top     : 1rem;
+  overflow       : hidden;
+  border         : 1px solid var(--border);
+  border-radius  : var(--r-sm);
+  font-size      : 0.86rem;
+}
+
+.faq-table th,
+.faq-table td {
+  border : 1px solid var(--border);
+  padding: 0.85rem;
+  color  : var(--text-2);
+}
+
+.faq-table th {
+  color         : var(--green-300);
+  background    : rgba(93,184,62,0.08);
+  text-align    : left;
+  font-family   : 'IBM Plex Mono', monospace;
+  font-size     : 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.faq-code {
+  margin       : 0.75rem 0 0;
+  padding      : 0.8rem 1rem;
+  border       : 1px solid rgba(26,158,120,0.28);
+  border-radius: var(--r-sm);
+  background   : rgba(0,0,0,0.28);
+  color        : var(--teal-300);
+  font-family  : 'IBM Plex Mono', monospace;
+  font-size    : 0.86rem;
+  overflow-x   : auto;
 }
 
 @media (max-width: 860px) {
